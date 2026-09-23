@@ -2,15 +2,45 @@
   <div class="container">
     <nav class="navbar">
       <ul class="up_navigation">
-        <li class="active"><%= link_to "Home", root_path %></li>
-        <li><%= link_to "Account", accounts_path %></li>
-        <li><%= link_to "Stats", stats_path %></li>
+        <li class="active">
+          <%= link_to root_path do %>
+            <%= image_tag "home_icon.svg", alt: "home_icon" %>
+            <span>Home</span>
+          <% end %>
+        </li>
+        <li>
+          <%= link_to accounts_path do %>
+            <%= image_tag "account_icon.svg", alt: "account_icon" %>
+            <span>Account</span>
+          <% end %>
+        </li>
+        <li>
+          <%= link_to stats_path do %>
+            <%= image_tag "stats_icon.svg", alt: "stats_icon" %>
+            <span>Stats</span>
+          <% end %>
+        </li>
       </ul>
       <div class="space"></div>
       <ul class="down_navigation">
-        <li><%= link_to "Setting", settings_path %></li>
-        <li><%= link_to "Theme", themes_path %></li>
-        <li><%= link_to "About", abouts_path %></li>
+        <li>
+          <%= link_to settings_path do %>
+            <%= image_tag "setting_icon.svg", alt: "setting_icon" %>
+            <span>Settings</span>
+          <% end %>
+        </li>
+        <li>
+          <%= link_to themes_path do %>
+            <%= image_tag "dark_icon.svg", alt: "dark_icon" %>
+            <span>Dark</span>
+          <% end %>
+        </li>
+        <li>
+          <%= link_to abouts_path do %>
+            <%= image_tag "about_icon.svg", alt: "about_icon" %>
+            <span>About</span>
+          <% end %>
+        </li>
       </ul>
     </nav>
   </div>

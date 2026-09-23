@@ -16,10 +16,19 @@
 }
 
 .navbar li a {
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: 16px;
     color: white;
     padding: 16px 16px;
     text-decoration: none;
+}
+
+.navbar li a img,
+.navbar li a svg {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
 }
 
 .navbar li a:hover {
