@@ -6,8 +6,8 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="application-name" content="Smart Watering Application">
     <meta name="mobile-web-app-capable" content="yes">
-    <%= csrf_meta_tags %>
-    <%= csp_meta_tag %>
+    <%#= csrf_meta_tags %>
+    <%#= csp_meta_tag %>
 
     <%= yield :head %>
 
@@ -24,6 +24,7 @@
   </head>
 
   <body>
+    <%= render "layouts/navbar" %>
     <%= yield %>
   </body>
 </html>
