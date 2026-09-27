@@ -1,0 +1,18 @@
+{
+  "name": "smart_watering_application",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Gustin-MAILHE/Smart_Watering_Application.git"
+  },
+  "private": true,
+  "dependencies": {
+    "@hotwired/stimulus": "^3.2.2",
+    "controllers": "^0.0.2"
+  }
+}
