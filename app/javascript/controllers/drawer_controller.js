@@ -5,7 +5,6 @@ export default class extends Controller {
   static targets = ["drawer"]
 
   open() {
-    console.log("Clic détecté !", this.drawerTarget)
     this.drawerTarget.show()
   }
   connect() {
