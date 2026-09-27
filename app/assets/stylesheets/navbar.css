@@ -1,0 +1,63 @@
+.navbar {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 200px;
+    background-color: #244363;
+    font-size: 1.1rem;
+}
+
+.navbar ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    text-align: center;
+}
+
+.navbar li a {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    color: white;
+    padding: 16px 16px;
+    text-decoration: none;
+}
+
+.navbar li a img,
+.navbar li a svg {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+}
+
+.navbar li a:hover {
+    background-color: white;
+    color: black;
+}
+
+.space {
+    flex-grow: 1;
+}
+
+#sidebar-drawer .navbar {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+}
+
+.burger-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #244363;
+}
+
+.burger-button:hover {
+    opacity: 0.8;
+}
