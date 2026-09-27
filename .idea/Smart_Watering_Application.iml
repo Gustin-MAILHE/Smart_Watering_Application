@@ -4230,5 +4230,6 @@
       </library>
     </orderEntry>
     <orderEntry type="library" scope="PROVIDED" name="bundler (v4.0.16, ruby-4.0.6-p0) [gem]" level="application" />
+    <orderEntry type="library" name="default" level="application" />
   </component>
 </module>

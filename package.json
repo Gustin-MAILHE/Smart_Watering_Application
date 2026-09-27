@@ -10,5 +10,8 @@
     "type": "git",
     "url": "https://github.com/Gustin-MAILHE/Smart_Watering_Application.git"
   },
-  "private": true
+  "private": true,
+  "dependencies": {
+    "@hotwired/stimulus": "^3.2.2"
+  }
 }

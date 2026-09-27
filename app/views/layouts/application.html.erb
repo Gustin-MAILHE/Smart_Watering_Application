@@ -9,6 +9,11 @@
     <%#= csrf_meta_tags %>
     <%#= csp_meta_tag %>
 
+    <!-- WEB AWESOME-->
+    <!-- Required: default theme + autoloader -->
+    <link rel="stylesheet" href="https://early.webawesome.com/webawesome@3.0.0-alpha.10/dist/themes/default.css" />
+    <script type="module" src="https://early.webawesome.com/webawesome@3.0.0-alpha.10/dist/webawesome.loader.js"></script>
+
     <%= yield :head %>
 
     <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>

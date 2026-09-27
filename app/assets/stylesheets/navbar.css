@@ -40,3 +40,24 @@
     flex-grow: 1;
 }
 
+#sidebar-drawer .navbar {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+}
+
+.burger-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #244363;
+}
+
+.burger-button:hover {
+    opacity: 0.8;
+}
