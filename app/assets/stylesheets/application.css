@@ -25,3 +25,9 @@ body {
     width: 100%;
     height: 100vh;
 }
+
+.title-page {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
