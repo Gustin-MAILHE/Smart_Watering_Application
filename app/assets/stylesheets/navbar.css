@@ -1,9 +1,11 @@
+@import "application.css";
+
 .navbar {
     display: flex;
     flex-direction: column;
     height: 100vh;
     width: 200px;
-    background-color: #244363;
+    background-color: var(--BackgroundColor);
     font-size: 1.1rem;
 }
 
@@ -19,21 +21,22 @@
     display: flex;
     align-items: center;
     gap: 16px;
-    color: white;
+    color: var(--TextColor);
     padding: 16px 16px;
     text-decoration: none;
 }
 
-.navbar li a img,
-.navbar li a svg {
+
+.navbar li a svg,
+.navbar li a img{
+    fill: var(--TextColor);
     width: 28px;
     height: 28px;
     flex-shrink: 0;
 }
 
 .navbar li a:hover {
-    background-color: white;
-    color: black;
+    background-color: var(--P2Color);
 }
 
 .space {
@@ -55,7 +58,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #244363;
+    color: var(--TextColor);
 }
 
 .burger-button:hover {

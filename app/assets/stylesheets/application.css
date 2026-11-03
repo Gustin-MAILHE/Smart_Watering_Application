@@ -27,34 +27,34 @@ body {
 }
 
 :root {
-    --text_color: #E2EDF0;
-    --text-dark_color: #2B3338;
+    --TextColor: #E2EDF0;
+    --TextDarkColor: #2B3338;
 
-    --background_color: #2B3338;
-    --accent_color: #11BF62;
-    --p1_color: #274866;
-    --p2_color: #46687F;
-    --p3_color: #4C849B;
+    --BackgroundColor: #2B3338;
+    --AccentColor: #11BF62;
+    --P1Color: #274866;
+    --P2Color: #46687F;
+    --P3Color: #4C849B;
 }
 [theme="dark"] {
-    --text_color: #E2EDF0;
-    --text-dark_color: #2B3338;
+    --TextColor: #E2EDF0;
+    --TextDarkColor: #2B3338;
 
-    --background_color: #2B3338;
-    --accent_color: #11BF62;
-    --p1_color: #274866;
-    --p2_color: #46687F;
-    --p3_color: #4C849B;
+    --BackgroundColor: #2B3338;
+    --AccentColor: #11BF62;
+    --P1Color: #274866;
+    --P2Color: #46687F;
+    --P3Color: #4C849B;
 }
 [theme="light"] {
-    --text_color: #2B3338;
-    --text-dark_color: #E2EDF0;
+    --TextColor: #2B3338;
+    --TextDarkColor: #E2EDF0;
 
-    --background_color: #E2EDF0;
-    --accent_color: #157743;
-    --p1_color: #83D1FF;
-    --p2_color: #40AEF8;
-    --p3_color: #018BC3;
+    --BackgroundColor: #E2EDF0;
+    --AccentColor: #157743;
+    --P1Color: #83D1FF;
+    --P2Color: #40AEF8;
+    --P3Color: #018BC3;
 }
 .title-page {
     display: flex;
