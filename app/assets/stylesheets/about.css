@@ -1,0 +1,48 @@
+.about-page {
+    --about-text: #ffffff;
+    --about-accent: #1fb862;
+    --about-link: #4a90e2;
+
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    color: var(--about-text);
+}
+
+.about-page .title-page {
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
+.about-card {
+    padding: 1.25rem 1.5rem;
+    border: 2px solid var(--about-accent);
+    border-radius: 10px;
+    background: transparent;
+}
+
+.about-card__title {
+    margin: 0 0 0.75rem;
+    font-size: 1.1rem;
+}
+
+.about-card__text,
+.about-card__list {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+.about-card__list {
+    padding-left: 1.2rem;
+}
+
+.about-card a {
+    color: var(--about-link);
+}
+body {
+    background: #2b333b;
+}
