@@ -56,3 +56,8 @@ body {
     --p2_color: #40AEF8;
     --p3_color: #018BC3;
 }
+.title-page {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
