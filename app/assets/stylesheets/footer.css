@@ -1,0 +1,13 @@
+.site-footer {
+    padding: 1rem 1.5rem;
+    background-color: #244363;
+    color: white;
+    text-align: center;
+    font-size: 0.8rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.site-footer__text {
+    margin: 0;
+}

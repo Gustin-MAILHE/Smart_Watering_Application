@@ -1,0 +1,8 @@
+body {
+    background-color: #2b333b;
+    color: white;
+}
+
+.app-main {
+    min-height: 100vh;
+}
