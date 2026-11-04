@@ -40,6 +40,12 @@ gem "thruster", require: false
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 gem "image_processing", "~> 1.2"
 
+# json version
+gem "json", "< 3.0"
+
+# User gestion
+gem "devise", ">= 4.9.3"
+
 # Use to render SVG image as a SVG
 gem "inline_svg"
 

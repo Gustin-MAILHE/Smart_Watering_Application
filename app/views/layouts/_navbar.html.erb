@@ -52,6 +52,18 @@
             <% end %>
           </li>
         </ul>
+        <ul class="down_navigation">
+          <% if user_signed_in? %>
+            <li>Login as :
+              <strong><%= current_user.username %></strong>
+              <%= button_to "Log out", destroy_user_session_path, method: :delete, class: "btn-submit" %>
+          <% else %>
+            <li>
+              <%= link_to "Log in", new_user_session_path, class: "btn-submit"%>
+            </li>
+
+          <% end %>
+        </ul>
       </nav>
     </sl-drawer>
   </div>
