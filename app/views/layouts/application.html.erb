@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html data-theme="dark">
   <head>
     <title><%= content_for(:title) || "Smart Watering Application" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -29,7 +29,12 @@
   </head>
 
   <body>
-    <%= render "layouts/navbar" %>
+  <%= render "layouts/header" %>
+
+  <main class="app-main">
     <%= yield %>
+  </main>
+
+  <%= render "layouts/footer" %>
   </body>
 </html>
