@@ -12,16 +12,53 @@
 @import url('https://cdn.jsdelivr.net/npm/@fontsource-variable/roboto-slab@5.3.0/index.css');
 
 * {
+    color: var(--TextColor);
     padding: 0;
     margin: 0;
 }
 
+:root {
+    --TextColor: #E2EDF0;
+    --TextDarkColor: #2B3338;
+
+    --BackgroundColor: #2B3338;
+    --AccentColor: #11BF62;
+    --P1Color: #274866;
+    --P2Color: #46687F;
+    --P3Color: #4C849B;
+}
+[data-theme="dark"] {
+    --TextColor: #E2EDF0;
+    --TextDarkColor: #2B3338;
+
+    --BackgroundColor: #2B3338;
+    --AccentColor: #11BF62;
+    --P1Color: #274866;
+    --P2Color: #46687F;
+    --P3Color: #4C849B;
+}
+[data-theme="light"] {
+    --TextColor: #2B3338;
+    --TextDarkColor: #E2EDF0;
+
+    --BackgroundColor: #E2EDF0;
+    --AccentColor: #157743;
+    --P1Color: #83D1FF;
+    --P2Color: #40AEF8;
+    --P3Color: #018BC3;
+}
+
+
 body {
+    display: flex;
+    background: var(--BackgroundColor);
+    flex-direction: row;
     font-family: 'Roboto Slab Variable', serif;
     font-weight: 400;
     font-style: normal;
+    width: 100%;
+    height: 100vh;
 }
-
 .title-page {
     display: flex;
     justify-content: center;
