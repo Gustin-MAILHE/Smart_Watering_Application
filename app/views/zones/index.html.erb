@@ -1,0 +1,66 @@
+<div class="zone-page" data-controller="zones">
+  <h1 class="title-page" data-zones-target="title">Configuration du jardin</h1>
+
+  <section class="zone-card">
+    <h2 class="zone-card__title">Zones du potager</h2>
+    <nav class="zone-tabs" data-zones-target="tabs">
+      <button type="button" class="zone-tabs__add" data-action="click->zones#add" aria-label="Ajouter une zone">+</button>
+    </nav>
+    <p class="zone-hint" data-zones-target="hint">Ajoutez une zone avec le bouton + pour commencer.</p>
+  </section>
+
+  <div data-zones-target="panels"></div>
+
+  <template data-zones-target="tabTemplate">
+    <button type="button" class="zone-tabs__tab" data-action="click->zones#show"></button>
+  </template>
+
+  <template data-zones-target="panelTemplate">
+    <div class="zone-panel">
+      <div class="zone-page__columns">
+        <section class="zone-card">
+          <h2 class="zone-card__title">Configuration</h2>
+
+          <label class="zone-field">
+            <span class="zone-field__label">Culture</span>
+            <select class="zone-field__select">
+              <option value="" disabled selected>Choisir une culture</option>
+            </select>
+          </label>
+
+          <label class="zone-field">
+            <span class="zone-field__label">Fréquence</span>
+            <select class="zone-field__select">
+              <option value="" disabled selected>Choisir une fréquence</option>
+            </select>
+          </label>
+        </section>
+
+        <div class="zone-page__column">
+          <section class="zone-card">
+            <h2 class="zone-card__title">Capteurs associés</h2>
+            <ul class="zone-tags">
+              <li class="zone-tags__tag">température</li>
+              <li class="zone-tags__tag">humidité</li>
+              <li class="zone-tags__tag">luminosité</li>
+            </ul>
+          </section>
+
+          <section class="zone-card">
+            <h2 class="zone-card__title">Mesures en direct</h2>
+            <ul class="zone-readings">
+              <li class="zone-readings__item">-- °C</li>
+              <li class="zone-readings__item">-- %</li>
+              <li class="zone-readings__item">-- lx</li>
+            </ul>
+          </section>
+        </div>
+      </div>
+
+      <div class="zone-page__actions">
+        <button type="button" class="zone-button zone-button--start">Démarrer</button>
+        <button type="button" class="zone-button zone-button--stop">Arrêter</button>
+      </div>
+    </div>
+  </template>
+</div>

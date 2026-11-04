@@ -9,3 +9,6 @@ application.register("drawer", DrawerController)
 
 import HelloController from "controllers/hello_controller"
 application.register("hello", HelloController)
+
+import ZonesController from "controllers/zones_controller"
+application.register("zones", ZonesController)
