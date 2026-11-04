@@ -1,1 +1,35 @@
-<h1 class="title-page">Home</h1>
+<div class="home-page">
+  <h1 class="title-page">Vue d'ensemble</h1>
+
+  <section class="home-summary">
+    <h2 class="home-summary__title">Moyenne générale</h2>
+
+    <div class="home-summary__body">
+      <ul class="home-summary__values">
+        <li>Humidité : <%= @average[:humidity] %> %</li>
+        <li>Luminosité : <%= @average[:brightness] %> %</li>
+        <li>Température : <%= @average[:temperature] %> °C</li>
+      </ul>
+
+      <span class="home-summary__status"><%= @average[:status] %></span>
+    </div>
+  </section>
+
+  <ul class="crop-list">
+    <% @crops.each do |crop| %>
+      <li class="crop-card">
+        <div class="crop-card__header">
+          <h3 class="crop-card__name"><%= crop[:name] %></h3>
+          <span class="status-dot status-dot--<%= crop[:watering] %>"></span>
+          <span class="status-dot status-dot--<%= crop[:health] %>"></span>
+        </div>
+
+        <ul class="crop-card__values">
+          <li>Humidité : <%= crop[:humidity] %> %</li>
+          <li>Luminosité : <%= crop[:brightness] %> %</li>
+          <li>Température : <%= crop[:temperature] %> °C</li>
+        </ul>
+      </li>
+    <% end %>
+  </ul>
+</div>
