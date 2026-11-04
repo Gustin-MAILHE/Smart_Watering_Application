@@ -21,6 +21,9 @@ Rails.application.routes.draw do
   # Stats
   resources :stats, only: [ :index ]
 
+  # Zones
+  resources :zones, only: [:index]
+
   # Settings
   resources :settings, only: [ :index ]
 
