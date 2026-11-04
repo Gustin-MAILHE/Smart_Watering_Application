@@ -1,4 +1,4 @@
-<header data-controller="drawer">
+<div data-controller="drawer">
   <div class="container">
     <!-- Burger -->
     <button type="button" id="open-menu" class="burger-button" data-action="click->drawer#open" aria-label="Menu">
@@ -14,25 +14,25 @@
         <ul class="up_navigation">
           <li class="<%= 'active' if current_page?(root_path) %>">
             <%= link_to root_path do %>
-              <%= image_tag "home_icon.svg", alt: "home_icon" %>
+              <%= inline_svg_tag "home_icon.svg", alt: "home_icon" %>
               <span>Home</span>
             <% end %>
           </li>
           <li class="<%= 'active' if current_page?(gardens_path) %>">
             <%= link_to gardens_path do %>
-              <%= image_tag "garden_icon.svg", alt: "garden_icon" %>
+              <%= inline_svg_tag "garden_icon.svg", alt: "garden_icon" %>
               <span>Garden</span>
             <% end %>
           </li>
           <li class="<%= 'active' if current_page?(accounts_path) %>">
             <%= link_to accounts_path do %>
-              <%= image_tag "account_icon.svg", alt: "account_icon" %>
+              <%= inline_svg_tag "account_icon.svg", alt: "account_icon" %>
               <span>Account</span>
             <% end %>
           </li>
           <li class="<%= 'active' if current_page?(stats_path) %>">
             <%= link_to stats_path do %>
-              <%= image_tag "stats_icon.svg", alt: "stats_icon" %>
+              <%= inline_svg_tag "stats_icon.svg", alt: "stats_icon" %>
               <span>Stats</span>
             <% end %>
           </li>
@@ -41,24 +41,37 @@
         <ul class="down_navigation">
           <li class="<%= 'active' if current_page?(settings_path) %>">
             <%= link_to settings_path do %>
-              <%= image_tag "setting_icon.svg", alt: "setting_icon" %>
+              <%= inline_svg_tag "setting_icon.svg", alt: "setting_icon" %>
               <span>Settings</span>
             <% end %>
           </li>
           <li class="<%= 'active' if current_page?(themes_path) %>">
             <%= link_to themes_path do %>
-              <%= image_tag "dark_icon.svg", alt: "dark_icon" %>
+              <%= inline_svg_tag "dark_icon.svg", alt: "dark_icon" %>
               <span>Dark</span>
             <% end %>
           </li>
           <li class="<%= 'active' if current_page?(abouts_path) %>">
             <%= link_to abouts_path do %>
-              <%= image_tag "about_icon.svg", alt: "about_icon" %>
+              <%= inline_svg_tag "about_icon.svg", alt: "about_icon" %>
               <span>About</span>
             <% end %>
           </li>
         </ul>
+        <ul class="down_navigation">
+          <% if user_signed_in? %>
+            <li>Login as :
+              <strong><%= current_user.username %></strong>
+              <%= button_to "Log out", destroy_user_session_path, method: :delete, class: "btn-submit" %>
+            </li>
+          <% else %>
+            <li>
+              <%= link_to "Log in", new_user_session_path, class: "btn-submit"%>
+            </li>
+
+          <% end %>
+        </ul>
       </nav>
     </sl-drawer>
   </div>
-</header>
+</div>

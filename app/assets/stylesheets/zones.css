@@ -1,0 +1,151 @@
+.zone-page {
+    --zone-accent: #1fb862;
+    --zone-surface: #244363;
+    --zone-start: #4a8f5c;
+
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+.zone-page__columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+}
+
+.zone-page__column {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.zone-page__actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.zone-card {
+    padding: 1.25rem 1.5rem;
+    border: 2px solid var(--zone-accent);
+    border-radius: 10px;
+}
+
+.zone-card__title {
+    margin-bottom: 0.75rem;
+    font-size: 1.1rem;
+}
+
+.zone-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.zone-tabs__tab {
+    padding: 0.5rem 1.5rem;
+    border: 2px solid var(--zone-surface);
+    border-radius: 20px;
+    background: transparent;
+    color: white;
+    font-family: inherit;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.zone-tabs__tab--active {
+    background-color: var(--zone-surface);
+    font-weight: bold;
+}
+
+.zone-tabs__add {
+    width: 2rem;
+    height: 2rem;
+    border: 2px solid var(--zone-accent);
+    border-radius: 50%;
+    background: transparent;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.zone-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-bottom: 1rem;
+}
+
+.zone-field__label {
+    font-size: 0.85rem;
+}
+
+.zone-field__select {
+    padding: 0.6rem;
+    border: none;
+    border-radius: 6px;
+    background: white;
+    color: black;
+    font-family: inherit;
+    font-weight: bold;
+}
+
+.zone-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    list-style: none;
+}
+
+.zone-tags__tag {
+    padding: 0.25rem 0.8rem;
+    border: 1px solid var(--zone-accent);
+    border-radius: 20px;
+    font-size: 0.85rem;
+}
+
+.zone-readings {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+    list-style: none;
+}
+
+.zone-readings__item {
+    padding: 1rem 0.5rem;
+    border-radius: 6px;
+    background: white;
+    color: black;
+    text-align: center;
+    font-weight: bold;
+}
+
+.zone-button {
+    min-width: 140px;
+    padding: 0.7rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-family: inherit;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.zone-button--start {
+    background-color: var(--zone-start);
+    color: white;
+}
+
+.zone-button--stop {
+    background-color: #e3eef2;
+    color: black;
+}
+
+.zone-page__columns[hidden] {
+    display: none;
+}

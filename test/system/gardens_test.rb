@@ -84,7 +84,8 @@ class GardensTest < ApplicationSystemTestCase
     click_button "Add a new zone"
     select "Strawberries", from: "Crops"
     page.execute_script("window.gardenNavigationMarker = true; window.Turbo.visit(arguments[0])", root_path)
-    assert_selector "h1", text: "Home"
+    assert_current_path root_path
+    assert_selector ".home-page"
 
     page.go_back
     wait_for_garden
@@ -94,7 +95,8 @@ class GardensTest < ApplicationSystemTestCase
     assert page.evaluate_script("window.gardenNavigationMarker"), "Navigation should preserve the Turbo document"
 
     page.execute_script("window.Turbo.visit(arguments[0])", root_path)
-    assert_selector "h1", text: "Home"
+    assert_current_path root_path
+    assert_selector ".home-page"
     page.execute_script("window.Turbo.visit(arguments[0])", gardens_path)
     wait_for_garden
     assert_selector ".zone-btn", count: 3
@@ -166,7 +168,8 @@ class GardensTest < ApplicationSystemTestCase
       });
     JS
     page.execute_script("window.Turbo.visit(arguments[0])", root_path)
-    assert_selector "h1", text: "Home"
+    assert_current_path root_path
+    assert_selector ".home-page"
     page.execute_script("window.Turbo.visit(arguments[0])", gardens_path)
     wait_for_garden
 
@@ -280,7 +283,8 @@ class GardensTest < ApplicationSystemTestCase
     assert_text "No zones yet"
     assert_no_selector "[role='status']"
     page.execute_script("window.Turbo.visit(arguments[0])", root_path)
-    assert_selector "h1", text: "Home"
+    assert_current_path root_path
+    assert_selector ".home-page"
     page.go_back
     wait_for_garden
     assert_no_selector ".zone-btn"

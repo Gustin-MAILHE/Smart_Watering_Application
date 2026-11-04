@@ -1,0 +1,10 @@
+# Distinct accounts satisfy Devise's unique email and username indexes.
+one:
+  email: garden-one@example.test
+  username: gardenerOne
+  encrypted_password: <%= Devise::Encryptor.digest(User, "GardenTest123!") %>
+
+two:
+  email: garden-two@example.test
+  username: gardenerTwo
+  encrypted_password: <%= Devise::Encryptor.digest(User, "GardenTest123!") %>

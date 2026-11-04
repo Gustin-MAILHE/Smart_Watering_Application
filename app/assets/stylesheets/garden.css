@@ -11,10 +11,15 @@ body:has(.garden-wrapper) {
 }
 
 body:has(.garden-wrapper) > header {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    z-index: 10;
+    --TextColor: #386749;
+    background: #fffef9;
+    border-bottom: 1px solid #d6dfce;
+}
+
+body:has(.garden-wrapper) > footer {
+    --TextColor: #5c7160;
+    background: #f3f5ed;
+    border-top: 1px solid #d6dfce;
 }
 
 .garden-wrapper {
@@ -23,6 +28,7 @@ body:has(.garden-wrapper) > header {
     --garden-green: #386749;
     --garden-border: #d6dfce;
     --garden-sage: #e8efdf;
+    --TextColor: var(--garden-ink);
     width: 100%;
     min-width: 0;
     min-height: 100svh;
@@ -201,9 +207,10 @@ body:has(.garden-wrapper) :is(.burger-button, .navbar a):focus-visible {
 /* These navigation overrides apply only while Garden is displayed, including Turbo visits. */
 body:has(.garden-wrapper) .burger-button { color: #386749; background: #fffef9; border: 1px solid #d6dfce; border-radius: 13px; }
 body:has(.garden-wrapper) .burger-button:hover { opacity: 1; background: #e8efdf; transform: translateY(-2px); box-shadow: 0 5px 12px #243c2b12; }
-body:has(.garden-wrapper) .navbar { background: #294d35; }
+body:has(.garden-wrapper) .navbar { --TextColor: #fffef9; background: #294d35; }
 body:has(.garden-wrapper) .navbar a { font-family: 'Inter', system-ui, sans-serif; font-weight: 650; }
-body:has(.garden-wrapper) .navbar a:hover { color: #243c2b; background: #e8efdf; padding-left: 20px; }
+body:has(.garden-wrapper) .navbar a:hover { --TextColor: #243c2b; color: #243c2b; background: #e8efdf; padding-left: 20px; }
+body:has(.garden-wrapper) .navbar a svg { fill: none; stroke: currentColor; }
 body:has(.garden-wrapper) sl-drawer::part(panel) { background: #fffef9; color: #243c2b; font-family: 'Inter', system-ui, sans-serif; }
 
 @media (min-width: 900px) {
