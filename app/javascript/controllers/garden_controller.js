@@ -1,0 +1,379 @@
+import { Controller } from "@hotwired/stimulus"
+
+const STORAGE_KEY = "smartWatering.garden.v1"
+const DEMO_SENSORS = [
+  { id: "temperature-1", type: "temp", name: "Temperature · T-01", health: "healthy", reading: "24°C", initialZoneId: 1 },
+  { id: "humidity-1", type: "humidity", name: "Humidity · H-01", health: "healthy", reading: "65%", initialZoneId: 1 },
+  { id: "brightness-1", type: "brightness", name: "Brightness · B-01", health: "healthy", reading: "850 lx", initialZoneId: 1 },
+  { id: "temperature-2", type: "temp", name: "Temperature · T-02", health: "healthy", reading: "19°C", initialZoneId: 2 },
+  { id: "humidity-2", type: "humidity", name: "Humidity · H-02", health: "healthy", reading: "80%", initialZoneId: 2 },
+  { id: "brightness-2", type: "brightness", name: "Brightness · B-02", health: "healthy", reading: "620 lx", initialZoneId: 2 },
+  { id: "temperature-3", type: "temp", name: "Temperature · T-03", health: "healthy", reading: "22°C" },
+  { id: "humidity-3", type: "humidity", name: "Humidity · H-03", health: "low-battery", reading: "58%" },
+  { id: "brightness-3", type: "brightness", name: "Brightness · B-03", health: "offline", reading: null }
+]
+const SENSOR_HEALTH = {
+  healthy: "Healthy", "low-battery": "Low battery", offline: "Offline"
+}
+
+/** Manages the Garden demo and saves each zone's configuration in this browser. */
+export default class extends Controller {
+  static targets = [
+    "title", "zoneList", "zoneBtn", "zoneAdd", "crop", "schedule",
+    "temp", "humidity", "brightness", "sensorTags", "emptySensors",
+    "readingsNote", "storageNotice", "zoneName", "nameError", "zoneContent", "emptyGarden",
+    "sensorSelect", "sensorAssign"
+  ]
+
+  /** Restores state and rebuilds buttons after initial loading or a Turbo visit. */
+  connect() {
+    this.state = this.loadState()
+    this.renderZoneButtons()
+    this.renderSelectedZone()
+    console.log("SUCCESS: Garden controller connected.")
+  }
+
+  /** @returns {object} A fresh demo state when no saved zones are available. */
+  defaultState() {
+    return {
+      version: 1,
+      numberingVersion: 1,
+      selectedZoneId: 1,
+      nextZoneId: 3,
+      zones: [
+        { id: 1, name: "Zone 1", crop: "Tomatoes", schedule: "Every 2 days - 6:00 AM", sensorIds: ["temperature-1", "humidity-1", "brightness-1"] },
+        { id: 2, name: "Zone 2", crop: "Lettuce", schedule: "Every day - 7:00 AM", sensorIds: ["temperature-2", "humidity-2", "brightness-2"] }
+      ]
+    }
+  }
+
+  /** @returns {object} Valid saved state, or usable defaults if storage fails. */
+  loadState() {
+    this.showStorageNotice("")
+    try {
+      const savedText = window.localStorage.getItem(STORAGE_KEY)
+      if (savedText === null) return this.state || this.defaultState()
+
+      const savedState = JSON.parse(savedText)
+      if (!this.isValidState(savedState)) throw new Error("Invalid saved garden data")
+
+      savedState.zones.forEach((zone) => {
+        zone.name = (zone.name ?? `Zone ${zone.id}`).trim()
+        zone.sensorIds = this.sensorIdsForZone(zone)
+      })
+      const highestId = savedState.zones.reduce((highest, zone) => Math.max(highest, zone.id), 2)
+      savedState.nextZoneId = Math.max(highestId + 1, Number.isSafeInteger(savedState.nextZoneId) ? savedState.nextZoneId : 0)
+      this.restoreZoneNumbering(savedState)
+      if (!savedState.zones.some((zone) => zone.id === savedState.selectedZoneId)) {
+        savedState.selectedZoneId = savedState.zones[0]?.id ?? null
+      }
+      return savedState
+    } catch (error) {
+      this.showStorageNotice(
+        "Saved zones could not be loaded. You can keep editing, but changes may be lost when you leave or reload this page."
+      )
+      console.warn("Garden storage could not be loaded:", error)
+      return this.state || this.defaultState()
+    }
+  }
+
+  /** @param {object} state Repairs old generated names once, retaining custom names and device identities. */
+  restoreZoneNumbering(state) {
+    if (state.numberingVersion === 1) return
+    const automaticZones = state.zones.filter((zone) => zone.name === `Zone ${zone.id}`)
+    const reservedNames = new Set(state.zones.filter((zone) => !automaticZones.includes(zone)).map((zone) => zone.name.toLowerCase()))
+    automaticZones.forEach((zone) => {
+      zone.name = this.nextZoneName(reservedNames, state.zones.length)
+      reservedNames.add(zone.name.toLowerCase())
+    })
+    state.numberingVersion = 1
+  }
+
+  /** @param {Set<string>} usedNames @param {number} zoneCount Finds the first free display number. @returns {string} */
+  nextZoneName(usedNames, zoneCount) {
+    for (let number = 1; number <= zoneCount + 1; number += 1) {
+      if (!usedNames.has(`zone ${number}`)) return `Zone ${number}`
+    }
+  }
+
+  /** @param {unknown} state Saved JSON to check before displaying it. @returns {boolean} */
+  isValidState(state) {
+    if (!state || state.version !== 1 || !Array.isArray(state.zones)) {
+      return false
+    }
+
+    const crops = Array.from(this.cropTarget.options, (option) => option.value)
+    const schedules = Array.from(this.scheduleTarget.options, (option) => option.value)
+    const uniqueIds = new Set()
+    const uniqueNames = new Set()
+    const assignedSensors = new Set()
+
+    return state.zones.every((zone) => {
+      if (!zone || !Number.isSafeInteger(zone.id) || zone.id < 1 || uniqueIds.has(zone.id)) return false
+      const name = zone.name ?? `Zone ${zone.id}`
+      if (typeof name !== "string" || !name.trim() || name.trim().length > 60) return false
+      const normalizedName = name.trim().toLowerCase()
+      if (uniqueNames.has(normalizedName)) return false
+      uniqueIds.add(zone.id)
+      uniqueNames.add(normalizedName)
+      return crops.includes(zone.crop) && schedules.includes(zone.schedule) && this.isValidSensorAssignment(zone, assignedSensors)
+    })
+  }
+
+  /** @param {object} zone Restores original demo assignments for older saves. @returns {string[]} */
+  sensorIdsForZone(zone) {
+    return zone.sensorIds ?? DEMO_SENSORS.filter((sensor) => sensor.initialZoneId === zone.id).map((sensor) => sensor.id)
+  }
+
+  /** @param {object} zone @param {Set<string>} assigned Checks unique devices and one sensor per reading type. @returns {boolean} */
+  isValidSensorAssignment(zone, assigned) {
+    const ids = this.sensorIdsForZone(zone)
+    if (!Array.isArray(ids)) return false
+    const types = new Set()
+    return ids.every((id) => {
+      const sensor = DEMO_SENSORS.find((sensor) => sensor.id === id)
+      if (!sensor || assigned.has(id) || types.has(sensor.type)) return false
+      assigned.add(id)
+      types.add(sensor.type)
+      return true
+    })
+  }
+
+  /** Saves current state without interrupting editing if browser storage is unavailable. */
+  saveState() {
+    try {
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state))
+      this.showStorageNotice("")
+      console.log("SUCCESS: Garden zones saved in this browser.")
+    } catch (error) {
+      this.showStorageNotice("Changes could not be saved in this browser. They may be lost when you leave or reload this page.")
+      console.warn("Garden changes could not be saved:", error)
+    }
+  }
+
+  /** @param {string} message Storage feedback; an empty message hides the notice. */
+  showStorageNotice(message) {
+    this.storageNoticeTarget.textContent = message
+    this.storageNoticeTarget.hidden = message.length === 0
+  }
+
+  /** Replaces cached zone buttons so a Turbo restoration never duplicates them. */
+  renderZoneButtons() {
+    this.state.zones.sort((left, right) => left.name.localeCompare(right.name, "en", { numeric: true, sensitivity: "base" }))
+    this.zoneBtnTargets.forEach((button) => button.remove())
+    this.state.zones.forEach((zone) => this.appendZoneButton(zone))
+  }
+
+  /** @param {object} zone A zone with a stable numeric identifier. @returns {HTMLButtonElement} */
+  appendZoneButton(zone) {
+    const button = document.createElement("button")
+    button.type = "button"
+    button.className = "zone-btn"
+    button.textContent = zone.name
+    button.dataset.gardenTarget = "zoneBtn"
+    button.dataset.zoneId = String(zone.id)
+    button.dataset.action = "click->garden#selectZone"
+    button.setAttribute("aria-pressed", "false")
+    this.zoneListTarget.insertBefore(button, this.zoneAddTarget)
+    return button
+  }
+
+  /** @param {MouseEvent} event The selected zone button's click event. */
+  selectZone(event) {
+    const zoneId = Number(event.currentTarget.dataset.zoneId)
+    if (!this.state.zones.some((zone) => zone.id === zoneId)) return
+
+    this.state.selectedZoneId = zoneId
+    this.renderSelectedZone()
+    this.saveState()
+    console.log(`SUCCESS: Selected Zone ${zoneId}.`)
+  }
+
+  /** Creates and selects the next numbered zone without assigning simulated sensors. */
+  addZone() {
+    const nextId = this.state.nextZoneId
+    if (!Number.isSafeInteger(nextId)) return
+
+    const usedNames = new Set(this.state.zones.map((zone) => zone.name.toLowerCase()))
+    const name = this.nextZoneName(usedNames, this.state.zones.length)
+    const zone = { id: nextId, name, crop: "Carrots", schedule: "Every 3 days - 8:00 PM", sensorIds: [] }
+    this.state.nextZoneId = nextId + 1
+    this.state.zones.push(zone)
+    this.state.selectedZoneId = zone.id
+    this.renderZoneButtons()
+    this.renderSelectedZone()
+    const button = this.zoneBtnTargets.find((button) => Number(button.dataset.zoneId) === zone.id)
+    button.focus()
+    this.saveState()
+    console.log(`SUCCESS: Created and selected ${zone.name} (ID ${zone.id}).`)
+  }
+
+  /** @param {SubmitEvent} event Saves a trimmed, unique name for the selected zone. */
+  renameZone(event) {
+    event.preventDefault()
+    const zone = this.state.zones.find((zone) => zone.id === this.state.selectedZoneId)
+    if (!zone) return
+
+    const name = this.zoneNameTarget.value.trim()
+    if (!name || name.length > 60) {
+      this.showNameError("Enter a zone name between 1 and 60 characters.")
+      return
+    }
+    if (this.state.zones.some((other) => other.id !== zone.id && other.name.toLowerCase() === name.toLowerCase())) {
+      this.showNameError("Another zone already uses this name.")
+      return
+    }
+
+    zone.name = name
+    this.renderZoneButtons()
+    this.renderSelectedZone()
+    this.saveState()
+    console.log(`SUCCESS: Renamed Zone ${zone.id} to ${name}.`)
+  }
+
+  /** @param {string} message Explains a rejected name and focuses the field to correct it. */
+  showNameError(message) {
+    this.nameErrorTarget.textContent = message
+    this.nameErrorTarget.hidden = false
+    this.zoneNameTarget.setAttribute("aria-invalid", "true")
+    this.zoneNameTarget.focus()
+  }
+
+  /** Clears name feedback when editing the field or switching to another zone. */
+  clearNameError() {
+    this.nameErrorTarget.hidden = true
+    this.nameErrorTarget.textContent = ""
+    this.zoneNameTarget.removeAttribute("aria-invalid")
+  }
+
+  /** Immediately deletes the selected zone and selects its nearest remaining neighbour. */
+  deleteZone() {
+    const index = this.state.zones.findIndex((zone) => zone.id === this.state.selectedZoneId)
+    const zone = this.state.zones[index]
+    if (!zone) return
+
+    this.state.zones.splice(index, 1)
+    this.state.selectedZoneId = this.state.zones[Math.min(index, this.state.zones.length - 1)]?.id ?? null
+    this.zoneBtnTargets.find((button) => Number(button.dataset.zoneId) === zone.id).remove()
+    this.renderSelectedZone()
+    const selectedButton = this.zoneBtnTargets.find((button) => Number(button.dataset.zoneId) === this.state.selectedZoneId)
+    const focusTarget = selectedButton || this.zoneAddTarget
+    focusTarget.focus()
+    this.saveState()
+    console.log(`SUCCESS: Deleted Zone ${zone.id}.`)
+  }
+
+  /** Saves the selected zone's crop and schedule when either configuration field changes. */
+  updateConfiguration() {
+    const zone = this.state.zones.find((zone) => zone.id === this.state.selectedZoneId)
+    if (!zone) return
+    zone.crop = this.cropTarget.value
+    zone.schedule = this.scheduleTarget.value
+    this.saveState()
+    console.log(`SUCCESS: Updated Zone ${zone.id} configuration.`)
+  }
+
+  /** Updates the selection, configuration and sensor display from the same zone state. */
+  renderSelectedZone() {
+    const zone = this.state.zones.find((zone) => zone.id === this.state.selectedZoneId)
+    this.clearNameError()
+    this.zoneContentTargets.forEach((content) => { content.hidden = !zone })
+    this.emptyGardenTarget.hidden = Boolean(zone)
+    if (!zone) {
+      this.titleTarget.textContent = "Garden - configuration"
+      this.zoneNameTarget.value = ""
+      return
+    }
+    this.zoneBtnTargets.forEach((button) => {
+      const isSelected = Number(button.dataset.zoneId) === zone.id
+      button.classList.toggle("active", isSelected)
+      button.setAttribute("aria-pressed", String(isSelected))
+    })
+    this.titleTarget.textContent = `${zone.name} - configuration`
+    this.zoneNameTarget.value = zone.name
+    this.cropTarget.value = zone.crop
+    this.scheduleTarget.value = zone.schedule
+    this.renderSensorReadings(zone)
+  }
+
+  /** @param {object} zone Lists unassigned devices for reading types still missing in the zone. @returns {object[]} */
+  availableSensors(zone) {
+    const assignedIds = new Set(this.state.zones.flatMap((other) => other.sensorIds))
+    const assignedTypes = new Set(DEMO_SENSORS.filter((sensor) => zone.sensorIds.includes(sensor.id)).map((sensor) => sensor.type))
+    return DEMO_SENSORS.filter((sensor) => !assignedIds.has(sensor.id) && !assignedTypes.has(sensor.type))
+  }
+
+  /** Enables assignment only after an available sensor has been selected. */
+  updateSensorButton() {
+    this.sensorAssignTarget.disabled = !this.sensorSelectTarget.value
+  }
+
+  /** @param {SubmitEvent} event Assigns an available demo device to the active zone. */
+  assignSensor(event) {
+    event.preventDefault()
+    const zone = this.state.zones.find((zone) => zone.id === this.state.selectedZoneId)
+    if (!zone) return
+    const id = this.sensorSelectTarget.value
+    if (!this.availableSensors(zone).some((sensor) => sensor.id === id)) return
+
+    zone.sensorIds.push(id)
+    this.renderSensorReadings(zone)
+    this.sensorSelectTarget.focus()
+    this.saveState()
+    console.log(`SUCCESS: Assigned sensor ${id} to Zone ${zone.id}.`)
+  }
+
+  /** @param {MouseEvent} event Removes a device from this zone, making it available elsewhere. */
+  removeSensor(event) {
+    const zone = this.state.zones.find((zone) => zone.id === this.state.selectedZoneId)
+    const id = event.currentTarget.dataset.sensorId
+    if (!zone || !zone.sensorIds.includes(id)) return
+
+    zone.sensorIds = zone.sensorIds.filter((sensorId) => sensorId !== id)
+    this.renderSensorReadings(zone)
+    this.sensorSelectTarget.focus()
+    this.saveState()
+    console.log(`SUCCESS: Removed sensor ${id} from Zone ${zone.id}.`)
+  }
+
+  /** @param {object} sensor Creates an accessible row with a labelled health state. @returns {HTMLLIElement} */
+  sensorElement(sensor) {
+    const item = document.createElement("li")
+    item.className = "sensor-item"
+    const name = document.createElement("span")
+    name.className = "sensor-name"
+    name.textContent = sensor.name
+    const health = document.createElement("span")
+    health.className = `sensor-health ${sensor.health}`
+    health.textContent = SENSOR_HEALTH[sensor.health]
+    const remove = document.createElement("button")
+    remove.type = "button"
+    remove.className = "sensor-remove"
+    remove.textContent = "×"
+    remove.setAttribute("aria-label", `Remove ${sensor.name}`)
+    remove.dataset.sensorId = sensor.id
+    remove.dataset.action = "click->garden#removeSensor"
+    item.append(name, health, remove)
+    return item
+  }
+
+  /** @param {object} zone Displays device assignments, simulated health and available demo readings. */
+  renderSensorReadings(zone) {
+    const sensors = DEMO_SENSORS.filter((sensor) => zone.sensorIds.includes(sensor.id))
+    this.sensorTagsTarget.replaceChildren(...sensors.map((sensor) => this.sensorElement(sensor)))
+    this.sensorTagsTarget.hidden = sensors.length === 0
+    this.emptySensorsTarget.hidden = sensors.length > 0
+    this.readingsNoteTarget.textContent = sensors.length > 0
+      ? "Simulated sensor readings for this demo zone."
+      : "No sensor readings available."
+    const available = this.availableSensors(zone)
+    this.sensorSelectTarget.replaceChildren(new Option(available.length ? "Select a sensor" : "No sensors available", ""))
+    available.forEach((sensor) => this.sensorSelectTarget.add(new Option(sensor.name, sensor.id)))
+    this.sensorSelectTarget.disabled = available.length === 0
+    this.updateSensorButton()
+    for (const type of ["temp", "humidity", "brightness"]) {
+      const sensor = sensors.find((sensor) => sensor.type === type)
+      this[`${type}Target`].textContent = sensor?.health === "offline" ? "—" : sensor?.reading ?? "—"
+    }
+  }
+}

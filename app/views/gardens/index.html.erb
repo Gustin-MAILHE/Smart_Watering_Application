@@ -1,0 +1,116 @@
+<main class="garden-wrapper" data-controller="garden">
+  <div class="garden-heading">
+    <p class="garden-eyebrow">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+      </svg>
+    </p>
+    <h1 class="garden-main-title" data-garden-target="title" aria-live="polite">Zone 1 - configuration</h1>
+    <p class="garden-description">A little care. A greener garden.</p>
+  </div>
+
+  <div class="garden-page">
+    <!-- Zone selection -->
+    <div class="garden-card full-width">
+      <p class="card-subtitle">Vegetable garden area</p>
+      <div class="zone-list" data-garden-target="zoneList" role="group" aria-label="Garden zones">
+        <button type="button"
+                class="zone-btn active"
+                data-garden-target="zoneBtn"
+                data-zone-id="1"
+                aria-pressed="true"
+                data-action="click->garden#selectZone">
+          Zone 1
+        </button>
+
+        <button type="button"
+                class="zone-btn"
+                data-garden-target="zoneBtn"
+                data-zone-id="2"
+                aria-pressed="false"
+                data-action="click->garden#selectZone">
+          Zone 2
+        </button>
+
+        <button type="button"
+                class="zone-add"
+                data-garden-target="zoneAdd"
+                data-action="click->garden#addZone"
+                aria-label="Add a new zone"
+                title="Add a new zone">
+          +
+        </button>
+      </div>
+      <p class="garden-empty" data-garden-target="emptyGarden" hidden>No zones yet. Use + to create your first zone.</p>
+      <p class="garden-storage-notice" data-garden-target="storageNotice" role="status" hidden></p>
+    </div>
+
+    <!-- Selected zone configuration -->
+    <div class="garden-card" data-garden-target="zoneContent">
+      <p class="card-title">Configuration</p>
+
+      <form class="zone-name-form" data-action="submit->garden#renameZone">
+        <label class="field-label" for="zone-name">Zone name</label>
+        <div class="zone-name-row">
+          <input id="zone-name" class="field-input" type="text" value="Zone 1" required maxlength="60"
+                 data-garden-target="zoneName" data-action="input->garden#clearNameError"
+                 aria-describedby="zone-name-error">
+          <button type="submit" class="zone-save">Save name</button>
+        </div>
+        <p id="zone-name-error" class="garden-field-error" data-garden-target="nameError" role="alert" hidden></p>
+      </form>
+
+      <label class="field-label" for="crop-select">Crops</label>
+      <select id="crop-select" class="field-select" data-garden-target="crop"
+              data-action="change->garden#updateConfiguration">
+        <option value="Tomatoes">Tomatoes</option>
+        <option value="Lettuce">Lettuce</option>
+        <option value="Carrots">Carrots</option>
+        <option value="Strawberries">Strawberries</option>
+      </select>
+      <label class="field-label" for="schedule-select">Watering schedule</label>
+      <select id="schedule-select" class="field-select" data-garden-target="schedule"
+              data-action="change->garden#updateConfiguration">
+        <option value="Every 2 days - 6:00 AM">Every 2 days - 6:00 AM</option>
+        <option value="Every day - 7:00 AM">Every day - 7:00 AM</option>
+        <option value="Every 3 days - 8:00 PM">Every 3 days - 8:00 PM</option>
+      </select>
+      <button type="button" class="zone-delete" data-action="click->garden#deleteZone">Delete zone</button>
+    </div>
+
+    <!-- Sensor cards stack on mobile and sit alongside configuration on desktop. -->
+    <div class="garden-right-col" data-garden-target="zoneContent">
+      <!-- Sensors associated with the selected zone -->
+      <div class="garden-card">
+        <p class="card-title">Associated sensors</p>
+        <p class="garden-note">Demo devices · simulated health and readings</p>
+        <ul class="sensor-tags" data-garden-target="sensorTags"></ul>
+        <p class="garden-note" data-garden-target="emptySensors" hidden>No sensors assigned</p>
+        <form class="sensor-form" data-action="submit->garden#assignSensor">
+          <label class="field-label" for="sensor-select">Available sensor</label>
+          <select id="sensor-select" class="field-select" data-garden-target="sensorSelect"
+                  data-action="change->garden#updateSensorButton" required>
+            <option value="">Select a sensor</option>
+          </select>
+          <button type="submit" class="zone-save" data-garden-target="sensorAssign" disabled>Assign sensor</button>
+        </form>
+      </div>
+
+      <!-- Demo readings are never presented as live hardware measurements. -->
+      <div class="garden-card">
+        <p class="card-title">Sensor readings</p>
+        <p class="garden-note" data-garden-target="readingsNote">Simulated sensor readings for this demo zone.</p>
+        <div class="sensor-boxes">
+          <div class="sensor-reading"><span class="sensor-label">Temperature</span><div class="value-box" data-garden-target="temp">24°C</div></div>
+          <div class="sensor-reading"><span class="sensor-label">Humidity</span><div class="value-box" data-garden-target="humidity">65%</div></div>
+          <div class="sensor-reading"><span class="sensor-label">Brightness</span><div class="value-box" data-garden-target="brightness">850 lx</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hardware controls are reserved for a later integration. -->
+    <div class="garden-actions full-width" data-garden-target="zoneContent">
+      <button type="button" class="btn-start">Start</button>
+      <button type="button" class="btn-stop">Stop</button>
+    </div>
+  </div>
+</main>

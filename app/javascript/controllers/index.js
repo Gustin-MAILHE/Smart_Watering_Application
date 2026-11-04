@@ -7,5 +7,8 @@ import { application } from "controllers/application"
 import DrawerController from "controllers/drawer_controller"
 application.register("drawer", DrawerController)
 
+import GardenController from "controllers/garden_controller"
+application.register("garden", GardenController)
+
 import HelloController from "controllers/hello_controller"
 application.register("hello", HelloController)
