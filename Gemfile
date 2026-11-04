@@ -46,6 +46,9 @@ gem "json", "< 3.0"
 # User gestion
 gem "devise", ">= 4.9.3"
 
+# Use to render SVG image as a SVG
+gem "inline_svg"
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
