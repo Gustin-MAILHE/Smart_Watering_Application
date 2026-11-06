@@ -41,7 +41,7 @@ gem "thruster", require: false
 gem "image_processing", "~> 1.2"
 
 # json version
-gem "json", "< 3.0"
+gem "json", "< 4.0"
 
 # User gestion
 gem "devise", ">= 4.9.3"
