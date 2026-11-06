@@ -1,15 +1,15 @@
-<section class="garden-wrapper" data-controller="garden" aria-label="Garden zone configuration">
+<section class="garden-wrapper" data-controller="garden" aria-label="Configuration des zones du jardin">
   <div class="garden-heading">
-    <p class="garden-eyebrow">Your growing space</p>
+    <p class="garden-eyebrow">Votre espace de culture</p>
     <h1 class="garden-main-title" data-garden-target="title" aria-live="polite">Zone 1 - configuration</h1>
-    <p class="garden-description">Crops, sensors and watering settings.</p>
+    <p class="garden-description">Cultures, capteurs et réglages d’arrosage.</p>
   </div>
 
   <div class="garden-page">
     <!-- Zone selection -->
     <div class="garden-card full-width">
-      <p class="card-subtitle">Vegetable garden area</p>
-      <div class="zone-list" data-garden-target="zoneList" role="group" aria-label="Garden zones">
+      <p class="card-subtitle">Zones du potager</p>
+      <div class="zone-list" data-garden-target="zoneList" role="group" aria-label="Zones du jardin">
         <button type="button"
                 class="zone-btn active"
                 data-garden-target="zoneBtn"
@@ -32,12 +32,12 @@
                 class="zone-add"
                 data-garden-target="zoneAdd"
                 data-action="click->garden#addZone"
-                aria-label="Add a new zone"
-                title="Add a new zone">
+                aria-label="Ajouter une zone"
+                title="Ajouter une zone">
           +
         </button>
       </div>
-      <p class="garden-empty" data-garden-target="emptyGarden" hidden>No zones yet. Use + to create your first zone.</p>
+      <p class="garden-empty" data-garden-target="emptyGarden" hidden>Aucune zone pour le moment. Utilisez + pour créer votre première zone.</p>
       <p class="garden-storage-notice" data-garden-target="storageNotice" role="status" hidden></p>
     </div>
 
@@ -46,107 +46,107 @@
       <p class="card-title">Configuration</p>
 
       <form class="zone-name-form" data-action="submit->garden#renameZone">
-        <label class="field-label" for="zone-name">Zone name</label>
+        <label class="field-label" for="zone-name">Nom de la zone</label>
         <div class="zone-name-row">
           <input id="zone-name" class="field-input" type="text" value="Zone 1" required maxlength="60"
                  data-garden-target="zoneName" data-action="input->garden#clearNameError"
                  aria-describedby="zone-name-error">
-          <button type="submit" class="zone-save">Save name</button>
+          <button type="submit" class="zone-save">Enregistrer le nom</button>
         </div>
         <p id="zone-name-error" class="garden-field-error" data-garden-target="nameError" role="alert" hidden></p>
       </form>
 
-      <label class="field-label" for="crop-select">Crops</label>
+      <label class="field-label" for="crop-select">Cultures</label>
       <select id="crop-select" class="field-select" data-garden-target="crop"
               data-action="change->garden#updateConfiguration">
-        <option value="Tomatoes">Tomatoes</option>
-        <option value="Lettuce">Lettuce</option>
-        <option value="Carrots">Carrots</option>
-        <option value="Strawberries">Strawberries</option>
+        <option value="Tomatoes">Tomates</option>
+        <option value="Lettuce">Laitues</option>
+        <option value="Carrots">Carottes</option>
+        <option value="Strawberries">Fraises</option>
       </select>
-      <label class="field-label" for="schedule-select">Watering schedule</label>
+      <label class="field-label" for="schedule-select">Programme d’arrosage</label>
       <select id="schedule-select" class="field-select" data-garden-target="schedule"
               data-action="change->garden#updateConfiguration">
-        <option value="Every 2 days - 6:00 AM">Every 2 days - 6:00 AM</option>
-        <option value="Every day - 7:00 AM">Every day - 7:00 AM</option>
-        <option value="Every 3 days - 8:00 PM">Every 3 days - 8:00 PM</option>
+        <option value="Every 2 days - 6:00 AM">Tous les 2 jours à 06 h 00</option>
+        <option value="Every day - 7:00 AM">Tous les jours à 07 h 00</option>
+        <option value="Every 3 days - 8:00 PM">Tous les 3 jours à 20 h 00</option>
       </select>
-      <button type="button" class="zone-delete" data-action="click->garden#deleteZone">Delete zone</button>
+      <button type="button" class="zone-delete" data-action="click->garden#deleteZone">Supprimer la zone</button>
     </div>
 
     <!-- Sensor cards stack on mobile and sit alongside configuration on desktop. -->
     <div class="garden-right-col" data-garden-target="zoneContent">
       <!-- Sensors associated with the selected zone -->
       <div class="garden-card">
-        <p class="card-title">Associated sensors</p>
-        <p class="garden-note">Demo devices · simulated health and readings</p>
+        <p class="card-title">Capteurs associés</p>
+        <p class="garden-note">Capteurs de démonstration · état et mesures simulés</p>
         <ul class="sensor-tags" data-garden-target="sensorTags"></ul>
-        <p class="garden-note" data-garden-target="emptySensors" hidden>No sensors assigned</p>
+        <p class="garden-note" data-garden-target="emptySensors" hidden>Aucun capteur attribué</p>
         <form class="sensor-form" data-action="submit->garden#assignSensor">
-          <label class="field-label" for="sensor-select">Available sensor</label>
+          <label class="field-label" for="sensor-select">Capteur disponible</label>
           <select id="sensor-select" class="field-select" data-garden-target="sensorSelect"
                   data-action="change->garden#updateSensorButton" required>
-            <option value="">Select a sensor</option>
+            <option value="">Choisir un capteur</option>
           </select>
-          <button type="submit" class="zone-save" data-garden-target="sensorAssign" disabled>Assign sensor</button>
+          <button type="submit" class="zone-save" data-garden-target="sensorAssign" disabled>Attribuer le capteur</button>
         </form>
       </div>
 
       <!-- Demo readings are never presented as live hardware measurements. -->
       <div class="garden-card">
-        <p class="card-title">Sensor readings</p>
-        <p class="garden-note" data-garden-target="readingsNote">Simulated sensor readings for this demo zone.</p>
+        <p class="card-title">Mesures des capteurs</p>
+        <p class="garden-note" data-garden-target="readingsNote">Mesures simulées pour cette zone de démonstration.</p>
         <div class="sensor-boxes">
-          <div class="sensor-reading"><span class="sensor-label">Temperature</span><div class="value-box" data-garden-target="temp">24°C</div></div>
-          <div class="sensor-reading"><span class="sensor-label">Humidity</span><div class="value-box" data-garden-target="humidity">65%</div></div>
-          <div class="sensor-reading"><span class="sensor-label">Brightness</span><div class="value-box" data-garden-target="brightness">850 lx</div></div>
+          <div class="sensor-reading"><span class="sensor-label">Température</span><div class="value-box" data-garden-target="temp">24°C</div></div>
+          <div class="sensor-reading"><span class="sensor-label">Humidité</span><div class="value-box" data-garden-target="humidity">65%</div></div>
+          <div class="sensor-reading"><span class="sensor-label">Luminosité</span><div class="value-box" data-garden-target="brightness">850 lx</div></div>
         </div>
       </div>
     </div>
 
     <div class="garden-card full-width" data-garden-target="zoneContent">
-      <p class="card-title">Presets &amp; thresholds</p>
-      <p class="garden-note">Apply a preset to copy its thresholds to this zone. Updating or deleting a preset keeps other zones' settings.</p>
+      <p class="card-title">Préréglages et seuils</p>
+      <p class="garden-note">Appliquez un préréglage pour copier ses seuils dans cette zone. Sa modification ou sa suppression conserve les réglages des autres zones.</p>
       <div class="preset-grid">
         <div>
-          <label class="field-label" for="preset-select">Saved preset</label>
+          <label class="field-label" for="preset-select">Préréglage enregistré</label>
           <select id="preset-select" class="field-select" data-garden-target="presetSelect" data-action="change->garden#selectPreset">
-            <option value="">Select a preset</option>
+            <option value="">Choisir un préréglage</option>
           </select>
-          <button type="button" class="zone-save" data-garden-target="presetApply" data-action="click->garden#applyPreset" disabled>Apply preset</button>
+          <button type="button" class="zone-save" data-garden-target="presetApply" data-action="click->garden#applyPreset" disabled>Appliquer le préréglage</button>
         </div>
         <div>
-          <label class="field-label" for="preset-name">Preset name</label>
+          <label class="field-label" for="preset-name">Nom du préréglage</label>
           <input id="preset-name" class="field-input" type="text" maxlength="60" data-garden-target="presetName">
         </div>
       </div>
       <div class="threshold-grid">
         <div>
-          <label class="field-label" for="humidity-threshold">Humidity threshold (%)</label>
+          <label class="field-label" for="humidity-threshold">Seuil d’humidité (%)</label>
           <input id="humidity-threshold" class="field-input" type="number" min="0" max="100" step="any" data-garden-target="humidityThreshold" data-action="change->garden#updateThresholds">
         </div>
         <div>
-          <label class="field-label" for="temperature-threshold">Temperature threshold (°C)</label>
+          <label class="field-label" for="temperature-threshold">Seuil de température (°C)</label>
           <input id="temperature-threshold" class="field-input" type="number" min="-50" max="100" step="any" data-garden-target="temperatureThreshold" data-action="change->garden#updateThresholds">
         </div>
         <div>
-          <label class="field-label" for="brightness-threshold">Brightness threshold (lx)</label>
+          <label class="field-label" for="brightness-threshold">Seuil de luminosité (lx)</label>
           <input id="brightness-threshold" class="field-input" type="number" min="0" max="200000" step="any" data-garden-target="brightnessThreshold" data-action="change->garden#updateThresholds">
         </div>
       </div>
-      <p class="garden-note">Leave a threshold blank to disable it. Settings are saved locally; automatic watering is not connected yet.</p>
+      <p class="garden-note">Laissez un seuil vide pour le désactiver. Les réglages sont enregistrés dans ce navigateur ; l’arrosage automatique n’est pas encore connecté.</p>
       <p class="garden-field-error" data-garden-target="presetError" role="alert" hidden></p>
       <div class="preset-actions">
-        <button type="button" class="zone-save" data-action="click->garden#createPreset">Save as new preset</button>
-        <button type="button" class="zone-save" data-garden-target="presetUpdate" data-action="click->garden#updatePreset" disabled>Update preset</button>
-        <button type="button" class="zone-delete" data-garden-target="presetDelete" data-action="click->garden#deletePreset" disabled>Delete preset</button>
+        <button type="button" class="zone-save" data-action="click->garden#createPreset">Enregistrer un nouveau préréglage</button>
+        <button type="button" class="zone-save" data-garden-target="presetUpdate" data-action="click->garden#updatePreset" disabled>Modifier le préréglage</button>
+        <button type="button" class="zone-delete" data-garden-target="presetDelete" data-action="click->garden#deletePreset" disabled>Supprimer le préréglage</button>
       </div>
     </div>
 
     <!-- Hardware controls are reserved for a later integration. -->
     <div class="garden-actions full-width" data-garden-target="zoneContent">
-      <button type="button" class="btn-start">Start</button>
-      <button type="button" class="btn-stop">Stop</button>
+      <button type="button" class="btn-start">Démarrer</button>
+      <button type="button" class="btn-stop">Arrêter</button>
     </div>
   </div>
 </section>

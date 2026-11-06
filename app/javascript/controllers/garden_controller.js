@@ -2,18 +2,18 @@ import { Controller } from "@hotwired/stimulus"
 
 const STORAGE_KEY = "smartWatering.garden.v1"
 const DEMO_SENSORS = [
-  { id: "temperature-1", type: "temp", name: "Temperature · T-01", health: "healthy", reading: "24°C", initialZoneId: 1 },
-  { id: "humidity-1", type: "humidity", name: "Humidity · H-01", health: "healthy", reading: "65%", initialZoneId: 1 },
-  { id: "brightness-1", type: "brightness", name: "Brightness · B-01", health: "healthy", reading: "850 lx", initialZoneId: 1 },
-  { id: "temperature-2", type: "temp", name: "Temperature · T-02", health: "healthy", reading: "19°C", initialZoneId: 2 },
-  { id: "humidity-2", type: "humidity", name: "Humidity · H-02", health: "healthy", reading: "80%", initialZoneId: 2 },
-  { id: "brightness-2", type: "brightness", name: "Brightness · B-02", health: "healthy", reading: "620 lx", initialZoneId: 2 },
-  { id: "temperature-3", type: "temp", name: "Temperature · T-03", health: "healthy", reading: "22°C" },
-  { id: "humidity-3", type: "humidity", name: "Humidity · H-03", health: "low-battery", reading: "58%" },
-  { id: "brightness-3", type: "brightness", name: "Brightness · B-03", health: "offline", reading: null }
+  { id: "temperature-1", type: "temp", name: "Température · T-01", health: "healthy", reading: "24°C", initialZoneId: 1 },
+  { id: "humidity-1", type: "humidity", name: "Humidité · H-01", health: "healthy", reading: "65%", initialZoneId: 1 },
+  { id: "brightness-1", type: "brightness", name: "Luminosité · B-01", health: "healthy", reading: "850 lx", initialZoneId: 1 },
+  { id: "temperature-2", type: "temp", name: "Température · T-02", health: "healthy", reading: "19°C", initialZoneId: 2 },
+  { id: "humidity-2", type: "humidity", name: "Humidité · H-02", health: "healthy", reading: "80%", initialZoneId: 2 },
+  { id: "brightness-2", type: "brightness", name: "Luminosité · B-02", health: "healthy", reading: "620 lx", initialZoneId: 2 },
+  { id: "temperature-3", type: "temp", name: "Température · T-03", health: "healthy", reading: "22°C" },
+  { id: "humidity-3", type: "humidity", name: "Humidité · H-03", health: "low-battery", reading: "58%" },
+  { id: "brightness-3", type: "brightness", name: "Luminosité · B-03", health: "offline", reading: null }
 ]
 const SENSOR_HEALTH = {
-  healthy: "Healthy", "low-battery": "Low battery", offline: "Offline"
+  healthy: "En bon état", "low-battery": "Batterie faible", offline: "Hors ligne"
 }
 
 /** Manages the Garden demo and saves each zone's configuration in this browser. */
@@ -72,7 +72,7 @@ export default class extends Controller {
       return savedState
     } catch (error) {
       this.showStorageNotice(
-        "Saved zones could not be loaded. You can keep editing, but changes may be lost when you leave or reload this page."
+        "Impossible de charger les zones enregistrées. Vous pouvez continuer, mais vos modifications risquent d’être perdues en quittant ou en rechargeant la page."
       )
       console.warn("Garden storage could not be loaded:", error)
       return this.state || this.defaultState()
@@ -148,7 +148,7 @@ export default class extends Controller {
       this.showStorageNotice("")
       console.log("SUCCESS: Garden zones saved in this browser.")
     } catch (error) {
-      this.showStorageNotice("Changes could not be saved in this browser. They may be lost when you leave or reload this page.")
+      this.showStorageNotice("Impossible d’enregistrer les modifications dans ce navigateur. Elles risquent d’être perdues en quittant ou en rechargeant la page.")
       console.warn("Garden changes could not be saved:", error)
     }
   }
@@ -161,7 +161,7 @@ export default class extends Controller {
 
   /** Replaces cached zone buttons so a Turbo restoration never duplicates them. */
   renderZoneButtons() {
-    this.state.zones.sort((left, right) => left.name.localeCompare(right.name, "en", { numeric: true, sensitivity: "base" }))
+    this.state.zones.sort((left, right) => left.name.localeCompare(right.name, "fr", { numeric: true, sensitivity: "base" }))
     this.zoneBtnTargets.forEach((button) => button.remove())
     this.state.zones.forEach((zone) => this.appendZoneButton(zone))
   }
@@ -218,11 +218,11 @@ export default class extends Controller {
 
     const name = this.zoneNameTarget.value.trim()
     if (!name || name.length > 60) {
-      this.showNameError("Enter a zone name between 1 and 60 characters.")
+      this.showNameError("Saisissez un nom de zone de 1 à 60 caractères.")
       return
     }
     if (this.state.zones.some((other) => other.id !== zone.id && other.name.toLowerCase() === name.toLowerCase())) {
-      this.showNameError("Another zone already uses this name.")
+      this.showNameError("Une autre zone utilise déjà ce nom.")
       return
     }
 
@@ -282,7 +282,7 @@ export default class extends Controller {
     this.zoneContentTargets.forEach((content) => { content.hidden = !zone })
     this.emptyGardenTarget.hidden = Boolean(zone)
     if (!zone) {
-      this.titleTarget.textContent = "Garden - configuration"
+      this.titleTarget.textContent = "Jardin - configuration"
       this.zoneNameTarget.value = ""
       return
     }
@@ -353,7 +353,7 @@ export default class extends Controller {
     remove.type = "button"
     remove.className = "sensor-remove"
     remove.textContent = "×"
-    remove.setAttribute("aria-label", `Remove ${sensor.name}`)
+    remove.setAttribute("aria-label", `Retirer ${sensor.name}`)
     remove.dataset.sensorId = sensor.id
     remove.dataset.action = "click->garden#removeSensor"
     item.append(name, health, remove)
@@ -367,10 +367,10 @@ export default class extends Controller {
     this.sensorTagsTarget.hidden = sensors.length === 0
     this.emptySensorsTarget.hidden = sensors.length > 0
     this.readingsNoteTarget.textContent = sensors.length > 0
-      ? "Simulated sensor readings for this demo zone."
-      : "No sensor readings available."
+      ? "Mesures simulées pour cette zone de démonstration."
+      : "Aucune mesure disponible."
     const available = this.availableSensors(zone)
-    this.sensorSelectTarget.replaceChildren(new Option(available.length ? "Select a sensor" : "No sensors available", ""))
+    this.sensorSelectTarget.replaceChildren(new Option(available.length ? "Choisir un capteur" : "Aucun capteur disponible", ""))
     available.forEach((sensor) => this.sensorSelectTarget.add(new Option(sensor.name, sensor.id)))
     this.sensorSelectTarget.disabled = available.length === 0
     this.updateSensorButton()
@@ -428,7 +428,7 @@ export default class extends Controller {
     for (const key of ["humidity", "temperature", "brightness"]) {
       const field = this[`${key}ThresholdTarget`]
       if (!field.checkValidity()) {
-        this.showPresetError("Check the threshold ranges and enter valid numbers.")
+        this.showPresetError("Vérifiez les plages des seuils et saisissez des nombres valides.")
         return null
       }
       values[key] = field.value === "" ? null : Number(field.value)
@@ -452,7 +452,7 @@ export default class extends Controller {
   /** @param {object} zone Restores its values and lists reusable presets safely as text. */
   renderPresets(zone) {
     zone.thresholds ??= this.emptyThresholds()
-    this.presetSelectTarget.replaceChildren(new Option("Select a preset", ""))
+    this.presetSelectTarget.replaceChildren(new Option("Choisir un préréglage", ""))
     this.state.presets.forEach((preset) => this.presetSelectTarget.add(new Option(preset.name, preset.id)))
     this.presetSelectTarget.value = zone.presetId ?? ""
     for (const key of ["humidity", "temperature", "brightness"]) {
@@ -502,11 +502,11 @@ export default class extends Controller {
     const name = this.presetNameTarget.value.trim()
     const thresholds = this.readThresholds()
     if (!thresholds) return
-    if (!name || name.length > 60) return this.showPresetError("Enter a preset name between 1 and 60 characters.")
+    if (!name || name.length > 60) return this.showPresetError("Saisissez un nom de préréglage de 1 à 60 caractères.")
     if (this.state.presets.some((preset) => preset.id !== existing?.id && preset.name.toLowerCase() === name.toLowerCase())) {
-      return this.showPresetError("Another preset already uses this name.")
+      return this.showPresetError("Un autre préréglage utilise déjà ce nom.")
     }
-    if (Object.values(thresholds).every((value) => value === null)) return this.showPresetError("Enter at least one threshold to save a preset.")
+    if (Object.values(thresholds).every((value) => value === null)) return this.showPresetError("Saisissez au moins un seuil pour enregistrer un préréglage.")
     const id = existing?.id ?? this.state.nextPresetId
     if (!Number.isSafeInteger(id)) return
     if (existing) Object.assign(existing, { name, thresholds: { ...thresholds } })

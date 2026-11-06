@@ -1,6 +1,6 @@
 require "application_system_test_case"
 
-# Exercises Garden through real Stimulus actions, browser storage and Turbo visits.
+# Exercises Jardin through real Stimulus actions, browser storage and Turbo visits.
 class GardensTest < ApplicationSystemTestCase
   STORAGE_KEY = "smartWatering.garden.v1"
 
@@ -18,36 +18,36 @@ class GardensTest < ApplicationSystemTestCase
     assert_selector "h1", text: "Zone 2 - configuration"
     assert_selector ".zone-btn.active[aria-pressed='true']", text: "Zone 2", count: 1
     assert_selector ".zone-btn[aria-pressed='false']", text: "Zone 1"
-    assert_select "Crops", selected: "Lettuce"
-    assert_select "Watering schedule", selected: "Every day - 7:00 AM"
+    assert_select "Cultures", selected: "Laitues"
+    assert_select "Programme d’arrosage", selected: "Tous les jours à 07 h 00"
     assert_selector "[data-garden-target='temp']", text: "19°C"
     assert_selector "[data-garden-target='humidity']", text: "80%"
     assert_selector "[data-garden-target='brightness']", text: "620 lx"
-    assert_text "Simulated sensor readings"
+    assert_text "Mesures simulées"
 
     active_color = page.evaluate_script("getComputedStyle(document.querySelector('.zone-btn.active')).backgroundColor")
     inactive_color = page.evaluate_script("getComputedStyle(document.querySelector('.zone-btn:not(.active)')).backgroundColor")
     assert_not_equal inactive_color, active_color
 
     click_button "Zone 1"
-    assert_select "Crops", selected: "Tomatoes"
+    assert_select "Cultures", selected: "Tomates"
     assert_selector "[data-garden-target='temp']", text: "24°C"
   end
 
   test "new zones are numbered selected focused and have no sensor readings" do
-    click_button "Add a new zone"
+    click_button "Ajouter une zone"
 
     assert_selector "h1", text: "Zone 3 - configuration"
     assert_selector ".zone-btn.active[aria-pressed='true']", text: "Zone 3"
     assert_equal "Zone 3", page.evaluate_script("document.activeElement.textContent")
-    assert_select "Crops", selected: "Carrots"
-    assert_select "Watering schedule", selected: "Every 3 days - 8:00 PM"
-    assert_text "No sensors assigned"
+    assert_select "Cultures", selected: "Carottes"
+    assert_select "Programme d’arrosage", selected: "Tous les 3 jours à 20 h 00"
+    assert_text "Aucun capteur attribué"
     assert_selector ".value-box", text: "—", count: 3
     assert_no_selector ".sensor-tags"
-    assert_no_text "Simulated sensor readings"
+    assert_no_text "Mesures simulées"
 
-    click_button "Add a new zone"
+    click_button "Ajouter une zone"
     assert_selector "h1", text: "Zone 4 - configuration"
     assert_selector ".zone-btn", count: 4
 
@@ -55,34 +55,34 @@ class GardensTest < ApplicationSystemTestCase
     wait_for_garden
     assert_selector ".zone-btn", count: 4
     assert_selector ".zone-btn.active", text: "Zone 4"
-    click_button "Add a new zone"
+    click_button "Ajouter une zone"
     assert_selector ".zone-btn.active", text: "Zone 5"
   end
 
   test "each zone retains its own configuration after switching and reloading" do
-    select "Strawberries", from: "Crops"
-    select "Every 3 days - 8:00 PM", from: "Watering schedule"
+    select "Fraises", from: "Cultures"
+    select "Tous les 3 jours à 20 h 00", from: "Programme d’arrosage"
     click_button "Zone 2"
-    assert_select "Crops", selected: "Lettuce"
-    assert_select "Watering schedule", selected: "Every day - 7:00 AM"
+    assert_select "Cultures", selected: "Laitues"
+    assert_select "Programme d’arrosage", selected: "Tous les jours à 07 h 00"
 
-    click_button "Add a new zone"
-    select "Tomatoes", from: "Crops"
-    select "Every day - 7:00 AM", from: "Watering schedule"
+    click_button "Ajouter une zone"
+    select "Tomates", from: "Cultures"
+    select "Tous les jours à 07 h 00", from: "Programme d’arrosage"
     page.refresh
     wait_for_garden
 
     assert_selector "h1", text: "Zone 3 - configuration"
-    assert_select "Crops", selected: "Tomatoes"
-    assert_select "Watering schedule", selected: "Every day - 7:00 AM"
+    assert_select "Cultures", selected: "Tomates"
+    assert_select "Programme d’arrosage", selected: "Tous les jours à 07 h 00"
     click_button "Zone 1"
-    assert_select "Crops", selected: "Strawberries"
-    assert_select "Watering schedule", selected: "Every 3 days - 8:00 PM"
+    assert_select "Cultures", selected: "Fraises"
+    assert_select "Programme d’arrosage", selected: "Tous les 3 jours à 20 h 00"
   end
 
   test "Turbo visits and browser history restore zones without duplicate controls" do
-    click_button "Add a new zone"
-    select "Strawberries", from: "Crops"
+    click_button "Ajouter une zone"
+    select "Fraises", from: "Cultures"
     page.execute_script("window.gardenNavigationMarker = true; window.Turbo.visit(arguments[0])", root_path)
     assert_current_path root_path
     assert_selector ".home-page"
@@ -91,7 +91,7 @@ class GardensTest < ApplicationSystemTestCase
     wait_for_garden
     assert_selector ".zone-btn", count: 3
     assert_selector ".zone-btn.active", text: "Zone 3"
-    assert_select "Crops", selected: "Strawberries"
+    assert_select "Cultures", selected: "Fraises"
     assert page.evaluate_script("window.gardenNavigationMarker"), "Navigation should preserve the Turbo document"
 
     page.execute_script("window.Turbo.visit(arguments[0])", root_path)
@@ -100,7 +100,7 @@ class GardensTest < ApplicationSystemTestCase
     page.execute_script("window.Turbo.visit(arguments[0])", gardens_path)
     wait_for_garden
     assert_selector ".zone-btn", count: 3
-    click_button "Add a new zone"
+    click_button "Ajouter une zone"
     assert_selector ".zone-btn", count: 4
     assert_selector ".zone-btn.active", text: "Zone 4"
   end
@@ -120,9 +120,9 @@ class GardensTest < ApplicationSystemTestCase
       wait_for_garden
       assert_selector ".zone-btn", count: 2
       assert_selector ".zone-btn.active", text: "Zone 1"
-      assert_selector "[role='status']", text: "Saved zones could not be loaded"
+      assert_selector "[role='status']", text: "Impossible de charger les zones enregistrées"
 
-      click_button "Add a new zone"
+      click_button "Ajouter une zone"
       assert_selector ".zone-btn.active", text: "Zone 3"
       assert_no_selector "[role='status']"
     end
@@ -139,7 +139,7 @@ class GardensTest < ApplicationSystemTestCase
     wait_for_garden
 
     assert_selector ".zone-btn.active", text: "Zone 1"
-    assert_select "Crops", selected: "Tomatoes"
+    assert_select "Cultures", selected: "Tomates"
     assert_no_selector "[role='status']"
   end
 
@@ -149,14 +149,14 @@ class GardensTest < ApplicationSystemTestCase
         throw new DOMException("Storage is full", "QuotaExceededError");
       };
     JS
-    click_button "Add a new zone"
+    click_button "Ajouter une zone"
     assert_selector ".zone-btn.active", text: "Zone 3"
-    assert_selector "[role='status']", text: "Changes could not be saved"
-    select "Strawberries", from: "Crops"
+    assert_selector "[role='status']", text: "Impossible d’enregistrer les modifications"
+    select "Fraises", from: "Cultures"
     click_button "Zone 1"
     click_button "Zone 3"
-    assert_select "Crops", selected: "Strawberries"
-    click_button "Add a new zone"
+    assert_select "Cultures", selected: "Fraises"
+    click_button "Ajouter une zone"
     assert_selector ".zone-btn.active", text: "Zone 4"
   end
 
@@ -174,16 +174,16 @@ class GardensTest < ApplicationSystemTestCase
     wait_for_garden
 
     assert_selector ".zone-btn", count: 2
-    assert_selector "[role='status']", text: "Saved zones could not be loaded"
-    click_button "Add a new zone"
+    assert_selector "[role='status']", text: "Impossible de charger les zones enregistrées"
+    click_button "Ajouter une zone"
     assert_selector ".zone-btn.active", text: "Zone 3"
-    assert_selector "[role='status']", text: "Changes could not be saved"
+    assert_selector "[role='status']", text: "Impossible d’enregistrer les modifications"
   end
 
   test "mobile and desktop layouts remain usable with keyboard selection" do
     long_name = "A" * 60
-    fill_in "Zone name", with: long_name
-    click_button "Save name"
+    fill_in "Nom de la zone", with: long_name
+    click_button "Enregistrer le nom"
 
     [ [ 390, 844 ], [ 1280, 900 ] ].each do |width, height|
       page.current_window.resize_to(width, height)
@@ -200,42 +200,42 @@ class GardensTest < ApplicationSystemTestCase
   end
 
   test "renaming a zone preserves its identity configuration and readings after reloading" do
-    select "Strawberries", from: "Crops"
-    select "Every day - 7:00 AM", from: "Watering schedule"
-    fill_in "Zone name", with: "  Greenhouse  "
-    click_button "Save name"
+    select "Fraises", from: "Cultures"
+    select "Tous les jours à 07 h 00", from: "Programme d’arrosage"
+    fill_in "Nom de la zone", with: "  Greenhouse  "
+    click_button "Enregistrer le nom"
 
     assert_selector "h1", text: "Greenhouse - configuration"
     assert_selector ".zone-btn.active[data-zone-id='1']", text: "Greenhouse"
-    assert_field "Zone name", with: "Greenhouse"
+    assert_field "Nom de la zone", with: "Greenhouse"
     assert_selector "[data-garden-target='temp']", text: "24°C"
     click_button "Zone 2"
-    assert_select "Crops", selected: "Lettuce"
+    assert_select "Cultures", selected: "Laitues"
     click_button "Greenhouse"
     page.refresh
     wait_for_garden
 
     assert_selector "h1", text: "Greenhouse - configuration"
-    assert_select "Crops", selected: "Strawberries"
-    assert_select "Watering schedule", selected: "Every day - 7:00 AM"
-    assert_field "Zone name", with: "Greenhouse"
+    assert_select "Cultures", selected: "Fraises"
+    assert_select "Programme d’arrosage", selected: "Tous les jours à 07 h 00"
+    assert_field "Nom de la zone", with: "Greenhouse"
     assert_selector ".zone-btn", count: 2
   end
 
   test "blank and duplicate names are rejected without changing the saved zone" do
-    fill_in "Zone name", with: "   "
-    click_button "Save name"
-    assert_selector "[role='alert']", text: "Enter a zone name"
+    fill_in "Nom de la zone", with: "   "
+    click_button "Enregistrer le nom"
+    assert_selector "[role='alert']", text: "Saisissez un nom de zone"
     assert_selector "#zone-name[aria-invalid='true']"
     assert_selector "h1", text: "Zone 1 - configuration"
 
-    fill_in "Zone name", with: " zone 2 "
+    fill_in "Nom de la zone", with: " zone 2 "
     assert_no_selector "[role='alert']"
-    click_button "Save name"
-    assert_selector "[role='alert']", text: "Another zone already uses this name"
+    click_button "Enregistrer le nom"
+    assert_selector "[role='alert']", text: "Une autre zone utilise déjà ce nom"
     click_button "Zone 2"
     assert_no_selector "[role='alert']"
-    assert_field "Zone name", with: "Zone 2"
+    assert_field "Nom de la zone", with: "Zone 2"
     page.refresh
     wait_for_garden
     assert_selector ".zone-btn", text: "Zone 1"
@@ -243,44 +243,44 @@ class GardensTest < ApplicationSystemTestCase
   end
 
   test "deleting a zone is immediate without a dialog and preserves the remaining zone settings" do
-    select "Strawberries", from: "Crops"
+    select "Fraises", from: "Cultures"
     click_button "Zone 2"
     page.execute_script(<<~JS)
       window.confirm = window.alert = window.prompt = function () {
         throw new Error("Deleting a zone must not open a dialog");
       };
     JS
-    click_button "Delete zone"
+    click_button "Supprimer la zone"
     assert_no_button "Zone 2"
     assert_selector ".zone-btn.active", text: "Zone 1"
     assert_equal "Zone 1", page.evaluate_script("document.activeElement.textContent")
-    assert_select "Crops", selected: "Strawberries"
+    assert_select "Cultures", selected: "Fraises"
     page.refresh
     wait_for_garden
     assert_selector ".zone-btn", count: 1
     assert_no_button "Zone 2"
-    assert_select "Crops", selected: "Strawberries"
-    click_button "Add a new zone"
+    assert_select "Cultures", selected: "Fraises"
+    click_button "Ajouter une zone"
     assert_selector ".zone-btn.active[data-zone-id='3']", text: "Zone 2"
   end
 
   test "deleting every zone keeps the garden empty until a new zone is created" do
     2.times do
-      click_button "Delete zone"
+      click_button "Supprimer la zone"
     end
     assert_no_selector ".zone-btn"
-    assert_text "No zones yet"
-    assert_no_field "Zone name"
-    assert_no_select "Crops"
+    assert_text "Aucune zone pour le moment"
+    assert_no_field "Nom de la zone"
+    assert_no_select "Cultures"
     assert_no_selector ".garden-right-col"
-    assert_no_button "Start"
-    assert_no_button "Delete zone"
-    assert_equal "Add a new zone", page.evaluate_script("document.activeElement.getAttribute('aria-label')")
+    assert_no_button "Démarrer"
+    assert_no_button "Supprimer la zone"
+    assert_equal "Ajouter une zone", page.evaluate_script("document.activeElement.getAttribute('aria-label')")
 
     page.refresh
     wait_for_garden
     assert_no_selector ".zone-btn"
-    assert_text "No zones yet"
+    assert_text "Aucune zone pour le moment"
     assert_no_selector "[role='status']"
     page.execute_script("window.Turbo.visit(arguments[0])", root_path)
     assert_current_path root_path
@@ -288,41 +288,41 @@ class GardensTest < ApplicationSystemTestCase
     page.go_back
     wait_for_garden
     assert_no_selector ".zone-btn"
-    click_button "Add a new zone"
+    click_button "Ajouter une zone"
     assert_selector ".zone-btn.active[data-zone-id='3']", text: "Zone 1"
-    assert_field "Zone name", with: "Zone 1"
-    assert_text "No sensors assigned"
+    assert_field "Nom de la zone", with: "Zone 1"
+    assert_text "Aucun capteur attribué"
     assert_selector ".value-box", text: "—", count: 3
   end
 
   test "new zone identifiers survive deletion and avoid names already in use" do
-    fill_in "Zone name", with: "Zone 3"
-    click_button "Save name"
-    click_button "Add a new zone"
+    fill_in "Nom de la zone", with: "Zone 3"
+    click_button "Enregistrer le nom"
+    click_button "Ajouter une zone"
     assert_selector ".zone-btn.active[data-zone-id='3']", text: "Zone 1"
-    click_button "Delete zone"
+    click_button "Supprimer la zone"
     page.refresh
     wait_for_garden
-    click_button "Add a new zone"
+    click_button "Ajouter une zone"
     assert_selector ".zone-btn.active[data-zone-id='4']", text: "Zone 1"
     assert_selector ".zone-btn", count: 3
     assert_selector ".zone-btn", text: "Zone 3", count: 1
   end
 
   test "creation fills numbering gaps and orders zone ten after zone nine" do
-    9.times { click_button "Add a new zone" }
+    9.times { click_button "Ajouter une zone" }
     assert_equal (1..11).map { |number| "Zone #{number}" }, all(".zone-btn").map(&:text)
     click_button "Zone 4", exact: true
-    click_button "Delete zone"
+    click_button "Supprimer la zone"
     page.refresh
     wait_for_garden
-    click_button "Add a new zone"
+    click_button "Ajouter une zone"
     assert_selector ".zone-btn.active[data-zone-id='12']", text: "Zone 4"
     assert_equal (1..11).map { |number| "Zone #{number}" }, all(".zone-btn").map(&:text)
     page.refresh
     wait_for_garden
     assert_selector ".zone-btn.active[data-zone-id='12']", text: "Zone 4"
-    assert_text "No sensors assigned"
+    assert_text "Aucun capteur attribué"
   end
 
   test "old automatic numbering is repaired without changing custom names configuration or identity" do
@@ -337,16 +337,16 @@ class GardensTest < ApplicationSystemTestCase
     page.refresh
     wait_for_garden
     assert_selector ".zone-btn.active[data-zone-id='19']", text: "Zone 4"
-    assert_select "Crops", selected: "Carrots"
-    assert_select "Watering schedule", selected: "Every day - 7:00 AM"
+    assert_select "Cultures", selected: "Carottes"
+    assert_select "Programme d’arrosage", selected: "Tous les jours à 07 h 00"
     assert_button "Greenhouse"
-    click_button "Add a new zone"
+    click_button "Ajouter une zone"
     assert_selector ".zone-btn.active[data-zone-id='20']", text: "Zone 5"
     page.refresh
     wait_for_garden
     assert_selector ".zone-btn.active[data-zone-id='20']", text: "Zone 5"
     click_button "Greenhouse"
-    assert_select "Crops", selected: "Strawberries"
+    assert_select "Cultures", selected: "Fraises"
   end
 
   test "zones saved before name editing remain usable" do
@@ -363,14 +363,14 @@ class GardensTest < ApplicationSystemTestCase
 
     assert_no_selector "[role='status']"
     assert_selector ".zone-btn.active", text: "Zone 2"
-    assert_select "Crops", selected: "Strawberries"
-    assert_field "Zone name", with: "Zone 2"
-    fill_in "Zone name", with: "Lettuce bed"
-    click_button "Save name"
+    assert_select "Cultures", selected: "Fraises"
+    assert_field "Nom de la zone", with: "Zone 2"
+    fill_in "Nom de la zone", with: "Laitues bed"
+    click_button "Enregistrer le nom"
     page.refresh
     wait_for_garden
-    assert_selector "h1", text: "Lettuce bed - configuration"
-    click_button "Add a new zone"
+    assert_selector "h1", text: "Laitues bed - configuration"
+    click_button "Ajouter une zone"
     assert_selector ".zone-btn.active[data-zone-id='3']", text: "Zone 2"
     assert_selector ".value-box", text: "—", count: 3
   end
@@ -403,8 +403,8 @@ class GardensTest < ApplicationSystemTestCase
           })()
         JS
         assert_equal width, metrics["width"]
-        assert metrics["centered"], "Garden should be centered at #{width}px"
-        assert metrics["fits"], "Garden should fit at #{width}px"
+        assert metrics["centered"], "Jardin should be centered at #{width}px"
+        assert metrics["fits"], "Jardin should fit at #{width}px"
         assert_equal columns, metrics["columns"]
         assert_equal "900", metrics["titleWeight"]
       end
@@ -412,61 +412,61 @@ class GardensTest < ApplicationSystemTestCase
   end
 
   test "demo sensors show health and readings independently for each zone and survive reloading" do
-    click_button "Add a new zone"
-    assert_button "Assign sensor", disabled: true
-    assert_select "Available sensor", options: [ "Select a sensor", "Temperature · T-03", "Humidity · H-03", "Brightness · B-03" ]
-    select "Temperature · T-03", from: "Available sensor"
-    click_button "Assign sensor"
-    assert_selector ".sensor-item", text: "Temperature · T-03"
-    assert_selector ".sensor-health", text: "Healthy"
+    click_button "Ajouter une zone"
+    assert_button "Attribuer le capteur", disabled: true
+    assert_select "Capteur disponible", options: [ "Choisir un capteur", "Température · T-03", "Humidité · H-03", "Luminosité · B-03" ]
+    select "Température · T-03", from: "Capteur disponible"
+    click_button "Attribuer le capteur"
+    assert_selector ".sensor-item", text: "Température · T-03"
+    assert_selector ".sensor-health", text: "En bon état"
     assert_selector "[data-garden-target='temp']", text: "22°C"
-    assert_select "Available sensor", options: [ "Select a sensor", "Humidity · H-03", "Brightness · B-03" ]
+    assert_select "Capteur disponible", options: [ "Choisir un capteur", "Humidité · H-03", "Luminosité · B-03" ]
 
-    select "Humidity · H-03", from: "Available sensor"
-    click_button "Assign sensor"
-    select "Brightness · B-03", from: "Available sensor"
-    click_button "Assign sensor"
-    assert_selector ".sensor-health", text: "Low battery"
-    assert_selector ".sensor-health", text: "Offline"
+    select "Humidité · H-03", from: "Capteur disponible"
+    click_button "Attribuer le capteur"
+    select "Luminosité · B-03", from: "Capteur disponible"
+    click_button "Attribuer le capteur"
+    assert_selector ".sensor-health", text: "Batterie faible"
+    assert_selector ".sensor-health", text: "Hors ligne"
     assert_selector "[data-garden-target='humidity']", text: "58%"
     assert_selector "[data-garden-target='brightness']", text: "—"
     assert_selector "#sensor-select:disabled"
-    assert_text "Demo devices · simulated health and readings"
+    assert_text "Capteurs de démonstration · état et mesures simulés"
 
     page.refresh
     wait_for_garden
     assert_selector ".sensor-item", count: 3
     assert_selector "[data-garden-target='temp']", text: "22°C"
     click_button "Zone 1"
-    assert_selector ".sensor-item", text: "Temperature · T-01"
-    assert_no_selector ".sensor-item", text: "Temperature · T-03"
+    assert_selector ".sensor-item", text: "Température · T-01"
+    assert_no_selector ".sensor-item", text: "Température · T-03"
     assert_selector "[data-garden-target='temp']", text: "24°C"
   end
 
   test "removing and deleting releases sensors for assignment to other zones" do
-    find("button[aria-label='Remove Temperature · T-01']").click
+    find("button[aria-label='Retirer Température · T-01']").click
     assert_selector "[data-garden-target='temp']", text: "—"
     assert_selector ".sensor-item", count: 2
     page.refresh
     wait_for_garden
     assert_selector ".sensor-item", count: 2
-    click_button "Add a new zone"
-    select "Temperature · T-01", from: "Available sensor"
-    click_button "Assign sensor"
+    click_button "Ajouter une zone"
+    select "Température · T-01", from: "Capteur disponible"
+    click_button "Attribuer le capteur"
     assert_selector "[data-garden-target='temp']", text: "24°C"
     assert_selector ".sensor-item", count: 1
     click_button "Zone 1"
-    assert_select "Available sensor", options: [ "Select a sensor", "Temperature · T-03" ]
+    assert_select "Capteur disponible", options: [ "Choisir un capteur", "Température · T-03" ]
     click_button "Zone 3"
-    click_button "Delete zone"
+    click_button "Supprimer la zone"
     click_button "Zone 1"
-    select "Temperature · T-01", from: "Available sensor"
-    click_button "Assign sensor"
+    select "Température · T-01", from: "Capteur disponible"
+    click_button "Attribuer le capteur"
     assert_selector ".sensor-item", count: 3
     assert_selector "[data-garden-target='temp']", text: "24°C"
   end
 
-  test "Garden follows the app theme and keeps the shared navigation icons" do
+  test "Jardin follows the app theme and keeps the shared navigation icons" do
     dark_card = page.evaluate_script("getComputedStyle(document.querySelector('.garden-card')).backgroundColor")
     navigation_script = <<~JS
       (() => {
@@ -492,68 +492,68 @@ class GardensTest < ApplicationSystemTestCase
   end
 
   test "presets can be created applied updated and deleted while zones keep independent snapshots" do
-    fill_in "Preset name", with: "Summer"
-    fill_in "Humidity threshold (%)", with: "40"
-    fill_in "Temperature threshold (°C)", with: "30"
-    fill_in "Brightness threshold (lx)", with: "900"
-    click_button "Save as new preset"
-    assert_select "Saved preset", selected: "Summer"
+    fill_in "Nom du préréglage", with: "Summer"
+    fill_in "Seuil d’humidité (%)", with: "40"
+    fill_in "Seuil de température (°C)", with: "30"
+    fill_in "Seuil de luminosité (lx)", with: "900"
+    click_button "Enregistrer un nouveau préréglage"
+    assert_select "Préréglage enregistré", selected: "Summer"
 
     click_button "Zone 2"
-    assert_field "Humidity threshold (%)", with: ""
-    select "Summer", from: "Saved preset"
-    click_button "Apply preset"
-    assert_field "Humidity threshold (%)", with: "40"
-    assert_field "Temperature threshold (°C)", with: "30"
-    assert_field "Brightness threshold (lx)", with: "900"
-    fill_in "Humidity threshold (%)", with: "55"
-    fill_in "Preset name", with: "Hot summer"
-    click_button "Update preset"
+    assert_field "Seuil d’humidité (%)", with: ""
+    select "Summer", from: "Préréglage enregistré"
+    click_button "Appliquer le préréglage"
+    assert_field "Seuil d’humidité (%)", with: "40"
+    assert_field "Seuil de température (°C)", with: "30"
+    assert_field "Seuil de luminosité (lx)", with: "900"
+    fill_in "Seuil d’humidité (%)", with: "55"
+    fill_in "Nom du préréglage", with: "Hot summer"
+    click_button "Modifier le préréglage"
 
     click_button "Zone 1"
-    assert_field "Humidity threshold (%)", with: "40"
-    assert_select "Saved preset", selected: "Hot summer"
-    click_button "Add a new zone"
-    assert_field "Humidity threshold (%)", with: ""
-    select "Hot summer", from: "Saved preset"
-    click_button "Apply preset"
-    assert_field "Humidity threshold (%)", with: "55"
+    assert_field "Seuil d’humidité (%)", with: "40"
+    assert_select "Préréglage enregistré", selected: "Hot summer"
+    click_button "Ajouter une zone"
+    assert_field "Seuil d’humidité (%)", with: ""
+    select "Hot summer", from: "Préréglage enregistré"
+    click_button "Appliquer le préréglage"
+    assert_field "Seuil d’humidité (%)", with: "55"
     page.refresh
     wait_for_garden
-    assert_select "Saved preset", selected: "Hot summer"
-    assert_field "Humidity threshold (%)", with: "55"
+    assert_select "Préréglage enregistré", selected: "Hot summer"
+    assert_field "Seuil d’humidité (%)", with: "55"
 
-    click_button "Delete preset"
-    assert_select "Saved preset", options: [ "Select a preset" ]
-    assert_field "Humidity threshold (%)", with: "55"
+    click_button "Supprimer le préréglage"
+    assert_select "Préréglage enregistré", options: [ "Choisir un préréglage" ]
+    assert_field "Seuil d’humidité (%)", with: "55"
     page.refresh
     wait_for_garden
-    assert_select "Saved preset", options: [ "Select a preset" ]
+    assert_select "Préréglage enregistré", options: [ "Choisir un préréglage" ]
     click_button "Zone 1"
-    assert_field "Humidity threshold (%)", with: "40"
+    assert_field "Seuil d’humidité (%)", with: "40"
   end
 
   test "presets reject empty names empty thresholds duplicates and out of range values" do
-    click_button "Save as new preset"
-    assert_text "Enter a preset name"
-    fill_in "Preset name", with: "Dry soil"
-    click_button "Save as new preset"
-    assert_text "Enter at least one threshold"
-    fill_in "Humidity threshold (%)", with: "101"
-    click_button "Save as new preset"
-    assert_text "Check the threshold ranges"
-    assert_select "Saved preset", options: [ "Select a preset" ]
+    click_button "Enregistrer un nouveau préréglage"
+    assert_text "Saisissez un nom de préréglage"
+    fill_in "Nom du préréglage", with: "Dry soil"
+    click_button "Enregistrer un nouveau préréglage"
+    assert_text "Saisissez au moins un seuil"
+    fill_in "Seuil d’humidité (%)", with: "101"
+    click_button "Enregistrer un nouveau préréglage"
+    assert_text "Vérifiez les plages des seuils"
+    assert_select "Préréglage enregistré", options: [ "Choisir un préréglage" ]
 
-    fill_in "Humidity threshold (%)", with: "0"
-    click_button "Save as new preset"
-    assert_select "Saved preset", selected: "Dry soil"
-    click_button "Save as new preset"
-    assert_text "Another preset already uses this name"
+    fill_in "Seuil d’humidité (%)", with: "0"
+    click_button "Enregistrer un nouveau préréglage"
+    assert_select "Préréglage enregistré", selected: "Dry soil"
+    click_button "Enregistrer un nouveau préréglage"
+    assert_text "Un autre préréglage utilise déjà ce nom"
     page.refresh
     wait_for_garden
-    assert_field "Humidity threshold (%)", with: "0"
-    assert_field "Temperature threshold (°C)", with: ""
-    assert_select "Saved preset", options: [ "Select a preset", "Dry soil" ]
+    assert_field "Seuil d’humidité (%)", with: "0"
+    assert_field "Seuil de température (°C)", with: ""
+    assert_select "Préréglage enregistré", options: [ "Choisir un préréglage", "Dry soil" ]
   end
 
   private
@@ -566,7 +566,7 @@ class GardensTest < ApplicationSystemTestCase
           document.querySelector('[data-controller="garden"]'), "garden"
         ))
       JS
-      raise Capybara::ElementNotFound, "Garden controller has not connected" unless connected
+      raise Capybara::ElementNotFound, "Jardin controller has not connected" unless connected
     end
   end
 end

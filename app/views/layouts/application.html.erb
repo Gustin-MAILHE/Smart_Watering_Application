@@ -1,10 +1,17 @@
 <!DOCTYPE html>
-<html data-theme="dark">
+<html lang="fr" data-theme="dark">
   <head>
-    <title><%= content_for(:title) || "Smart Watering Application" %></title>
+    <script>
+      try {
+        const theme = localStorage.getItem("smartWatering.theme");
+        if (["light", "dark"].includes(theme)) document.documentElement.dataset.theme = theme;
+      } catch (_) { /* Keep the default theme when browser storage is unavailable. */ }
+      document.documentElement.style.colorScheme = document.documentElement.dataset.theme;
+    </script>
+    <title><%= content_for(:title) || "Arrosage intelligent" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="Smart Watering Application">
+    <meta name="application-name" content="Arrosage intelligent">
     <meta name="mobile-web-app-capable" content="yes">
     <%#= csrf_meta_tags %>
     <%#= csp_meta_tag %>
@@ -28,13 +35,22 @@
     <%= yield :head %>
   </head>
 
-  <body>
+  <body data-controller="appearance"
+        data-action="scroll@window->appearance#updateScroll turbo:render@document->appearance#refresh turbo:load@document->appearance#updateScroll">
   <%= render "layouts/header" %>
 
-  <main class="app-main">
+  <% flash.each do |type, message| %>
+    <p class="flash-message" role="<%= type.to_s == "alert" ? "alert" : "status" %>"><%= message %></p>
+  <% end %>
+
+  <main class="app-main" id="main-content">
     <%= yield %>
   </main>
 
   <%= render "layouts/footer" %>
+  <button type="button" class="back-to-top" data-appearance-target="backToTop"
+          data-action="click->appearance#scrollToTop" aria-label="Retour en haut" title="Retour en haut" hidden>
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 14 6-6 6 6" /></svg>
+  </button>
   </body>
 </html>
