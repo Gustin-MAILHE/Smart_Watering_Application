@@ -466,6 +466,96 @@ class GardensTest < ApplicationSystemTestCase
     assert_selector "[data-garden-target='temp']", text: "24°C"
   end
 
+  test "Garden follows the app theme and keeps the shared navigation icons" do
+    dark_card = page.evaluate_script("getComputedStyle(document.querySelector('.garden-card')).backgroundColor")
+    navigation_script = <<~JS
+      (() => {
+        const nav = document.querySelector('.navbar');
+        const logo = nav.querySelector('a svg');
+        return [getComputedStyle(nav).backgroundColor, getComputedStyle(logo).fill];
+      })()
+    JS
+    garden_navigation = page.evaluate_script(navigation_script)
+    assert_not_equal "none", garden_navigation.last
+    assert_equal "none", page.evaluate_script("getComputedStyle(document.querySelector('a[href=\"/gardens\"] svg')).fill")
+    assert_not_equal "none", page.evaluate_script("getComputedStyle(document.querySelector('a[href=\"/gardens\"] svg')).stroke")
+
+    page.execute_script("document.documentElement.dataset.theme = 'light'")
+    light_card = page.evaluate_script("getComputedStyle(document.querySelector('.garden-card')).backgroundColor")
+    assert_not_equal dark_card, light_card
+    page.execute_script("document.documentElement.dataset.theme = 'dark'")
+    assert_equal dark_card, page.evaluate_script("getComputedStyle(document.querySelector('.garden-card')).backgroundColor")
+
+    page.execute_script("window.Turbo.visit(arguments[0])", root_path)
+    assert_selector ".home-page"
+    assert_equal garden_navigation, page.evaluate_script(navigation_script)
+  end
+
+  test "presets can be created applied updated and deleted while zones keep independent snapshots" do
+    fill_in "Preset name", with: "Summer"
+    fill_in "Humidity threshold (%)", with: "40"
+    fill_in "Temperature threshold (°C)", with: "30"
+    fill_in "Brightness threshold (lx)", with: "900"
+    click_button "Save as new preset"
+    assert_select "Saved preset", selected: "Summer"
+
+    click_button "Zone 2"
+    assert_field "Humidity threshold (%)", with: ""
+    select "Summer", from: "Saved preset"
+    click_button "Apply preset"
+    assert_field "Humidity threshold (%)", with: "40"
+    assert_field "Temperature threshold (°C)", with: "30"
+    assert_field "Brightness threshold (lx)", with: "900"
+    fill_in "Humidity threshold (%)", with: "55"
+    fill_in "Preset name", with: "Hot summer"
+    click_button "Update preset"
+
+    click_button "Zone 1"
+    assert_field "Humidity threshold (%)", with: "40"
+    assert_select "Saved preset", selected: "Hot summer"
+    click_button "Add a new zone"
+    assert_field "Humidity threshold (%)", with: ""
+    select "Hot summer", from: "Saved preset"
+    click_button "Apply preset"
+    assert_field "Humidity threshold (%)", with: "55"
+    page.refresh
+    wait_for_garden
+    assert_select "Saved preset", selected: "Hot summer"
+    assert_field "Humidity threshold (%)", with: "55"
+
+    click_button "Delete preset"
+    assert_select "Saved preset", options: [ "Select a preset" ]
+    assert_field "Humidity threshold (%)", with: "55"
+    page.refresh
+    wait_for_garden
+    assert_select "Saved preset", options: [ "Select a preset" ]
+    click_button "Zone 1"
+    assert_field "Humidity threshold (%)", with: "40"
+  end
+
+  test "presets reject empty names empty thresholds duplicates and out of range values" do
+    click_button "Save as new preset"
+    assert_text "Enter a preset name"
+    fill_in "Preset name", with: "Dry soil"
+    click_button "Save as new preset"
+    assert_text "Enter at least one threshold"
+    fill_in "Humidity threshold (%)", with: "101"
+    click_button "Save as new preset"
+    assert_text "Check the threshold ranges"
+    assert_select "Saved preset", options: [ "Select a preset" ]
+
+    fill_in "Humidity threshold (%)", with: "0"
+    click_button "Save as new preset"
+    assert_select "Saved preset", selected: "Dry soil"
+    click_button "Save as new preset"
+    assert_text "Another preset already uses this name"
+    page.refresh
+    wait_for_garden
+    assert_field "Humidity threshold (%)", with: "0"
+    assert_field "Temperature threshold (°C)", with: ""
+    assert_select "Saved preset", options: [ "Select a preset", "Dry soil" ]
+  end
+
   private
 
   # Waits for the controller to finish connecting instead of clicking static fallback HTML.

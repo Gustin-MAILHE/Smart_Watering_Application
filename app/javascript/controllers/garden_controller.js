@@ -22,12 +22,14 @@ export default class extends Controller {
     "title", "zoneList", "zoneBtn", "zoneAdd", "crop", "schedule",
     "temp", "humidity", "brightness", "sensorTags", "emptySensors",
     "readingsNote", "storageNotice", "zoneName", "nameError", "zoneContent", "emptyGarden",
-    "sensorSelect", "sensorAssign"
+    "sensorSelect", "sensorAssign", "presetSelect", "presetName", "presetError",
+    "presetApply", "presetUpdate", "presetDelete", "humidityThreshold", "temperatureThreshold", "brightnessThreshold"
   ]
 
   /** Restores state and rebuilds buttons after initial loading or a Turbo visit. */
   connect() {
     this.state = this.loadState()
+    this.initializePresets()
     this.renderZoneButtons()
     this.renderSelectedZone()
     console.log("SUCCESS: Garden controller connected.")
@@ -98,7 +100,7 @@ export default class extends Controller {
 
   /** @param {unknown} state Saved JSON to check before displaying it. @returns {boolean} */
   isValidState(state) {
-    if (!state || state.version !== 1 || !Array.isArray(state.zones)) {
+    if (!state || state.version !== 1 || !Array.isArray(state.zones) || !this.isValidPresetState(state)) {
       return false
     }
 
@@ -294,6 +296,7 @@ export default class extends Controller {
     this.cropTarget.value = zone.crop
     this.scheduleTarget.value = zone.schedule
     this.renderSensorReadings(zone)
+    this.renderPresets(zone)
   }
 
   /** @param {object} zone Lists unassigned devices for reading types still missing in the zone. @returns {object[]} */
@@ -375,5 +378,163 @@ export default class extends Controller {
       const sensor = sensors.find((sensor) => sensor.type === type)
       this[`${type}Target`].textContent = sensor?.health === "offline" ? "—" : sensor?.reading ?? "—"
     }
+  }
+
+  /** Upgrades older saves without changing their zones or sensor assignments. */
+  initializePresets() {
+    this.state.presets ??= []
+    const highestId = this.state.presets.reduce((highest, preset) => Math.max(highest, preset.id), 0)
+    this.state.nextPresetId = Math.max(highestId + 1, Number.isSafeInteger(this.state.nextPresetId) ? this.state.nextPresetId : 1)
+    this.state.zones.forEach((zone) => {
+      zone.thresholds ??= this.emptyThresholds()
+      if (!this.state.presets.some((preset) => preset.id === zone.presetId)) zone.presetId = null
+    })
+  }
+
+  /** @returns {object} Blank thresholds disable all three settings. */
+  emptyThresholds() {
+    return { humidity: null, temperature: null, brightness: null }
+  }
+
+  /** @param {unknown} values Checks stored units and numeric bounds. @returns {boolean} */
+  validThresholds(values) {
+    const bounds = { humidity: [0, 100], temperature: [-50, 100], brightness: [0, 200000] }
+    return Boolean(values && Object.entries(bounds).every(([key, [min, max]]) =>
+      values[key] === null || (typeof values[key] === "number" && Number.isFinite(values[key]) && values[key] >= min && values[key] <= max)))
+  }
+
+  /** @param {object} state Accepts legacy saves and checks the optional preset library. @returns {boolean} */
+  isValidPresetState(state) {
+    const presets = state.presets ?? []
+    if (!Array.isArray(presets)) return false
+    const ids = new Set()
+    const names = new Set()
+    const validPresets = presets.every((preset) => {
+      if (!preset || !Number.isSafeInteger(preset.id) || preset.id < 1 || ids.has(preset.id)) return false
+      if (typeof preset.name !== "string" || !preset.name.trim() || preset.name.length > 60) return false
+      const name = preset.name.trim().toLowerCase()
+      if (names.has(name) || !this.validThresholds(preset.thresholds)) return false
+      if (Object.values(preset.thresholds).every((value) => value === null)) return false
+      ids.add(preset.id)
+      names.add(name)
+      return true
+    })
+    return validPresets && state.zones.every((zone) => zone && (zone.thresholds === undefined || this.validThresholds(zone.thresholds)))
+  }
+
+  /** @returns {object|null} Current field values, or inline feedback for invalid input. */
+  readThresholds() {
+    const values = {}
+    for (const key of ["humidity", "temperature", "brightness"]) {
+      const field = this[`${key}ThresholdTarget`]
+      if (!field.checkValidity()) {
+        this.showPresetError("Check the threshold ranges and enter valid numbers.")
+        return null
+      }
+      values[key] = field.value === "" ? null : Number(field.value)
+    }
+    if (!this.validThresholds(values)) return null
+    return values
+  }
+
+  /** Saves manual threshold changes only to the active zone. */
+  updateThresholds() {
+    const zone = this.state.zones.find((zone) => zone.id === this.state.selectedZoneId)
+    const thresholds = this.readThresholds()
+    if (!zone || !thresholds) return
+    zone.thresholds = thresholds
+    zone.presetId = null
+    this.showPresetError("")
+    this.saveState()
+    console.log(`SUCCESS: Updated Zone ${zone.id} thresholds.`)
+  }
+
+  /** @param {object} zone Restores its values and lists reusable presets safely as text. */
+  renderPresets(zone) {
+    zone.thresholds ??= this.emptyThresholds()
+    this.presetSelectTarget.replaceChildren(new Option("Select a preset", ""))
+    this.state.presets.forEach((preset) => this.presetSelectTarget.add(new Option(preset.name, preset.id)))
+    this.presetSelectTarget.value = zone.presetId ?? ""
+    for (const key of ["humidity", "temperature", "brightness"]) {
+      this[`${key}ThresholdTarget`].value = zone.thresholds[key] ?? ""
+    }
+    this.selectPreset()
+    this.showPresetError("")
+  }
+
+  /** Selects a library entry for applying, editing or deleting without changing zone values. */
+  selectPreset() {
+    const preset = this.state.presets.find((preset) => preset.id === Number(this.presetSelectTarget.value))
+    this.presetNameTarget.value = preset?.name ?? ""
+    this.presetApplyTarget.disabled = !preset
+    this.presetUpdateTarget.disabled = !preset
+    this.presetDeleteTarget.disabled = !preset
+  }
+
+  /** Copies the chosen preset into the active zone; other zones keep their own snapshots. */
+  applyPreset() {
+    const zone = this.state.zones.find((zone) => zone.id === this.state.selectedZoneId)
+    const preset = this.state.presets.find((preset) => preset.id === Number(this.presetSelectTarget.value))
+    if (!zone || !preset) return
+    zone.thresholds = { ...preset.thresholds }
+    zone.presetId = preset.id
+    this.renderPresets(zone)
+    this.saveState()
+    console.log(`SUCCESS: Applied preset ${preset.id} to Zone ${zone.id}.`)
+  }
+
+  /** Creates a named preset from the currently displayed thresholds. */
+  createPreset() {
+    this.savePreset(false)
+  }
+
+  /** Updates the selected library entry from the currently displayed thresholds. */
+  updatePreset() {
+    this.savePreset(true)
+  }
+
+  /** @param {boolean} updating Validates the editor before creating or updating a library entry. */
+  savePreset(updating) {
+    const zone = this.state.zones.find((zone) => zone.id === this.state.selectedZoneId)
+    if (!zone) return
+    const existing = updating ? this.state.presets.find((preset) => preset.id === Number(this.presetSelectTarget.value)) : null
+    if (updating && !existing) return
+    const name = this.presetNameTarget.value.trim()
+    const thresholds = this.readThresholds()
+    if (!thresholds) return
+    if (!name || name.length > 60) return this.showPresetError("Enter a preset name between 1 and 60 characters.")
+    if (this.state.presets.some((preset) => preset.id !== existing?.id && preset.name.toLowerCase() === name.toLowerCase())) {
+      return this.showPresetError("Another preset already uses this name.")
+    }
+    if (Object.values(thresholds).every((value) => value === null)) return this.showPresetError("Enter at least one threshold to save a preset.")
+    const id = existing?.id ?? this.state.nextPresetId
+    if (!Number.isSafeInteger(id)) return
+    if (existing) Object.assign(existing, { name, thresholds: { ...thresholds } })
+    else {
+      this.state.presets.push({ id, name, thresholds: { ...thresholds } })
+      this.state.nextPresetId = id + 1
+    }
+    zone.thresholds = { ...thresholds }
+    zone.presetId = id
+    this.renderPresets(zone)
+    this.saveState()
+    console.log(`SUCCESS: Saved preset ${id}.`)
+  }
+
+  /** Removes the selected preset while retaining every zone's applied thresholds. */
+  deletePreset() {
+    const id = Number(this.presetSelectTarget.value)
+    if (!this.state.presets.some((preset) => preset.id === id)) return
+    this.state.presets = this.state.presets.filter((preset) => preset.id !== id)
+    this.state.zones.forEach((zone) => { if (zone.presetId === id) zone.presetId = null })
+    this.renderPresets(this.state.zones.find((zone) => zone.id === this.state.selectedZoneId))
+    this.saveState()
+    console.log(`SUCCESS: Deleted preset ${id}.`)
+  }
+
+  /** @param {string} message Shows inline validation feedback without opening a dialog. */
+  showPresetError(message) {
+    this.presetErrorTarget.textContent = message
+    this.presetErrorTarget.hidden = !message
   }
 }

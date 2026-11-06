@@ -1,11 +1,8 @@
 <section class="garden-wrapper" data-controller="garden" aria-label="Garden zone configuration">
   <div class="garden-heading">
-    <p class="garden-eyebrow">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-      </svg>
-    </p>
+    <p class="garden-eyebrow">Your growing space</p>
     <h1 class="garden-main-title" data-garden-target="title" aria-live="polite">Zone 1 - configuration</h1>
-    <p class="garden-description">A little care. A greener garden.</p>
+    <p class="garden-description">Crops, sensors and watering settings.</p>
   </div>
 
   <div class="garden-page">
@@ -104,6 +101,45 @@
           <div class="sensor-reading"><span class="sensor-label">Humidity</span><div class="value-box" data-garden-target="humidity">65%</div></div>
           <div class="sensor-reading"><span class="sensor-label">Brightness</span><div class="value-box" data-garden-target="brightness">850 lx</div></div>
         </div>
+      </div>
+    </div>
+
+    <div class="garden-card full-width" data-garden-target="zoneContent">
+      <p class="card-title">Presets &amp; thresholds</p>
+      <p class="garden-note">Apply a preset to copy its thresholds to this zone. Updating or deleting a preset keeps other zones' settings.</p>
+      <div class="preset-grid">
+        <div>
+          <label class="field-label" for="preset-select">Saved preset</label>
+          <select id="preset-select" class="field-select" data-garden-target="presetSelect" data-action="change->garden#selectPreset">
+            <option value="">Select a preset</option>
+          </select>
+          <button type="button" class="zone-save" data-garden-target="presetApply" data-action="click->garden#applyPreset" disabled>Apply preset</button>
+        </div>
+        <div>
+          <label class="field-label" for="preset-name">Preset name</label>
+          <input id="preset-name" class="field-input" type="text" maxlength="60" data-garden-target="presetName">
+        </div>
+      </div>
+      <div class="threshold-grid">
+        <div>
+          <label class="field-label" for="humidity-threshold">Humidity threshold (%)</label>
+          <input id="humidity-threshold" class="field-input" type="number" min="0" max="100" step="any" data-garden-target="humidityThreshold" data-action="change->garden#updateThresholds">
+        </div>
+        <div>
+          <label class="field-label" for="temperature-threshold">Temperature threshold (°C)</label>
+          <input id="temperature-threshold" class="field-input" type="number" min="-50" max="100" step="any" data-garden-target="temperatureThreshold" data-action="change->garden#updateThresholds">
+        </div>
+        <div>
+          <label class="field-label" for="brightness-threshold">Brightness threshold (lx)</label>
+          <input id="brightness-threshold" class="field-input" type="number" min="0" max="200000" step="any" data-garden-target="brightnessThreshold" data-action="change->garden#updateThresholds">
+        </div>
+      </div>
+      <p class="garden-note">Leave a threshold blank to disable it. Settings are saved locally; automatic watering is not connected yet.</p>
+      <p class="garden-field-error" data-garden-target="presetError" role="alert" hidden></p>
+      <div class="preset-actions">
+        <button type="button" class="zone-save" data-action="click->garden#createPreset">Save as new preset</button>
+        <button type="button" class="zone-save" data-garden-target="presetUpdate" data-action="click->garden#updatePreset" disabled>Update preset</button>
+        <button type="button" class="zone-delete" data-garden-target="presetDelete" data-action="click->garden#deletePreset" disabled>Delete preset</button>
       </div>
     </div>
 
