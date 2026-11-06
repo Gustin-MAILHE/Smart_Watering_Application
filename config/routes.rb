@@ -33,4 +33,6 @@ Rails.application.routes.draw do
 
   # Abouts
   resources :abouts, only: [ :index ]
+
+  resources :gardens, only: [ :index ]
 end

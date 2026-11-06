@@ -1,11 +1,10 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+# Distinct accounts satisfy Devise's unique email and username indexes.
+one:
+  email: garden-one@example.test
+  username: gardenerOne
+  encrypted_password: <%= Devise::Encryptor.digest(User, "GardenTest123!") %>
 
-# This model initially had no columns defined. If you add columns to the
-# model remove the "{}" from the fixture names and add the columns immediately
-# below each fixture, per the syntax in the comments below
-#
-one: {}
-# column: value
-#
-two: {}
-# column: value
+two:
+  email: garden-two@example.test
+  username: gardenerTwo
+  encrypted_password: <%= Devise::Encryptor.digest(User, "GardenTest123!") %>
