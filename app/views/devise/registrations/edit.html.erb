@@ -1,4 +1,4 @@
-<h2>Edit <%= resource_name.to_s.humanize %></h2>
+<h2>Modifier votre compte</h2>
 
 <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
   <%= render "devise/shared/error_messages", resource: resource %>
@@ -9,14 +9,14 @@
   </div>
 
   <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-    <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
+    <div>Confirmation en attente pour : <%= resource.unconfirmed_email %></div>
   <% end %>
 
   <div class="field">
-    <p><%= f.label :password %> <i>(leave blank if you don't want to change it)</i></p>
+    <p><%= f.label :password %> <i>(laissez ce champ vide pour conserver votre mot de passe)</i></p>
     <p><%= f.password_field :password, autocomplete: "new-password" %></p>
     <% if @minimum_password_length %>
-      <p><em><%= @minimum_password_length %> characters minimum</em></p>
+      <p><em><%= @minimum_password_length %> caractères minimum</em></p>
     <% end %>
   </div>
 
@@ -26,17 +26,17 @@
   </div>
 
   <div class="field">
-    <p><%= f.label :current_password %> <i>(we need your current password to confirm your changes)</i></p>
+    <p><%= f.label :current_password %> <i>(saisissez votre mot de passe actuel pour confirmer les modifications)</i></p>
     <p><%= f.password_field :current_password, autocomplete: "current-password" %></p>
   </div>
 
   <div class="actions">
-    <%= f.submit "Update" %>
+    <%= f.submit "Enregistrer les modifications" %>
   </div>
 <% end %>
 
-<h3>Cancel my account</h3>
+<h3>Supprimer mon compte</h3>
 
-<div>Unhappy? <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?", turbo_confirm: "Are you sure?" }, method: :delete %></div>
+<div>Vous souhaitez partir ? <%= button_to "Supprimer mon compte", registration_path(resource_name), data: { confirm: "Voulez-vous vraiment supprimer votre compte ?", turbo_confirm: "Voulez-vous vraiment supprimer votre compte ?" }, method: :delete %></div>
 
-<%= link_to "Back", :back %>
+<%= link_to "Retour", :back %>

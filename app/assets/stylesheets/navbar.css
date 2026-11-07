@@ -51,6 +51,22 @@
 
 sl-drawer::part(panel) {
     background-color: var(--BackgroundColor) ;
+    color: var(--TextColor);
+}
+
+sl-drawer::part(close-button) {
+    color: var(--TextColor);
+}
+
+/* Filled logos and outline icons must retain their original drawing style. */
+.navbar li a svg:not([fill="none"]) {
+    fill: currentColor;
+    stroke: none;
+}
+
+.navbar li a svg[fill="none"] {
+    fill: none;
+    stroke: currentColor;
 }
 
 .burger-button {
