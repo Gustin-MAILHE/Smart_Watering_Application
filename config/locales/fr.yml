@@ -2,7 +2,16 @@ fr:
   activerecord:
     models:
       user: compte
+      zone: zone
     attributes:
+      zone:
+        name: Nom
+        user: Propriétaire
+        crop: Culture
+        schedule: Programme d’arrosage
+        humidity_threshold: Seuil d’humidité
+        temperature_threshold: Seuil de température
+        brightness_threshold: Seuil de luminosité
       user:
         email: Adresse e-mail
         username: Nom d’utilisateur

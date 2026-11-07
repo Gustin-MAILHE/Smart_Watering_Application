@@ -35,4 +35,5 @@ Rails.application.routes.draw do
   resources :abouts, only: [ :index ]
 
   resources :gardens, only: [ :index ]
+  resources :garden_zones, only: [ :index, :create, :update, :destroy ]
 end

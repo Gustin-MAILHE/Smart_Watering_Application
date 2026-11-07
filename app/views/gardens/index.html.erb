@@ -1,8 +1,23 @@
-<section class="garden-wrapper" data-controller="garden" aria-label="Configuration des zones du jardin">
+<% content_for :head do %>
+  <meta name="turbo-cache-control" content="no-cache">
+<% end %>
+
+<section class="garden-wrapper" data-controller="garden" aria-label="Configuration des zones du jardin"
+         data-garden-account-id-value="<%= current_user&.id.to_i %>"
+         data-garden-zones-value="<%= @zones.map(&:garden_data).to_json %>"
+         data-garden-zones-url-value="<%= garden_zones_path %>">
   <div class="garden-heading">
     <p class="garden-eyebrow">Votre espace de culture</p>
-    <h1 class="garden-main-title" data-garden-target="title" aria-live="polite">Zone 1 - configuration</h1>
+    <h1 class="garden-main-title" data-garden-target="title" aria-live="polite">Jardin - configuration</h1>
     <p class="garden-description">Cultures, capteurs et réglages d’arrosage.</p>
+    <p class="garden-note">
+      <% if user_signed_in? %>
+        Vos zones, cultures, programmes et seuils sont enregistrés sur votre compte. Les capteurs de démonstration et la bibliothèque de préréglages restent dans ce navigateur.
+      <% else %>
+        Mode démonstration : les données restent dans ce navigateur.
+        <%= link_to "Connectez-vous pour enregistrer vos zones sur votre compte.", new_user_session_path %>
+      <% end %>
+    </p>
   </div>
 
   <div class="garden-page">
@@ -10,23 +25,16 @@
     <div class="garden-card full-width">
       <p class="card-subtitle">Zones du potager</p>
       <div class="zone-list" data-garden-target="zoneList" role="group" aria-label="Zones du jardin">
-        <button type="button"
-                class="zone-btn active"
-                data-garden-target="zoneBtn"
-                data-zone-id="1"
-                aria-pressed="true"
-                data-action="click->garden#selectZone">
-          Zone 1
-        </button>
-
+        <% (user_signed_in? ? @zones : [ { id: 1, name: "Zone 1" }, { id: 2, name: "Zone 2" } ]).each do |zone| %>
         <button type="button"
                 class="zone-btn"
                 data-garden-target="zoneBtn"
-                data-zone-id="2"
+                data-zone-id="<%= zone[:id] %>"
                 aria-pressed="false"
                 data-action="click->garden#selectZone">
-          Zone 2
+          <%= zone[:name] %>
         </button>
+        <% end %>
 
         <button type="button"
                 class="zone-add"
@@ -71,6 +79,10 @@
         <option value="Every day - 7:00 AM">Tous les jours à 07 h 00</option>
         <option value="Every 3 days - 8:00 PM">Tous les 3 jours à 20 h 00</option>
       </select>
+      <div data-garden-target="localConfiguration" hidden>
+        <p class="garden-note">Cette zone possède d’anciens réglages locaux. Transférez-les sur votre compte pour les retrouver sur vos autres appareils. Ils seront aussi enregistrés lors de votre prochaine modification des réglages.</p>
+        <button type="button" class="zone-save" data-action="click->garden#importConfiguration">Enregistrer ces réglages sur mon compte</button>
+      </div>
       <button type="button" class="zone-delete" data-action="click->garden#deleteZone">Supprimer la zone</button>
     </div>
 
@@ -134,7 +146,7 @@
           <input id="brightness-threshold" class="field-input" type="number" min="0" max="200000" step="any" data-garden-target="brightnessThreshold" data-action="change->garden#updateThresholds">
         </div>
       </div>
-      <p class="garden-note">Laissez un seuil vide pour le désactiver. Les réglages sont enregistrés dans ce navigateur ; l’arrosage automatique n’est pas encore connecté.</p>
+      <p class="garden-note">Laissez un seuil vide pour le désactiver. <%= user_signed_in? ? "Les seuils sont enregistrés sur votre compte." : "Les réglages sont enregistrés dans ce navigateur." %> L’arrosage automatique n’est pas encore connecté.</p>
       <p class="garden-field-error" data-garden-target="presetError" role="alert" hidden></p>
       <div class="preset-actions">
         <button type="button" class="zone-save" data-action="click->garden#createPreset">Enregistrer un nouveau préréglage</button>
