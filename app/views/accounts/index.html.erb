@@ -1,2 +1,62 @@
-<h1 class="title-page">Compte</h1>
+<div class="account-page">
+  <h1 class="title-page">Account</h1>
 
+  <% if notice %>
+    <p class="account-notice"><%= notice %></p>
+  <% end %>
+  <% if alert %>
+    <p class="account-notice account-notice--error"><%= alert %></p>
+  <% end %>
+
+  <% if @users.empty? %>
+    <p class="account-empty">Aucun compte.</p>
+  <% end %>
+
+  <div class="account-list">
+    <% @users.each do |user| %>
+      <section class="account-card" data-controller="password-dialog">
+        <div class="account-card__avatar">
+          <%= image_tag "account_icon.svg", alt: "" %>
+        </div>
+
+        <div class="account-card__info">
+          <p class="account-card__row">
+            <span class="account-card__label">Nom</span>
+            <span class="account-card__value"><%= user["name"] %></span>
+          </p>
+          <p class="account-card__row">
+            <span class="account-card__label">PWD</span>
+            <span class="account-card__value"><%= user["password"] %></span>
+          </p>
+        </div>
+
+        <%= form_with url: account_path(user["id"]), method: :patch, class: "account-card__form" do |form| %>
+          <%= form.select :role, [["Utilisateur", "user"], ["Admin", "admin"]], { selected: user["role"] }, class: "account-card__select" %>
+          <%= form.submit "Enregistrer le rôle", class: "account-card__button" %>
+        <% end %>
+
+        <div class="account-card__actions">
+          <button type="button" class="account-card__button" data-action="click->password-dialog#open">
+            Modifier le mot de passe
+          </button>
+          <%= button_to "Supprimer le compte", account_path(user["id"]),
+                        method: :delete,
+                        class: "account-card__button account-card__button--danger",
+                        form: { class: "account-card__form", data: { turbo_confirm: "Supprimer ce compte ?" } } %>
+        </div>
+
+        <dialog class="account-dialog" data-password-dialog-target="dialog">
+          <%= form_with url: account_path(user["id"]), method: :patch, class: "account-dialog__form" do |form| %>
+            <h2 class="account-dialog__title">Modifier le mot de passe</h2>
+            <p class="account-dialog__text"><%= user["name"] %></p>
+            <%= form.text_field :password, placeholder: "Nouveau mot de passe", required: true, minlength: 6, autocomplete: "off", class: "account-dialog__input" %>
+            <div class="account-dialog__actions">
+              <button type="button" class="account-card__button" data-action="click->password-dialog#close">Annuler</button>
+              <%= form.submit "Valider", class: "account-card__button" %>
+            </div>
+          <% end %>
+        </dialog>
+      </section>
+    <% end %>
+  </div>
+</div>
