@@ -17,35 +17,34 @@
     margin: 0;
 }
 
-:root {
-    --TextColor: #E2EDF0;
-    --TextDarkColor: #2B3338;
-
-    --BackgroundColor: #2B3338;
-    --AccentColor: #11BF62;
-    --P1Color: #274866;
-    --P2Color: #46687F;
-    --P3Color: #4C849B;
-}
+:root,
 [data-theme="dark"] {
-    --TextColor: #E2EDF0;
-    --TextDarkColor: #2B3338;
-
-    --BackgroundColor: #2B3338;
-    --AccentColor: #11BF62;
-    --P1Color: #274866;
-    --P2Color: #46687F;
-    --P3Color: #4C849B;
+    --TextColor: #e4edde;
+    --TextDarkColor: #19271d;
+    --BackgroundColor: #202924;
+    --AccentColor: #a6cf94;
+    --P1Color: #293d30;
+    --P2Color: #38533e;
+    --P3Color: #48694e;
+    --SurfaceColor: #26342b;
+    --BorderColor: #465b49;
+    --MutedColor: #afc1ac;
+    --ChromeBackground: rgb(29 41 32 / 94%);
+    color-scheme: dark;
 }
 [data-theme="light"] {
-    --TextColor: #2B3338;
-    --TextDarkColor: #E2EDF0;
-
-    --BackgroundColor: #E2EDF0;
-    --AccentColor: #157743;
-    --P1Color: #83D1FF;
-    --P2Color: #40AEF8;
-    --P3Color: #018BC3;
+    --TextColor: #263e2c;
+    --TextDarkColor: #fffef9;
+    --BackgroundColor: #f3f5ed;
+    --AccentColor: #386749;
+    --P1Color: #e2ead8;
+    --P2Color: #d2e0c5;
+    --P3Color: #b8ceaa;
+    --SurfaceColor: #fffef9;
+    --BorderColor: #d6dfce;
+    --MutedColor: #5c7160;
+    --ChromeBackground: rgb(255 254 249 / 94%);
+    color-scheme: light;
 }
 
 
@@ -59,4 +58,14 @@ body {
     display: flex;
     justify-content: center;
     width: 100%;
+}
+.flash-message {
+    width: min(1080px, calc(100% - 32px));
+    margin: 16px auto;
+    padding: 14px 18px;
+    box-sizing: border-box;
+    color: var(--TextColor);
+    background: var(--SurfaceColor);
+    border: 1px solid var(--BorderColor);
+    border-radius: 10px;
 }

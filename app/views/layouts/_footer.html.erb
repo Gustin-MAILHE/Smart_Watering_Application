@@ -1,3 +1,17 @@
 <footer class="site-footer">
-  <p class="site-footer__text">Projet SAE - Irrigation intelligente</p>
+  <div class="site-footer__content">
+    <div class="site-footer__brand">
+      <%= link_to gardens_path, class: "footer-brand" do %>
+        <%= inline_svg_tag "garden_icon.svg", aria: { hidden: true } %>
+        <span>Irrigation Intelligente</span>
+      <% end %>
+      <p class="footer-description">Prendre soin du jardin, une zone à la fois.</p>
+    </div>
+    <nav class="footer-links" aria-label="Navigation du pied de page">
+      <%= link_to "Accueil", root_path %>
+      <%= link_to "Mon jardin", gardens_path %>
+      <%= link_to "À propos", abouts_path %>
+    </nav>
+  </div>
+  <p class="site-footer__bottom">© <%= Time.current.year %> · Projet SAE · Irrigation intelligente</p>
 </footer>
