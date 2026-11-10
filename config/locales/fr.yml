@@ -9,6 +9,9 @@ fr:
         user: Propriétaire
         crop: Culture
         schedule: Programme d’arrosage
+        watering_time_slots: Les créneaux d’arrosage
+        watering_starts_on: La date de début
+        watering_ends_on: La date de fin
         humidity_threshold: Seuil d’humidité
         temperature_threshold: Seuil de température
         brightness_threshold: Seuil de luminosité

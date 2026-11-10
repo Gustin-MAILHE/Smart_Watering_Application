@@ -13,6 +13,9 @@ application.register("drawer", DrawerController)
 import GardenController from "controllers/garden_controller"
 application.register("garden", GardenController)
 
+import GardenStepsController from "controllers/garden_steps_controller"
+application.register("garden-steps", GardenStepsController)
+
 import HelloController from "controllers/hello_controller"
 application.register("hello", HelloController)
 
