@@ -17,7 +17,7 @@ Rails.application.routes.draw do
   root "home#index"
 
   # Account
-  resources :accounts, only: [ :index ]
+  resources :accounts, only: [ :index, :update, :destroy ]
 
   # Stats
   resources :stats, only: [ :index ]

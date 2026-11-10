@@ -18,3 +18,6 @@ application.register("hello", HelloController)
 
 import ZonesController from "controllers/zones_controller"
 application.register("zones", ZonesController)
+
+import PasswordDialogController from "controllers/password_dialog_controller"
+application.register("password-dialog", PasswordDialogController)

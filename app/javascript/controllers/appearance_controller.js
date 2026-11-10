@@ -4,7 +4,7 @@ const THEME_KEY = "smartWatering.theme"
 
 /** Controls the shared theme and back-to-top button across Turbo visits. */
 export default class extends Controller {
-  static targets = ["toggle", "sun", "moon", "themeLabel", "backToTop"]
+  static targets = ["toggle", "sun", "moon", "backToTop"]
 
   /** Restores preferences when the shared layout connects. */
   connect() {
@@ -44,7 +44,6 @@ export default class extends Controller {
     document.documentElement.style.colorScheme = dark ? "dark" : "light"
     this.sunTarget.toggleAttribute("hidden", dark)
     this.moonTarget.toggleAttribute("hidden", !dark)
-    this.themeLabelTarget.textContent = dark ? "Nuit" : "Jour"
     const label = dark ? "Passer en mode jour" : "Passer en mode nuit"
     this.toggleTarget.setAttribute("aria-label", label)
     this.toggleTarget.title = label
