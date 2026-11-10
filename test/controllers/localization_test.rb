@@ -8,7 +8,7 @@ class LocalizationTest < ActionDispatch::IntegrationTest
     assert_select "html[lang=fr]"
     assert_select "label[for=user_email]", text: "Adresse e-mail"
     assert_select "label[for=user_password]", text: "Mot de passe"
-    assert_select "input[type=submit][value=?]", "Se connecter"
+    assert_select "button[type=submit]", text: "Se connecter"
 
     post user_session_path, params: { user: { email: "missing@example.test", password: "incorrect" } }
     follow_redirect! if response.redirect?
