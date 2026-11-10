@@ -76,6 +76,8 @@ class GardenStepsTest < ApplicationSystemTestCase
         document.body.append(frame);
       JS
       within_frame "steps-preview" do
+        # Switching frames can finish before the new document has loaded in CI.
+        assert_selector "[data-controller='garden'] .garden-stepper"
         [ "light", "dark" ].each do |theme|
           page.execute_script("document.documentElement.dataset.theme = arguments[0]", theme)
           %w[Cultures Capteurs Arrosage Seuils].each do |step|
