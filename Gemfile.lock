@@ -115,6 +115,9 @@ GEM
       warden (~> 1.2.3)
     dotenv (3.2.0)
     drb (2.2.3)
+    easy_translate (0.5.2)
+      thread
+      thread_safe
     ed25519 (1.4.0)
     erb (6.0.7)
     erubi (1.13.1)
@@ -127,8 +130,21 @@ GEM
       raabro (~> 1.4)
     globalid (1.4.0)
       activesupport (>= 6.1)
+    highline (3.1.2)
+      reline
     i18n (1.15.2)
       concurrent-ruby (~> 1.0)
+    i18n-tasks (1.0.15)
+      activesupport (>= 4.0.2)
+      ast (>= 2.1.0)
+      erubi
+      highline (>= 2.0.0)
+      i18n
+      parser (>= 3.2.2.1)
+      rails-i18n
+      rainbow (>= 2.2.2, < 4.0)
+      ruby-progressbar (~> 1.8, >= 1.8.1)
+      terminal-table (>= 1.5.1)
     image_processing (1.14.0)
       mini_magick (>= 4.9.5, < 6)
       ruby-vips (>= 2.0.17, < 3)
@@ -249,6 +265,9 @@ GEM
     rails-html-sanitizer (1.7.2)
       loofah (~> 2.25, >= 2.25.3)
       nokogiri (>= 1.15.7, != 1.16.7, != 1.16.6, != 1.16.5, != 1.16.4, != 1.16.3, != 1.16.2, != 1.16.1, != 1.16.0.rc1, != 1.16.0)
+    rails-i18n (8.1.0)
+      i18n (>= 0.7, < 2)
+      railties (>= 8.0.0, < 9)
     railties (8.1.4.1)
       actionpack (= 8.1.4.1)
       activesupport (= 8.1.4.1)
@@ -343,7 +362,11 @@ GEM
       ostruct
     stimulus-rails (1.3.4)
       railties (>= 6.0.0)
+    terminal-table (4.0.0)
+      unicode-display_width (>= 1.1.1, < 4)
     thor (1.5.0)
+    thread (0.2.2)
+    thread_safe (0.3.6)
     thruster (0.1.27)
     thruster (0.1.27-x86_64-linux)
     timeout (0.6.1)
@@ -386,6 +409,8 @@ DEPENDENCIES
   capybara
   debug
   devise (>= 4.9.3)
+  easy_translate
+  i18n-tasks (~> 1.0.13)
   image_processing (~> 1.2)
   importmap-rails
   inline_svg
@@ -441,6 +466,7 @@ CHECKSUMS
   devise (5.0.4) sha256=d605f2b85854e74e56ee789e2d398702bc2d06e6bcd894717a670a3199c74cc1
   dotenv (3.2.0) sha256=e375b83121ea7ca4ce20f214740076129ab8514cd81378161f11c03853fe619d
   drb (2.2.3) sha256=0b00d6fdb50995fe4a45dea13663493c841112e4068656854646f418fda13373
+  easy_translate (0.5.2) sha256=d6f65b0d0cdb2983391049b35fc4f67bae2f5dbc1e69e9805762673e0c02c35f
   ed25519 (1.4.0) sha256=16e97f5198689a154247169f3453ef4cfd3f7a47481fde0ae33206cdfdcac506
   erb (6.0.7) sha256=c5ca6dc25b0ef974a44dc8f59fe847577122483b1968a38dec305c60bf91ee92
   erubi (1.13.1) sha256=a082103b0885dbc5ecf1172fede897f9ebdb745a4b97a5e8dc63953db1ee4ad9
@@ -449,7 +475,9 @@ CHECKSUMS
   ffi (1.17.4-x86_64-linux-gnu) sha256=9d3db14c2eae074b382fa9c083fe95aec6e0a1451da249eab096c34002bc752d
   fugit (1.14.0) sha256=e311a9cc85a54bb67649df45060e721282a1e2c8ebad40e41874a3a7d576f37e
   globalid (1.4.0) sha256=037f12fbf1d9d7a014d501c2d5c77356fd4ddd96d7a7991d6700bba96706f427
+  highline (3.1.2) sha256=67cbd34d19f6ef11a7ee1d82ffab5d36dfd5b3be861f450fc1716c7125f4bb4a
   i18n (1.15.2) sha256=00f9eb62412fe593b2a65a97daa75300d37abb8f7202ec748e94b6d46a9dd1b5
+  i18n-tasks (1.0.15) sha256=74f3e9e0e2db5d757c58e659f4269ee698c7a7532ed29066a2aaffc9efbdfb56
   image_processing (1.14.0) sha256=754cc169c9c262980889bec6bfd325ed1dafad34f85242b5a07b60af004742fb
   importmap-rails (2.2.3) sha256=7101be2a4dc97cf1558fb8f573a718404c5f6bcfe94f304bf1f39e444feeb16a
   inline_svg (1.10.0) sha256=5b652934236fd9f8adc61f3fd6e208b7ca3282698b19f28659971da84bf9a10f
@@ -498,6 +526,7 @@ CHECKSUMS
   rails (8.1.4.1) sha256=365c3a0ad2713bd6e60628e5e826622d4ca8dee60b5a7e560e9b20844e9650bc
   rails-dom-testing (2.3.0) sha256=8acc7953a7b911ca44588bf08737bc16719f431a1cc3091a292bca7317925c1d
   rails-html-sanitizer (1.7.2) sha256=a21ef45b7a6639fc8e2282473c547514cb86ae271616162a946bf89148fa2424
+  rails-i18n (8.1.0) sha256=52d5fd6c0abef28d84223cc05647f6ae0fd552637a1ede92deee9545755b6cf3
   railties (8.1.4.1) sha256=ff2ef4b5a62cbc89811f88be11c776e2ed71b14dd012eae6a494d37994aa9782
   rainbow (3.1.1) sha256=039491aa3a89f42efa1d6dec2fc4e62ede96eb6acd95e52f1ad581182b79bc6a
   rake (13.4.2) sha256=cb825b2bd5f1f8e91ca37bddb4b9aaf345551b4731da62949be002fa89283701
@@ -524,7 +553,10 @@ CHECKSUMS
   sqlite3 (2.10.2-x86_64-linux-gnu) sha256=ca92731ab464df9cae503fa1a439a549e2724f6953c8c05a7769b59366e38f15
   sshkit (1.25.1) sha256=be3f10b9d6eb0b44d5eaba3f7cbe41bc6bb894bce4339688ac20124391455b78
   stimulus-rails (1.3.4) sha256=765676ffa1f33af64ce026d26b48e8ffb2e0b94e0f50e9119e11d6107d67cb06
+  terminal-table (4.0.0) sha256=f504793203f8251b2ea7c7068333053f0beeea26093ec9962e62ea79f94301d2
   thor (1.5.0) sha256=e3a9e55fe857e44859ce104a84675ab6e8cd59c650a49106a05f55f136425e73
+  thread (0.2.2) sha256=0ef704d20878d4dc9090fd2e8e99282fdc7bb047b2ee53fe15916bdfd97776f5
+  thread_safe (0.3.6) sha256=9ed7072821b51c57e8d6b7011a8e282e25aeea3a4065eab326e43f66f063b05a
   thruster (0.1.27) sha256=5fd3855192bb4e8d13db69ae5f70d39f2dfd88fe0394fa372104996edf0bb599
   thruster (0.1.27-x86_64-linux) sha256=7e0e6381011401810b047ff25506e0e38755b2430499ff5586f1a110086981c6
   timeout (0.6.1) sha256=78f57368a7e7bbadec56971f78a3f5ecbcfb59b7fcbb0a3ed6ddc08a5094accb

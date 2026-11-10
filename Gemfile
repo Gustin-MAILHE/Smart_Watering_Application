@@ -66,6 +66,10 @@ end
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
+
+  # Translation (I18n-tasks)
+  gem "i18n-tasks", "~> 1.0.13"
+  gem "easy_translate"
 end
 
 group :test do

@@ -1,35 +1,27 @@
 <div class="about-page">
-  <h1 class="title-page">A propos</h1>
+  <h1 class="title-page"><%= t('pages.about.index.title') %></h1>
 
 <section class ="about-card">
-  <h2 class="about-card__title">Quel est ce projet?</h2>
-  <p class="about-card__text">
-    Le projet d'irrigation Intelligente est un projet de SAE.
-    Il a pour but de créer une application web permettant de surveiller et gérer l'arrosage des plantes de manière intelligente.
-  </p>
+  <h2 class="about-card__title"><%= t('pages.about.index.project_title') %></h2>
+  <p class="about-card__text"><%= t('pages.about.index.project_description') %></p>
 </section>
 
   <section class ="about-card">
-  <h2 class="about-card__title">Fonctionnalitées</h2>
+  <h2 class="about-card__title"><%= t('pages.about.index.features_title') %></h2>
     <ul class="about-card__list">
-    <li>Surveiller votre potager et les données météorologiques</li>
-    <li>Visionner l'historique des arrosages</li>
-    <li>Customiser votre potager</li>
+    <li><%= t('pages.about.index.features.monitor') %></li>
+    <li><%= t('pages.about.index.features.history') %></li>
+    <li><%= t('pages.about.index.features.customize') %></li>
   </ul>
 </section>
 
 <section class ="about-card">
-  <h2 class="about-card__title">L'équipe</h2>
-  <p class="about-card__text">
-    Ce projet a été créé par: AHAMED Nasser, BOUDIA--THOMAS Akcyl, CANTOR Romain, CHETIOUI Willem, DECAMPS Lou, MAILHE Gustin.
-    Et supérvisé par : GERARD Olivier
-  </p>
+  <h2 class="about-card__title"><%= t('pages.about.index.team_title') %></h2>
+  <p class="about-card__text"><%= t('pages.about.index.team_description') %></p>
 </section>
 
 <section class ="about-card">
-  <h2 class="about-card__title">Technologies</h2>
-  <p class="about-card__text">
-    Ruby on Rails, ...
-  </p>
+  <h2 class="about-card__title"><%= t('pages.about.index.tech_title') %></h2>
+  <p class="about-card__text"><%= t('pages.about.index.tech_description') %></p>
 </section>
 </div>

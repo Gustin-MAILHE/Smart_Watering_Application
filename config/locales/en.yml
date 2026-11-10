@@ -1,31 +1,213 @@
-# Files in the config/locales directory are used for internationalization and
-# are automatically loaded by Rails. If you want to use locales other than
-# English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t "hello"
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t("hello") %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# To learn more about the API, please read the Rails Internationalization guide
-# at https://guides.rubyonrails.org/i18n.html.
-#
-# Be aware that YAML interprets the following case-insensitive strings as
-# booleans: `true`, `false`, `on`, `off`, `yes`, `no`. Therefore, these strings
-# must be quoted to be interpreted as strings. For example:
-#
-#     en:
-#       "yes": yup
-#       enabled: "ON"
-
+---
 en:
-  hello: "Hello world"
+  activerecord:
+    attributes:
+      user:
+        current_password: Current password
+        email: Email address
+        password: Password
+        password_confirmation: Password Confirmation
+        remember_me: Remember Me
+        username: Username
+      zone:
+        brightness_threshold: Brightness Threshold
+        crop: Culture
+        humidity_threshold: Moisture Threshold
+        name: Name
+        schedule: Watering Schedule
+        temperature_threshold: Temperature Threshold
+        user: Owner
+    errors:
+      messages:
+        record_invalid: 'Validation failed: %{errors}'
+        restrict_dependent_destroy:
+          has_many: 'Cannot delete: Associated items exist.'
+          has_one: 'Cannot delete: an associated item exists.'
+    models:
+      user: account
+      zone: area
+  date:
+    abbr_day_names:
+    - sun.
+    - mon.
+    - tue.
+    - wed.
+    - thu.
+    - fri.
+    - sat.
+    abbr_month_names:
+    - jan.
+    - fbr.
+    - march
+    - apr.
+    - may
+    - june
+    - july
+    - aug
+    - sept.
+    - oct.
+    - nov.
+    - dec.
+    day_names:
+    - sunday
+    - monday
+    - tuesday
+    - wednesday
+    - thursday
+    - friday
+    - saturday
+    formats:
+      default: "%d/%m/%Y"
+      long: "%d %B %Y"
+      short: "%d/%m"
+    month_names:
+    -
+    - january
+    - february
+    - march
+    - april
+    - may
+    - june
+    - july
+    - august
+    - september
+    - october
+    - november
+    - december
+    order:
+    - day
+    - month
+    - year
+  errors:
+    format: "%{attribute} %{message}"
+    messages:
+      accepted: must be accepted
+      already_confirmed: has already been confirmed
+      blank: must be filled in
+      confirmation: does not match %{attribute}
+      confirmation_period_expired: must be confirmed within %{period};
+        request a new link
+      empty: must be filled in
+      equal_to: must be equal to %{count}
+      even: must be even
+      exclusion: is not available
+      expired: has expired; request a new link
+      greater_than: must be greater than %{count}
+      greater_than_or_equal_to: must be greater than or equal to %{count}
+      inclusion: is not on the list
+      invalid: is invalid
+      less_than: must be less than %{count}
+      less_than_or_equal_to: must be less than or equal to %{count}
+      model_invalid: 'Validation failed: %{errors}'
+      not_a_number: must be a number
+      not_an_integer: must be an integer
+      not_found: cannot be found
+      not_locked: is not locked
+      not_saved:
+        one: 'An error is preventing this %{resource} from being saved:'
+        other: "%{count} errors are preventing this %{resource} from being saved:"
+      odd: must be an odd number
+      other_than: must be different from %{count}
+      present: must be empty
+      required: must exist
+      taken: is already in use
+      too_long:
+        one: 'is too long (maximum: 1 character)'
+        other: 'is too long (maximum: %{count} characters)'
+      too_short:
+        one: 'is too short (minimum: 1 character)'
+        other: 'is too short (minimum: %{count} characters)'
+      wrong_length:
+        one: must contain 1 character
+        other: must contain %{count} characters
+  hello: Hello world
+  layout:
+    navbar:
+      index:
+        top_navigation:
+          home_label: Home
+          garden_label: Garden
+          account_label: Account
+          stats_label: Statistics
+        bottom_navigation:
+          settings_label: Settings
+          about_label: About
+          login_as_label: 'Logged in as: '
+          login_button: Sign in
+          logout_button: Log out
+    header:
+      header_title_link: Smart Irrigation
+      header_button_theme: Night
+      aria_toggle: "Toggle day/night mode"
+      day: Day
+      night: Night
+    footer:
+      footer_title: Smart Irrigation
+      footer_description: Taking care of the garden, one area at a time.
+      footer_link_home: Home
+      footer_link_garden: My garden
+      footer_link_about: About
+      footer_site_bottom: SAE Project · Smart Irrigation
+  pages:
+    about:
+      index:
+        features:
+          customize: Customize Your Vegetable Garden
+          history: View the watering history
+          monitor: Monitor Your Vegetable Garden and Weather Data
+        features_title: Features
+        project_description: The Smart Irrigation Project is a
+          SAE project. Its goal is to create a web application that allows users to monitor
+          and manage plant watering in a smart way.
+        project_title: What is this project ?
+        team_description: 'This project was created by: AHAMED Nasser, BOUDIA--THOMAS
+          Akcyl, CANTOR Romain, CHETIOUI Willem, DECAMPS Lou, MAILHE Gustin. And supervised
+          by: GERARD Olivier.'
+        team_title: The Team
+        tech_description: Ruby on Rails, ...
+        tech_title: Technologies
+        title: About
+    settings:
+      index:
+        settings_title: Settings
+        language_label: Language
+        theme_label: Theme
+        themes:
+          default: Default
+          light: Light
+          dark: Dark
+          sakura: Sakura
+        temperature_label: Temperature unit
+        brightness_label: Brightness unit
+        humidity_label: Humidity unit
+        units:
+          celsius: Celsius (C°)
+          fahrenheit: Fahrenheit (F°)
+          kelvin: Kelvin (K)
+          percentage: Percentage (%)
+          lumen: Lumen (lm)
+          lux: Lux (lx)
+          weight_by_distance: g/m³ (g/kg)
+        profile_label: Profile management
+        login: Log in
+        edit_profile: Edit profile
+        notifications_title: Notifications (via email)
+        notifications:
+          all: All
+          battery_level: Battery level
+          battery_status: Battery status
+          sensor_status: Sensor status
+          watering_start: Watering started
+          watering_end: Watering ended
+  support:
+    array:
+      last_word_connector: " and "
+      two_words_connector: " and "
+      words_connector: ", "
+  time:
+    am: morning
+    formats:
+      default: "%d/%m/%Y à %H h %M"
+      long: "%d %B %Y à %H h %M"
+      short: "%d/%m à %H h %M"
+    pm: afternoon

@@ -1,0 +1,20 @@
+base_locale: fr
+
+locales:
+  - fr
+  - en
+
+search:
+  paths:
+    - app/
+
+data:
+  read:
+    - config/locales/%{locale}.yml
+    - config/locales/**/*.%{locale}.yml
+  write:
+    - config/locales/%{locale}.yml
+
+translation:
+  easy_translate:
+    host: translate.argosopentech.com

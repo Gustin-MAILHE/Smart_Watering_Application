@@ -44,7 +44,14 @@ export default class extends Controller {
     document.documentElement.style.colorScheme = dark ? "dark" : "light"
     this.sunTarget.toggleAttribute("hidden", dark)
     this.moonTarget.toggleAttribute("hidden", !dark)
-    this.themeLabelTarget.textContent = dark ? "Nuit" : "Jour"
+
+    //this.themeLabelTarget.textContent = dark ? "Nuit" : "Jour"
+    // day/night translation text
+    const dayText = this.themeLabelTarget.dataset.dayText;
+    const nightText = this.themeLabelTarget.dataset.nightText;
+    this.themeLabelTarget.textContent = dark ? nightText : dayText
+
+
     const label = dark ? "Passer en mode jour" : "Passer en mode nuit"
     this.toggleTarget.setAttribute("aria-label", label)
     this.toggleTarget.title = label

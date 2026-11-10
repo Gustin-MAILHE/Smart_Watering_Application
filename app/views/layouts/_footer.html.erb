@@ -3,15 +3,15 @@
     <div class="site-footer__brand">
       <%= link_to gardens_path, class: "footer-brand" do %>
         <%= inline_svg_tag "garden_icon.svg", aria: { hidden: true } %>
-        <span>Irrigation Intelligente</span>
+        <span><%= t('layout.footer.footer_title') %></span>
       <% end %>
-      <p class="footer-description">Prendre soin du jardin, une zone à la fois.</p>
+      <p class="footer-description"><%= t('layout.footer.footer_description') %></p>
     </div>
     <nav class="footer-links" aria-label="Navigation du pied de page">
-      <%= link_to "Accueil", root_path %>
-      <%= link_to "Mon jardin", gardens_path %>
-      <%= link_to "À propos", abouts_path %>
+      <%= link_to t('layout.footer.footer_link_home'), root_path %>
+      <%= link_to t('layout.footer.footer_link_garden'), gardens_path %>
+      <%= link_to t('layout.footer.footer_link_about'), abouts_path %>
     </nav>
   </div>
-  <p class="site-footer__bottom">© <%= Time.current.year %> · Projet SAE · Irrigation intelligente</p>
+  <p class="site-footer__bottom">© <%= Time.current.year %> · <%= t('layout.footer.footer_site_bottom') %></p>
 </footer>

@@ -1,0 +1,143 @@
+.settings-box {
+    max-width: 800px;
+    margin: 2rem auto;
+    background-color: var(--SurfaceColor);
+    border: 1px solid var(--BorderColor);
+    border-radius: 12px;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.settings-box > div {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--P1Color);
+}
+
+.settings-box > div:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.settings-box > div > label:first-child {
+    font-weight: 500;
+    color: var(--TextColor);
+    font-size: 1.05rem;
+}
+
+.settings-box select,
+.settings-box input[type="text"] {
+    width: 100%;
+    padding: 0.6rem 1rem;
+    border: 1px solid var(--BorderColor);
+    background-color: var(--BackgroundColor);
+    color: var(--TextColor);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 1rem;
+    transition: all 0.2s ease-in-out;
+    box-sizing: border-box;
+}
+
+.settings-box select:focus,
+.settings-box input[type="text"]:focus {
+    outline: none;
+    border-color: var(--AccentColor);
+    box-shadow: 0 0 0 2px var(--P1Color);
+}
+
+.settings-box input[type="text"]:disabled {
+    background-color: var(--P1Color);
+    color: var(--MutedColor);
+    border-color: var(--P2Color);
+    cursor: not-allowed;
+}
+
+.profile-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+}
+
+
+.btn-edit,
+.btn-login {
+    display: block;
+    text-align: center;
+    background-color: var(--AccentColor);
+    color: var(--TextDarkColor);
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: opacity 0.2s ease, transform 0.1s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-edit:hover,
+.btn-login:hover {
+    transform: scale(0.98);
+}
+
+.checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+
+.checkbox-group label {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 400;
+    color: var(--TextColor);
+    cursor: pointer;
+}
+
+.checkbox-group input[type="checkbox"] {
+    accent-color: var(--AccentColor);
+    width: 1.25rem;
+    height: 1.25rem;
+    cursor: pointer;
+    margin: 0;
+    border-radius: 4px;
+}
+
+/* =========================================
+   RESPONSIVE : Affichage Bureau (Desktop)
+   ========================================= */
+@media (min-width: 640px) {
+    .settings-box > div {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center; /* Aligne le label et le champ sur la même hauteur */
+    }
+
+    .settings-box > div > label:first-child {
+        flex: 1;
+        margin-top: 0;
+    }
+
+    /* Cible TOUS les selects, formulaires et boutons à droite */
+    .settings-box form,
+    .settings-box select,
+    .settings-box .profile-actions,
+    .settings-box .checkbox-group {
+        flex: 1.5;
+        width: 100%;
+        max-width: 350px; /* Force la même largeur maximale pour tous */
+    }
+
+    /* S'assure que le select dans le form de langue occupe tout son conteneur */
+    .settings-box form select {
+        width: 100%;
+        max-width: 100%;
+    }
+}

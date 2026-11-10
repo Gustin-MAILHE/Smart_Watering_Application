@@ -27,6 +27,7 @@ Rails.application.routes.draw do
 
   # Settings
   resources :settings, only: [ :index ]
+  post 'set_language', to: 'settings#set_language'
 
   # Themes
   resources :themes, only: [ :index ]

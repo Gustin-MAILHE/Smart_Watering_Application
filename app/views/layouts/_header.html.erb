@@ -1,6 +1,6 @@
 <header class="site-header">
   <div class="navbar-wrapper"><%= render "layouts/navbar" %></div>
-  <%= link_to "Irrigation Intelligente", root_path, class: "site-header__title" %>
+  <%= link_to t('layout.header.header_title_link'), root_path, class: "site-header__title" %>
   <button type="button" class="theme-toggle" data-appearance-target="toggle"
           data-action="click->appearance#toggleTheme" aria-label="Passer en mode jour">
     <svg viewBox="0 0 24 24" data-appearance-target="sun" aria-hidden="true" hidden>
@@ -10,6 +10,11 @@
     <svg viewBox="0 0 24 24" data-appearance-target="moon" aria-hidden="true">
       <path d="M20.9 13A9 9 0 0 1 11 3.1 9 9 0 1 0 20.9 13Z" />
     </svg>
-    <span class="theme-toggle__label" data-appearance-target="themeLabel">Nuit</span>
+    <span class="theme-toggle__label"
+          data-appearance-target="themeLabel"
+          data-day-text="<%= t('layout.header.day') %>"
+          data-night-text="<%= t('layout.header.night') %>">
+      <%= t('layout.header.header_button_theme') %>
+    </span>
   </button>
 </header>
