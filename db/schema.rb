@@ -10,17 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_07_140000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_12_151308) do
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
-    t.string "username", default: "", null: false
-    t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
+    t.datetime "reset_password_sent_at"
+    t.string "reset_password_token"
+    t.string "username", default: "", null: false
+    t.string "temperature_unit", default: "celsius"
+    t.string "brightness_unit", default: "percentage"
+    t.string "humidity_unit", default: "percentage"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
-    t.index ["username"], name: "index_users_on_username", unique: true
   end
 
   create_table "zones", force: :cascade do |t|
@@ -34,6 +36,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_07_140000) do
     t.float "temperature_threshold"
     t.float "brightness_threshold"
     t.boolean "configuration_saved", default: false, null: false
+    t.json "watering_time_slots", default: [{"start" => "20:00", "end" => "20:30"}], null: false
+    t.date "watering_starts_on"
+    t.date "watering_ends_on"
     t.index ["user_id", "name"], name: "index_zones_on_user_id_and_name", unique: true
     t.index ["user_id"], name: "index_zones_on_user_id"
   end

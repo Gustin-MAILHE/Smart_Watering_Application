@@ -108,11 +108,31 @@
       <div class="garden-card">
         <p class="card-title">Mesures des capteurs</p>
         <p class="garden-note" data-garden-target="readingsNote">Mesures simulées pour cette zone de démonstration.</p>
-        <div class="sensor-boxes">
-          <div class="sensor-reading"><span class="sensor-label">Température</span><div class="value-box" data-garden-target="temp">24°C</div></div>
-          <div class="sensor-reading"><span class="sensor-label">Humidité</span><div class="value-box" data-garden-target="humidity">65%</div></div>
-          <div class="sensor-reading"><span class="sensor-label">Luminosité</span><div class="value-box" data-garden-target="brightness">850 lx</div></div>
-        </div>
+        <% @zones.each do |zone| %>
+          <div class="sensor-boxes">
+            <div class="sensor-reading">
+              <span class="sensor-label">Température</span>
+              <div class="value-box" data-garden-target="temp">
+                <%= display_temperature(zone.temperature_threshold, current_user) %>
+                <%= temperature_symbol(current_user) %>
+              </div>
+            </div>
+            <div class="sensor-reading">
+              <span class="sensor-label">Humidité</span>
+              <div class="value-box" data-garden-target="humidity">
+                <%= display_humidity(zone.humidity_threshold, zone.temperature_threshold, current_user) %>
+                <%= humidity_symbol(current_user) %>
+              </div>
+            </div>
+            <div class="sensor-reading">
+              <span class="sensor-label">Luminosité</span>
+              <div class="value-box" data-garden-target="brightness">
+                <%= display_brightness(zone.brightness_threshold, current_user) %>
+                <%= brightness_symbol(current_user) %>
+              </div>
+            </div>
+          </div>
+        <% end %>
       </div>
     </div>
 

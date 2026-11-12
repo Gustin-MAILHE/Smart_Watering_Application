@@ -188,7 +188,7 @@ fr:
           percentage: Pourcentage (%)
           lumen: Lumen (lm)
           lux: Lux (lx)
-          weight_by_distance: g/m³ (g/kg)
+          weight_by_distance: g/m³
         profile_label: Gestion du profile
         login: Se connecter
         edit_profile: Modifier le profile

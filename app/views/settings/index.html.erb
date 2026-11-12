@@ -58,29 +58,47 @@
   <!-- temperature section -->
   <div class="temperature-section">
     <label for="temperature-unit"><%= t('pages.settings.index.temperature_label') %></label>
-    <select name="temperature-unit" id="temperature-unit">
-      <option value="celsius"><%= t('pages.settings.index.units.celsius') %></option>
-      <option value="fahrenheit"><%= t('pages.settings.index.units.fahrenheit') %></option>
-      <option value="kelvin"><%= t('pages.settings.index.units.kelvin') %></option>
-    </select>
+    <%= form_with url: update_preferences_path, method: :post, data: { turbo: false } do |form| %>
+      <%= form.select :temperature_unit,
+                      options_for_select([
+                                           [t('pages.settings.index.units.celsius'),  "celsius"],
+                                           [t('pages.settings.index.units.fahrenheit'), "fahrenheit"],
+                                           [t('pages.settings.index.units.kelvin'), "kelvin"]
+                                         ], current_user&.temperature_unit || "celsius"),
+                      {},
+                      { onchange: "this.form.submit();", id: "temperature-unit"}
+      %>
+    <% end %>
   </div>
 
   <!-- brightness section -->
   <div class="brightness-section">
     <label for="brightness-unit"><%= t('pages.settings.index.brightness_label') %></label>
-    <select name="brightness-unit" id="brightness-unit">
-      <option value="percentage"><%= t('pages.settings.index.units.percentage') %></option>
-      <option value="lumen"><%= t('pages.settings.index.units.lumen') %></option>
-      <option value="lux"><%= t('pages.settings.index.units.lux') %></option>
-    </select>
+    <%= form_with url: update_preferences_path, method: :post, data: { turbo: false } do |form| %>
+      <%= form.select :brightness_unit,
+                      options_for_select([
+                                           [t('pages.settings.index.units.percentage'),  "percentage"],
+                                           [t('pages.settings.index.units.lumen'), "lumen"],
+                                           [t('pages.settings.index.units.lux'), "lux"]
+                                         ], current_user&.brightness_unit || "percentage"),
+                      {},
+                      { onchange: "this.form.submit();", id: "brightness-unit"}
+      %>
+    <% end %>
   </div>
 
   <!-- humidity section -->
   <div class="humidity-section">
     <label for="humidity-unit"><%= t('pages.settings.index.humidity_label') %></label>
-    <select name="humidity-unit" id="humidity-unit">
-      <option value="percentage"><%= t('pages.settings.index.units.percentage') %></option>
-      <option value="weight-by-distance"><%= t('pages.settings.index.units.weight_by_distance') %></option>
-    </select>
+    <%= form_with url: update_preferences_path, method: :post, data: { turbo: false } do |form| %>
+      <%= form.select :humidity_unit,
+                      options_for_select([
+                                           [t('pages.settings.index.units.percentage'),  "percentage"],
+                                           [t('pages.settings.index.units.weight_by_distance'), "weight_by_distance"]
+                                         ], current_user&.humidity_unit || "percentage"),
+                      {},
+                      { onchange: "this.form.submit();", id: "humidity-unit"}
+      %>
+    <% end %>
   </div>
 </div>

@@ -515,10 +515,12 @@ export default class extends Controller {
     available.forEach((sensor) => this.sensorSelectTarget.add(new Option(sensor.name, sensor.id)))
     this.sensorSelectTarget.disabled = available.length === 0
     this.updateSensorButton()
+    /**
     for (const type of ["temp", "humidity", "brightness"]) {
       const sensor = sensors.find((sensor) => sensor.type === type)
       this[`${type}Target`].textContent = sensor?.health === "offline" ? "—" : sensor?.reading ?? "—"
     }
+     **/
   }
 
   /** Upgrades older saves without changing their zones or sensor assignments. */
