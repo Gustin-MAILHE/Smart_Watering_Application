@@ -35,15 +35,15 @@
 [data-theme="light"] {
     --TextColor: #263e2c;
     --TextDarkColor: #fffef9;
-    --BackgroundColor: #f3f5ed;
+    --BackgroundColor: #e8e9dd;
     --AccentColor: #386749;
     --P1Color: #e2ead8;
     --P2Color: #d2e0c5;
     --P3Color: #b8ceaa;
-    --SurfaceColor: #fffef9;
+    --SurfaceColor: #e7e9dc;
     --BorderColor: #d6dfce;
     --MutedColor: #5c7160;
-    --ChromeBackground: rgb(255 254 249 / 94%);
+    --ChromeBackground: rgb(229 232 216 / 94%);
     color-scheme: light;
 }
 
