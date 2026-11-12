@@ -1,42 +1,45 @@
-<h2>Modifier votre compte</h2>
+<%= render layout: "devise/shared/shell", locals: { title: "Modifier votre compte", description: "Prenez soin de vos informations et gardez votre espace à jour." } do %>
+  <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+    <%= render "devise/shared/error_messages", resource: resource %>
 
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
+    <div class="field">
+      <p><%= f.label :email %></p>
+      <p><%= f.email_field :email, autofocus: true, autocomplete: "email" %></p>
+    </div>
 
-  <div class="field">
-    <p><%= f.label :email %></p>
-    <p><%= f.email_field :email, autofocus: true, autocomplete: "email" %></p>
-  </div>
+    <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+      <div>Confirmation en attente pour : <%= resource.unconfirmed_email %></div>
+    <% end %>
 
-  <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-    <div>Confirmation en attente pour : <%= resource.unconfirmed_email %></div>
+    <div class="field">
+      <p><%= f.label :password %> <i>(laissez ce champ vide pour conserver votre mot de passe)</i></p>
+      <p><%= f.password_field :password, autocomplete: "new-password" %></p>
+      <% if @minimum_password_length %>
+        <p><em><%= @minimum_password_length %> caractères minimum</em></p>
+      <% end %>
+    </div>
+
+    <div class="field">
+      <p><%= f.label :password_confirmation %></p>
+      <p><%= f.password_field :password_confirmation, autocomplete: "new-password" %></p>
+    </div>
+
+    <div class="field">
+      <p><%= f.label :current_password %> <i>(saisissez votre mot de passe actuel pour confirmer les modifications)</i></p>
+      <p><%= f.password_field :current_password, autocomplete: "current-password" %></p>
+    </div>
+
+    <div class="actions">
+      <%= f.button "Enregistrer les modifications", type: "submit", class: "btn-submit" %>
+    </div>
   <% end %>
 
-  <div class="field">
-    <p><%= f.label :password %> <i>(laissez ce champ vide pour conserver votre mot de passe)</i></p>
-    <p><%= f.password_field :password, autocomplete: "new-password" %></p>
-    <% if @minimum_password_length %>
-      <p><em><%= @minimum_password_length %> caractères minimum</em></p>
-    <% end %>
-  </div>
+  <section class="auth-danger-zone" aria-labelledby="delete-account-title">
+  <h2 id="delete-account-title">Supprimer mon compte</h2>
 
-  <div class="field">
-    <p><%= f.label :password_confirmation %></p>
-    <p><%= f.password_field :password_confirmation, autocomplete: "new-password" %></p>
-  </div>
+  <div>Vous souhaitez partir ? <%= button_to "Supprimer mon compte", registration_path(resource_name), class: "auth-danger", data: { confirm: "Voulez-vous vraiment supprimer votre compte ?", turbo_confirm: "Voulez-vous vraiment supprimer votre compte ?" }, method: :delete %></div>
 
-  <div class="field">
-    <p><%= f.label :current_password %> <i>(saisissez votre mot de passe actuel pour confirmer les modifications)</i></p>
-    <p><%= f.password_field :current_password, autocomplete: "current-password" %></p>
-  </div>
+  </section>
 
-  <div class="actions">
-    <%= f.submit "Enregistrer les modifications" %>
-  </div>
+  <div class="auth-links"><%= link_to "Retour", :back %></div>
 <% end %>
-
-<h3>Supprimer mon compte</h3>
-
-<div>Vous souhaitez partir ? <%= button_to "Supprimer mon compte", registration_path(resource_name), data: { confirm: "Voulez-vous vraiment supprimer votre compte ?", turbo_confirm: "Voulez-vous vraiment supprimer votre compte ?" }, method: :delete %></div>
-
-<%= link_to "Retour", :back %>

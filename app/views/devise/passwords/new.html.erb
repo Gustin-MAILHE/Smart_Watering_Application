@@ -1,25 +1,18 @@
+<%= render layout: "devise/shared/shell", locals: { title: "Mot de passe oublié ?", description: "Recevez un lien par e-mail pour retrouver votre jardin." } do %>
+  <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
+    <%= render "devise/shared/error_messages", resource: resource %>
 
-
-
-<div class="login-page-container">
-  <div class="login-container">
-    <h2>Mot de passe oublié ?</h2>
-
-    <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
-      <%= render "devise/shared/error_messages", resource: resource %>
-
-      <div class="form-group">
-        <%= f.label :email, "Adresse e-mail" %>
-        <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-input" %>
-      </div>
-
-      <div class="action">
-        <%= f.submit "Envoyer les instructions de réinitialisation", class: "btn-submit" %>
-      </div>
-    <% end %>
-
-    <div class="form-footer">
-      <%= render "devise/shared/links" %>
+    <div class="form-group">
+      <%= f.label :email, "Adresse e-mail" %>
+      <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-input" %>
     </div>
+
+    <div class="action">
+      <%= f.button "Envoyer les instructions de réinitialisation", type: "submit", class: "btn-submit" %>
+    </div>
+  <% end %>
+
+  <div class="form-footer">
+    <%= render "devise/shared/links" %>
   </div>
-</div>
+<% end %>
