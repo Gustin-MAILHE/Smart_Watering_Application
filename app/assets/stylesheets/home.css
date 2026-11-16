@@ -1,6 +1,6 @@
 .home-page {
-    --home-accent: #1fb862;
-    --home-surface: #244363;
+    --home-accent: var(--AccentColor);
+    --home-surface: var(--P1Color);
 
     display: flex;
     flex-direction: column;
@@ -8,6 +8,7 @@
     max-width: 1000px;
     margin: 0 auto;
     padding: 2rem 1rem;
+    color: var(--TextColor);
 }
 
 .home-summary {
@@ -15,6 +16,7 @@
     border: 2px solid var(--home-accent);
     border-radius: 10px;
     background-color: var(--home-surface);
+    color: var(--TextColor);
 }
 
 .home-summary__title {
@@ -39,6 +41,7 @@
     padding: 0.6rem 2rem;
     border-radius: 20px;
     background-color: var(--home-accent);
+    color: var(--TextDarkColor);
     font-size: 1.1rem;
     font-weight: bold;
 }
@@ -52,8 +55,10 @@
 
 .crop-card {
     padding: 1.25rem 1.5rem;
-    border: 2px solid var(--home-accent);
+    border: 2px solid var(--BorderColor);
     border-radius: 10px;
+    background-color: var(--SurfaceColor);
+    color: var(--TextColor);
 }
 
 .crop-card__header {
@@ -84,7 +89,7 @@
 }
 
 .status-dot--ok {
-    background-color: var(--home-accent);
+    background-color: #1fb862;
 }
 
 .status-dot--warning {
