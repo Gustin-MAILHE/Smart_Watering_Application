@@ -4,7 +4,7 @@
     z-index: 100;
     isolation: isolate;
     display: grid;
-    grid-template-columns: 44px minmax(0, 1fr) 44px;
+    grid-template-columns: 44px minmax(0, 1fr) auto;
     align-items: center;
     gap: 16px;
     min-height: 72px;
@@ -13,7 +13,6 @@
     border-bottom: 1px solid var(--BorderColor);
     box-shadow: 0 3px 16px rgb(0 0 0 / 8%);
 }
-
 /* Blur only this decorative layer so the fixed navigation drawer stays viewport-sized. */
 .site-header::before {
     content: '';
@@ -25,12 +24,7 @@
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
 }
-
-.site-header .navbar-wrapper {
-    grid-column: 1;
-    min-width: 0;
-}
-
+.site-header .navbar-wrapper { grid-column: 1; min-width: 0; }
 .site-header__title {
     grid-column: 2;
     justify-self: center;
@@ -43,16 +37,31 @@
     font-size: clamp(.95rem, 2vw, 1.2rem);
     font-weight: 700;
 }
-
-.site-header__title:focus-visible {
-    outline: 3px solid var(--AccentColor);
-    outline-offset: 4px;
+.theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 10px;
+    border: 0;
+    background: transparent;
+    color: var(--TextColor);
+    font: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: color .2s, transform .2s;
 }
-
+.theme-toggle:hover { color: var(--AccentColor); transform: translateY(-1px); }
+.theme-toggle svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.theme-toggle svg, .theme-toggle svg * { color: inherit; }
+.theme-toggle [hidden] { display: none !important; }
+.theme-toggle:focus-visible, .site-header__title:focus-visible { outline: 3px solid var(--AccentColor); outline-offset: 4px; }
 @media (max-width: 480px) {
-    .site-header {
-        gap: 8px;
-        min-height: 64px;
-        padding-inline: 12px;
-    }
+    .site-header { gap: 8px; min-height: 64px; padding-inline: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .theme-toggle { transition: none; }
+    .theme-toggle:hover { transform: none; }
 }
