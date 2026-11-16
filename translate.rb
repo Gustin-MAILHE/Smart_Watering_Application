@@ -22,7 +22,7 @@ def translate_text(text)
   uri = URI.parse("https://translate.argosopentech.com/translate")
   response = Net::HTTP.post(
     uri,
-    {q: text, source: "fr", target: "en", format: "text" }.to_json,
+    { q: text, source: "fr", target: "en", format: "text" }.to_json,
     "Content-Type" => "application/json"
   )
   result = JSON.parse(response.body)
@@ -32,7 +32,7 @@ def translate_text(text)
     text
 end
 
-en_data = { "en" => translate_hash(fr_data["fr"])}
+en_data = { "en" => translate_hash(fr_data["fr"]) }
 
 File.open('config/locales/en.yml', "w", encoding: "utf-8") do |f|
   f.write(en_data.to_yaml)

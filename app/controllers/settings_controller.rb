@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class SettingsController < ApplicationController
-  before_action :authenticate_user!, only: [:update_preferences]
+  before_action :authenticate_user!, only: [ :update_preferences ]
   def index
   end
 
