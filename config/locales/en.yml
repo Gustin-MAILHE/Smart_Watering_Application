@@ -137,10 +137,7 @@ en:
           logout_button: Log out
     header:
       header_title_link: Smart Irrigation
-      header_button_theme: Night
       aria_toggle: "Toggle day/night mode"
-      day: Day
-      night: Night
     footer:
       footer_title: Smart Irrigation
       footer_description: Taking care of the garden, one area at a time.

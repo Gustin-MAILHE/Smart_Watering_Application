@@ -138,10 +138,7 @@ fr:
           logout_button: Se déconnecter
     header:
       header_title_link: Irrigation Intelligente
-      header_button_theme: Nuit
       aria_toggle: "Passer en mode jour/nuit"
-      day: Jour
-      night: Nuit
     footer:
       footer_title: Irrigation Intelligente
       footer_description: Prendre soin du jardin, une zone à la fois.
