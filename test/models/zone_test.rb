@@ -96,4 +96,47 @@ class ZoneTest < ActiveSupport::TestCase
     zone.update!(thresholds: { humidity: nil, temperature: nil, brightness: nil })
     assert zone.reload.configuration_saved
   end
+
+  test "watering slots allow adjacent ranges and dates allow inclusive or open ended periods" do
+    zone = users(:one).zones.build(name: "Arrosage", watering_time_slots: [
+      { start: "18:00", end: "18:30" }, { start: "06:00", end: "06:30" }, { start: "06:30", end: "07:00" }
+    ])
+    [ [ nil, nil ], [ "2027-05-01", nil ], [ nil, "2027-05-31" ],
+      [ "2027-05-01", "2027-05-01" ], [ "2028-02-29", "2028-03-01" ] ].each do |starts_on, ends_on|
+      zone.assign_attributes(watering_starts_on: starts_on, watering_ends_on: ends_on)
+      assert zone.valid?, zone.errors.full_messages.join(", ")
+    end
+    zone.save!
+    assert_equal "2028-02-29", zone.reload.garden_data[:watering_starts_on]
+  end
+
+  test "watering slots reject empty malformed reversed overnight overlapping or excessive ranges" do
+    invalid_slots = [ nil, [], "06:00", { start: "06:00", end: "06:30" }, [ nil ],
+      [ { start: "24:00", end: "24:30" } ], [ { start: "6:00", end: "06:30" } ],
+      [ { start: "06:00", end: "06:00" } ], [ { start: "23:00", end: "01:00" } ],
+      [ { start: "06:00" } ], [ { start: 6, end: 7 } ],
+      [ { start: "06:00", end: "07:00" }, { start: "06:30", end: "08:00" } ],
+      Array.new(25) { { start: "06:00", end: "06:30" } } ]
+    invalid_slots.each do |slots|
+      zone = users(:one).zones.build(name: "Arrosage", watering_time_slots: slots)
+      assert_not zone.valid?, "Must reject #{slots.inspect}"
+      assert zone.errors[:watering_time_slots].present?
+    end
+  end
+
+  test "watering dates reject impossible dates and an end before the start" do
+    zone = users(:one).zones.build(name: "Arrosage")
+    [ [ "2027-05-02", "2027-05-01" ], [ "2027-02-29", nil ],
+      [ nil, "2027-04-31" ], [ "invalid", nil ], [ nil, "01/05/2027" ], [ "0000-01-01", nil ] ].each do |starts_on, ends_on|
+      zone.assign_attributes(watering_starts_on: starts_on, watering_ends_on: ends_on)
+      assert_not zone.valid?, "Must reject #{starts_on.inspect} / #{ends_on.inspect}"
+    end
+  end
+
+  test "saving watering settings marks legacy configuration as transferred" do
+    zone = users(:one).zones.create!(name: "Ancienne zone")
+    zone.update_column(:configuration_saved, false)
+    zone.update!(watering_time_slots: [ { start: "10:00", end: "10:15" } ])
+    assert zone.reload.configuration_saved
+  end
 end

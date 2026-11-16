@@ -33,7 +33,8 @@ class GardenZonesController < ApplicationController
   private
 
   def zone_params
-    params.require(:zone).permit(:name, :crop, :schedule, thresholds: [ :humidity, :temperature, :brightness ])
+    params.require(:zone).permit(:name, :crop, :schedule, :watering_time_slots, :watering_starts_on, :watering_ends_on,
+      watering_time_slots: [ :start, :end ], thresholds: [ :humidity, :temperature, :brightness ])
   end
 
   def save_zone(zone, status)
