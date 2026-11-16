@@ -1,11 +1,11 @@
 .account-page {
-    --account-accent: #1fb862;
+    --account-accent: var(--AccentColor);
     --account-danger: #e5484d;
 
     max-width: 1000px;
     margin: 0 auto;
     padding: 2rem 1rem;
-    color: white;
+    color: var(--TextColor);
 }
 
 .account-notice {
@@ -27,14 +27,22 @@
     align-items: center;
     gap: 0.9rem;
     padding: 1.25rem 1rem;
-    border: 2px solid var(--account-accent);
+    border: 2px solid var(--BorderColor);
     border-radius: 10px;
+    background-color: var(--SurfaceColor);
+    color: var(--TextColor);
 }
 
 .account-card__avatar img {
     width: 56px;
     height: 56px;
+    /* Icône blanche en mode sombre/défaut, noire en mode clair/sakura */
     filter: invert(1);
+}
+
+[data-theme="light"] .account-card__avatar img,
+[data-theme="sakura"] .account-card__avatar img {
+    filter: invert(0.2);
 }
 
 .account-card__info {
@@ -52,13 +60,14 @@
 }
 
 .account-card__label {
-    opacity: 0.7;
+    color: var(--MutedColor);
 }
 
 .account-card__value {
     font-weight: bold;
     word-break: break-all;
     text-align: right;
+    color: var(--TextColor);
 }
 
 .account-card__form,
@@ -72,10 +81,10 @@
 .account-card__select {
     width: 100%;
     padding: 0.45rem 0.6rem;
-    border: 1px solid var(--account-accent);
+    border: 1px solid var(--BorderColor);
     border-radius: 6px;
-    background: #2b333b;
-    color: white;
+    background-color: var(--P1Color);
+    color: var(--TextColor);
     font-family: inherit;
     font-size: 0.9rem;
 }
@@ -85,23 +94,29 @@
     padding: 0.55rem 0.75rem;
     border: 2px solid var(--account-accent);
     border-radius: 999px;
-    background: transparent;
-    color: white;
+    background-color: var(--P1Color);
+    color: var(--TextColor);
     font-family: inherit;
     font-size: 0.9rem;
+    font-weight: 600;
     cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
 }
 
 .account-card__button:hover {
-    background: var(--account-accent);
+    background-color: var(--account-accent);
+    color: var(--TextDarkColor);
 }
 
 .account-card__button--danger {
     border-color: var(--account-danger);
+    color: var(--account-danger);
+    background-color: transparent;
 }
 
 .account-card__button--danger:hover {
-    background: var(--account-danger);
+    background-color: var(--account-danger);
+    color: #ffffff;
 }
 
 .account-notice--error {
@@ -111,7 +126,7 @@
 .account-empty {
     margin-top: 2rem;
     text-align: center;
-    opacity: 0.7;
+    color: var(--MutedColor);
 }
 
 .account-dialog {
@@ -119,8 +134,8 @@
     padding: 1.5rem;
     border: 2px solid var(--account-accent);
     border-radius: 10px;
-    background: #2b333b;
-    color: white;
+    background-color: var(--SurfaceColor);
+    color: var(--TextColor);
 }
 
 .account-dialog::backdrop {
@@ -141,15 +156,15 @@
 .account-dialog__text {
     text-align: center;
     font-size: 0.9rem;
-    opacity: 0.7;
+    color: var(--MutedColor);
 }
 
 .account-dialog__input {
     padding: 0.55rem 0.75rem;
-    border: 1px solid var(--account-accent);
+    border: 1px solid var(--BorderColor);
     border-radius: 6px;
-    background: transparent;
-    color: white;
+    background-color: var(--P1Color);
+    color: var(--TextColor);
     font-family: inherit;
 }
 

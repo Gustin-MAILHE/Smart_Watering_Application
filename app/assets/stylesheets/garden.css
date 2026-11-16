@@ -1,44 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 
-/* Botanical colors follow the application theme without overriding shared navigation. */
-body:has(.garden-wrapper) {
-    --garden-background: #f3f5ed;
-    --garden-ink: #243c2b;
-    --garden-muted: #5c7160;
-    --garden-green: #386749;
-    --garden-border: #d6dfce;
-    --garden-sage: #e8efdf;
-    --garden-surface: #fffef9;
-    --garden-hover: #dbe7cf;
-    --garden-hover-border: #a3b893;
-    --garden-green-hover: #2c543a;
-    --garden-add-border: #90a480;
-    --garden-field: #fbfcf6;
-    --garden-field-hover: #f6f9ef;
-    --garden-field-border: #97ae87;
-    --garden-focus-surface: #fff;
-    --garden-danger: #8c4937;
-    --garden-danger-surface: #fcf2eb;
-    --garden-danger-border: #e7cfc1;
-    --garden-danger-hover: #743321;
-    --garden-danger-hover-surface: #f6e2d6;
-    --garden-danger-hover-border: #c89178;
-    --garden-error: #963e2b;
-    --garden-notice: #805326;
-    --garden-reading: #f1f5e9;
-    --garden-healthy-surface: #e0ebd7;
-    --garden-warning: #815614;
-    --garden-warning-surface: #f7ebc6;
-    --garden-offline: #8b493c;
-    --garden-offline-surface: #f5e1d9;
-    --garden-stop: #e7edde;
-    --garden-stop-hover: #d8e3ca;
-    --garden-focus: #648849;
-    --garden-button-text: #fffef9;
-}
-
-[data-theme="dark"] body:has(.garden-wrapper) {
-    --garden-background: var(--BackgroundColor);
+/* ==========================================================================
+   1. DEFAULT THEME
+   ========================================================================== */
+body:has(.garden-wrapper),
+[data-theme="default"] body:has(.garden-wrapper) {
+    --garden-background: #1c241e;
     --garden-ink: #e5eee4;
     --garden-muted: #afc1ac;
     --garden-green: #a6cf94;
@@ -74,6 +41,129 @@ body:has(.garden-wrapper) {
     color-scheme: dark;
 }
 
+/* ==========================================================================
+   2. Dark Theme (True dark mode)
+   ========================================================================== */
+[data-theme="dark"] body:has(.garden-wrapper) {
+    --garden-background: #0d0e11;
+    --garden-ink: #f1f3f5;
+    --garden-muted: #8b92a0;
+    --garden-green: #58a6ff;
+    --garden-border: #272a33;
+    --garden-sage: #1f2229;
+    --garden-surface: #16181d;
+    --garden-hover: #2c303a;
+    --garden-hover-border: #4a5162;
+    --garden-green-hover: #79b8ff;
+    --garden-add-border: #4a5162;
+    --garden-field: #121418;
+    --garden-field-hover: #1b1e24;
+    --garden-field-border: #3d4250;
+    --garden-focus-surface: #1f2229;
+    --garden-danger: #f28b82;
+    --garden-danger-surface: #2d1b1e;
+    --garden-danger-border: #5c2b30;
+    --garden-danger-hover: #f6aea9;
+    --garden-danger-hover-surface: #3d2226;
+    --garden-danger-hover-border: #8a3c43;
+    --garden-error: #f28b82;
+    --garden-notice: #fdd663;
+    --garden-reading: #1f2229;
+    --garden-healthy-surface: #1b2e26;
+    --garden-warning: #fdd663;
+    --garden-warning-surface: #332b18;
+    --garden-offline: #f28b82;
+    --garden-offline-surface: #331c1e;
+    --garden-stop: #1f2229;
+    --garden-stop-hover: #2c303a;
+    --garden-focus: #58a6ff;
+    --garden-button-text: #0d0e11;
+    color-scheme: dark;
+}
+
+/* ==========================================================================
+   3. LIGHT THEME
+   ========================================================================== */
+[data-theme="light"] body:has(.garden-wrapper) {
+    --garden-background: #eceae2;
+    --garden-ink: #273329;
+    --garden-muted: #5b695d;
+    --garden-green: #386749;
+    --garden-border: #d2d8ca;
+    --garden-sage: #e2e8d9;
+    --garden-surface: #f7f6f1;
+    --garden-hover: #d5dfc8;
+    --garden-hover-border: #9eb38e;
+    --garden-green-hover: #2c543a;
+    --garden-add-border: #90a480;
+    --garden-field: #f2f1eb;
+    --garden-field-hover: #eae8e0;
+    --garden-field-border: #97ae87;
+    --garden-focus-surface: #ffffff;
+    --garden-danger: #8c4937;
+    --garden-danger-surface: #f7ece6;
+    --garden-danger-border: #e0c5b6;
+    --garden-danger-hover: #743321;
+    --garden-danger-hover-surface: #efd9ce;
+    --garden-danger-hover-border: #c89178;
+    --garden-error: #963e2b;
+    --garden-notice: #805326;
+    --garden-reading: #eaece3;
+    --garden-healthy-surface: #dce8d3;
+    --garden-warning: #815614;
+    --garden-warning-surface: #f2e5be;
+    --garden-offline: #8b493c;
+    --garden-offline-surface: #eed9d1;
+    --garden-stop: #e2e8d9;
+    --garden-stop-hover: #d5dfc8;
+    --garden-focus: #648849;
+    --garden-button-text: #f7f6f1;
+    color-scheme: light;
+}
+
+/* ==========================================================================
+   4. SAKURA THEME (Japanese garden)
+   ========================================================================== */
+[data-theme="sakura"] body:has(.garden-wrapper) {
+    --garden-background: #f7eef0;
+    --garden-ink: #3b282e;
+    --garden-muted: #7d5e67;
+    --garden-green: #c85271;
+    --garden-border: #e6c6cf;
+    --garden-sage: #f3dce2;
+    --garden-surface: #fffafb;
+    --garden-hover: #ebd0d8;
+    --garden-hover-border: #d99aab;
+    --garden-green-hover: #ad3e5b;
+    --garden-add-border: #d48a9e;
+    --garden-field: #fdf5f7;
+    --garden-field-hover: #f8ebef;
+    --garden-field-border: #dba1b1;
+    --garden-focus-surface: #ffffff;
+    --garden-danger: #9e2a3b;
+    --garden-danger-surface: #fce8eb;
+    --garden-danger-border: #eabcc3;
+    --garden-danger-hover: #7d1e2c;
+    --garden-danger-hover-surface: #f7d4d9;
+    --garden-danger-hover-border: #d4838f;
+    --garden-error: #a62639;
+    --garden-notice: #8a4b5c;
+    --garden-reading: #f6e7eb;
+    --garden-healthy-surface: #f2d5dd;
+    --garden-warning: #8f5624;
+    --garden-warning-surface: #f7e6d4;
+    --garden-offline: #9e2a3b;
+    --garden-offline-surface: #f7d9de;
+    --garden-stop: #f3dce2;
+    --garden-stop-hover: #ebd0d8;
+    --garden-focus: #d45d79;
+    --garden-button-text: #fffafb;
+    color-scheme: light;
+}
+
+/* ==========================================================================
+   ADAPTATIVE STRUCTURE and BACKGROUND
+   ========================================================================== */
 body:has(.garden-wrapper) {
     display: block;
     height: auto;
@@ -97,7 +187,7 @@ body:has(.garden-wrapper) {
     color: var(--garden-ink);
 }
 
-/* Painted foliage stays behind the content and never intercepts clicks. */
+/* Background foliage tailored to each theme */
 .garden-wrapper::before {
     content: '';
     position: fixed;
@@ -105,10 +195,23 @@ body:has(.garden-wrapper) {
     z-index: -1;
     pointer-events: none;
     background: url('garden-foliage.png') center 60px / 100% auto no-repeat;
+    opacity: .38;
+    transition: filter 0.3s ease, opacity 0.3s ease;
+}
+
+[data-theme="dark"] .garden-wrapper::before {
+    filter: grayscale(100%) brightness(0.6);
+    opacity: .22;
+}
+
+[data-theme="light"] .garden-wrapper::before {
     opacity: .24;
 }
 
-[data-theme="dark"] .garden-wrapper::before { opacity: .42; }
+[data-theme="sakura"] .garden-wrapper::before {
+    filter: hue-rotate(285deg) saturate(1.6) brightness(0.95);
+    opacity: .26;
+}
 
 .garden-wrapper *,
 .garden-wrapper *::before,
@@ -163,11 +266,10 @@ body:has(.garden-wrapper) {
     letter-spacing: -.035em;
 }
 
-/* Shared transitions cover buttons, fields and the navigation menu. */
 .garden-wrapper :is(button, input, select) {
     font-family: inherit;
     transition: background-color .2s ease, color .2s ease, border-color .2s ease,
-                box-shadow .2s ease, transform .2s ease, padding-left .2s ease;
+    box-shadow .2s ease, transform .2s ease, padding-left .2s ease;
 }
 .garden-wrapper button { cursor: pointer; font-size: 17px; font-weight: 750; }
 .garden-wrapper button:hover { transform: translateY(-2px); box-shadow: 0 5px 12px #243c2b12; }
@@ -289,7 +391,6 @@ body:has(.garden-wrapper) {
     .garden-wrapper button:hover { transform: none; }
 }
 
-/* Presets retain the botanical theme and stack without overflowing narrow screens. */
 .garden-wrapper .preset-grid,
 .garden-wrapper .threshold-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; margin-bottom: 22px; }
 .garden-wrapper .preset-grid > div,

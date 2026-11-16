@@ -16,7 +16,9 @@
   <!-- theme section -->
   <div class="theme-section">
     <label for="theme"><%= t('pages.settings.index.theme_label') %></label>
-    <select name="theme" id="theme">
+    <select name="theme" id="theme"
+            data-appearance-target="themeSelect"
+            data-action="change->appearance#changeThemeFromSelect">
       <option value="default"><%= t('pages.settings.index.themes.default') %></option>
       <option value="light"><%= t('pages.settings.index.themes.light') %></option>
       <option value="dark"><%= t('pages.settings.index.themes.dark') %></option>
