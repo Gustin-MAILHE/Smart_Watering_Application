@@ -1,0 +1,27 @@
+<% content_for :title, "#{title} · Arrosage intelligent" %>
+
+<section class="auth-page" aria-labelledby="auth-title">
+  <div class="auth-layout">
+    <aside class="auth-garden" aria-label="Votre espace jardin">
+      <div class="auth-garden-content">
+        <span class="auth-eyebrow">Un jardin à votre rythme</span>
+        <svg class="auth-leaf" viewBox="0 0 64 64" aria-hidden="true">
+          <path d="M53 10C24 6 7 21 15 43c20 12 42-4 38-33Z"/>
+          <path d="M10 57 45 20M24 43l-2-16m14 4 13 2"/>
+        </svg>
+        <p class="auth-garden-title">Cultivez votre<br> petit coin de nature.</p>
+        <p class="auth-garden-description">Vos cultures, vos envies, votre rythme. Retrouvez tout ce qui fait grandir votre jardin, au même endroit.</p>
+        <span class="auth-garden-signature">Un peu d’attention. Beaucoup de vie.</span>
+      </div>
+    </aside>
+
+    <div class="auth-panel">
+      <header class="auth-heading">
+        <p class="auth-eyebrow">Votre espace personnel</p>
+        <h1 id="auth-title"><%= title %></h1>
+        <p class="auth-description"><%= description %></p>
+      </header>
+      <%= yield %>
+    </div>
+  </div>
+</section>

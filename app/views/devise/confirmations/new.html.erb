@@ -1,16 +1,16 @@
-<h2>Renvoyer les instructions de confirmation</h2>
+<%= render layout: "devise/shared/shell", locals: { title: "Confirmer votre adresse", description: "Recevez un nouvel e-mail de confirmation pour votre compte." } do %>
+  <%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f| %>
+    <%= render "devise/shared/error_messages", resource: resource %>
 
-<%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
+    <div class="field">
+      <p><%= f.label :email %></p>
+      <p><%= f.email_field :email, autofocus: true, autocomplete: "email", value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email) %></p>
+    </div>
 
-  <div class="field">
-    <p><%= f.label :email %></p>
-    <p><%= f.email_field :email, autofocus: true, autocomplete: "email", value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email) %></p>
-  </div>
+    <div class="actions">
+      <%= f.button "Renvoyer les instructions de confirmation", type: "submit", class: "btn-submit" %>
+    </div>
+  <% end %>
 
-  <div class="actions">
-    <%= f.submit "Renvoyer les instructions de confirmation" %>
-  </div>
+  <%= render "devise/shared/links" %>
 <% end %>
-
-<%= render "devise/shared/links" %>

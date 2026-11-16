@@ -163,4 +163,44 @@ class GardenZonesControllerTest < ActionDispatch::IntegrationTest
     assert_response :not_found
     assert_equal original, @zone.reload.garden_data
   end
+
+  test "watering settings persist across requests and remain private to the owner" do
+    sign_in @owner
+    settings = {
+      watering_time_slots: [ { start: "06:00", end: "06:15" }, { start: "19:00", end: "19:45" } ],
+      watering_starts_on: "2027-05-01", watering_ends_on: "2027-08-31"
+    }
+    patch garden_zone_path(@zone), params: { zone: settings }, as: :json
+    assert_response :success
+    settings.each { |key, value| assert_equal value.as_json, response.parsed_body[key.to_s] }
+    get garden_zones_path, as: :json
+    assert_equal [ @zone.reload.garden_data.deep_stringify_keys ], response.parsed_body
+
+    sign_in @other
+    patch garden_zone_path(@zone), params: { zone: { watering_ends_on: nil } }, as: :json
+    assert_response :not_found
+    assert_equal Date.new(2027, 8, 31), @zone.reload.watering_ends_on
+
+    sign_in @owner
+    patch garden_zone_path(@zone), params: { zone: { watering_starts_on: nil, watering_ends_on: nil } }, as: :json
+    assert_response :success
+    assert_nil @zone.reload.watering_starts_on
+    assert_nil @zone.watering_ends_on
+    assert_equal settings[:watering_time_slots].as_json, @zone.watering_time_slots
+  end
+
+  test "invalid watering settings reject the entire update without changing other configuration" do
+    sign_in @owner
+    [ { watering_time_slots: [] }, { watering_time_slots: "invalid" },
+      { watering_time_slots: [ { start: "06:00", end: "05:00" } ] },
+      { watering_time_slots: [ { start: "06:00", end: "07:00" }, { start: "06:30", end: "08:00" } ] },
+      { watering_starts_on: "2027-02-30" },
+      { watering_starts_on: "2027-06-01", watering_ends_on: "2027-05-01" } ].each do |settings|
+      original = @zone.reload.garden_data
+      patch garden_zone_path(@zone), params: { zone: settings.merge(crop: "Lettuce") }, as: :json
+      assert_response :unprocessable_entity
+      assert response.parsed_body["errors"].present?
+      assert_equal original, @zone.reload.garden_data
+    end
+  end
 end

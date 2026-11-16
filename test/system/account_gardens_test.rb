@@ -20,6 +20,7 @@ class AccountGardensTest < ApplicationSystemTestCase
     click_button "Ajouter une zone"
     assert_selector ".zone-btn.active", text: "Zone 1"
     assert_equal 2, users(:one).zones.count
+    garden_step "Cultures"
     fill_in "Nom de la zone", with: "Potager"
     click_button "Enregistrer le nom"
     assert_selector ".zone-btn.active", text: "Potager"
@@ -51,8 +52,10 @@ class AccountGardensTest < ApplicationSystemTestCase
     login(users(:one))
     visit gardens_path
     assert_button "Zone 1"
+    garden_step "Cultures"
     select "Fraises", from: "Cultures"
     wait_for_save
+    garden_step "Seuils"
     fill_in "Seuil d’humidité (%)", with: "45"
     find("#humidity-threshold").send_keys(:tab)
     wait_for_save
@@ -61,8 +64,11 @@ class AccountGardensTest < ApplicationSystemTestCase
     login(users(:two))
     visit gardens_path
     assert_button "Zone 1"
+    garden_step "Cultures"
     assert_select "Cultures", selected: "Carottes"
+    garden_step "Seuils"
     assert_field "Seuil d’humidité (%)", with: ""
+    garden_step "Cultures"
     fill_in "Nom de la zone", with: "Zone privée"
     click_button "Enregistrer le nom"
     assert_button "Zone privée"
@@ -72,7 +78,9 @@ class AccountGardensTest < ApplicationSystemTestCase
     visit gardens_path
     assert_button "Zone 1"
     assert_no_button "Zone privée"
+    garden_step "Cultures"
     assert_select "Cultures", selected: "Fraises"
+    garden_step "Seuils"
     assert_field "Seuil d’humidité (%)", with: "45"
   end
 
@@ -108,6 +116,7 @@ class AccountGardensTest < ApplicationSystemTestCase
     click_button "Supprimer la zone"
     assert_text "Impossible de joindre le serveur"
     assert_button "Serre"
+    garden_step "Cultures"
     fill_in "Nom de la zone", with: "Potager"
     click_button "Enregistrer le nom"
     assert_text "Impossible de joindre le serveur"
@@ -150,10 +159,13 @@ class AccountGardensTest < ApplicationSystemTestCase
     login(users(:one))
     visit gardens_path
     click_button "Potager"
+    garden_step "Cultures"
     select "Fraises", from: "Cultures"
     wait_for_save
-    select "Tous les jours à 07 h 00", from: "Programme d’arrosage"
+    garden_step "Arrosage"
+    select "Tous les jours", from: "Fréquence d’arrosage"
     wait_for_save
+    garden_step "Seuils"
     fill_in "Seuil d’humidité (%)", with: "45"
     find("#humidity-threshold").send_keys(:tab)
     wait_for_save
@@ -168,13 +180,18 @@ class AccountGardensTest < ApplicationSystemTestCase
     page.execute_script("localStorage.clear()")
     page.refresh
     click_button "Potager"
+    garden_step "Cultures"
     assert_select "Cultures", selected: "Fraises"
-    assert_select "Programme d’arrosage", selected: "Tous les jours à 07 h 00"
+    garden_step "Arrosage"
+    assert_select "Fréquence d’arrosage", selected: "Tous les jours"
+    garden_step "Seuils"
     assert_field "Seuil d’humidité (%)", with: "45"
     assert_field "Seuil de température (°C)", with: "28"
     assert_field "Seuil de luminosité (lx)", with: "1500"
     click_button "Serre"
+    garden_step "Cultures"
     assert_select "Cultures", selected: "Carottes"
+    garden_step "Seuils"
     assert_field "Seuil d’humidité (%)", with: ""
   end
 
@@ -191,11 +208,14 @@ class AccountGardensTest < ApplicationSystemTestCase
     }
     page.execute_script("localStorage.setItem(arguments[0], arguments[1])", account_storage_key, state.to_json)
     page.refresh
+    garden_step "Cultures"
     assert_button "Enregistrer ces réglages sur mon compte"
     assert_select "Cultures", selected: "Fraises"
+    garden_step "Seuils"
     assert_field "Seuil d’humidité (%)", with: "42"
     assert_equal "Carrots", zone.reload.crop
 
+    garden_step "Cultures"
     click_button "Enregistrer ces réglages sur mon compte"
     assert_no_button "Enregistrer ces réglages sur mon compte"
     assert zone.reload.configuration_saved
@@ -204,13 +224,17 @@ class AccountGardensTest < ApplicationSystemTestCase
     state[:zones][0][:thresholds][:humidity] = 1
     page.execute_script("localStorage.setItem(arguments[0], arguments[1])", account_storage_key, state.to_json)
     page.refresh
+    garden_step "Cultures"
     assert_select "Cultures", selected: "Fraises"
+    garden_step "Seuils"
     assert_field "Seuil d’humidité (%)", with: "42"
     assert_no_button "Enregistrer ces réglages sur mon compte"
 
     page.execute_script("localStorage.clear()")
     page.refresh
+    garden_step "Cultures"
     assert_select "Cultures", selected: "Fraises"
+    garden_step "Seuils"
     assert_field "Seuil d’humidité (%)", with: "42"
   end
 
@@ -218,11 +242,14 @@ class AccountGardensTest < ApplicationSystemTestCase
     zone = users(:one).zones.create!(name: "Potager", thresholds: { humidity: 30 })
     login(users(:one))
     visit gardens_path
+    garden_step "Seuils"
     assert_field "Seuil d’humidité (%)", with: "30"
     page.execute_script("window.fetch = () => Promise.reject(new TypeError('Offline'))")
+    garden_step "Cultures"
     select "Fraises", from: "Cultures"
     assert_text "Impossible de joindre le serveur"
     assert_select "Cultures", selected: "Carottes"
+    garden_step "Seuils"
     fill_in "Seuil d’humidité (%)", with: "45"
     find("#humidity-threshold").send_keys(:tab)
     assert_field "Seuil d’humidité (%)", with: "30"
@@ -234,6 +261,7 @@ class AccountGardensTest < ApplicationSystemTestCase
     users(:one).zones.create!(name: "Potager")
     login(users(:one))
     visit gardens_path
+    garden_step "Seuils"
     fill_in "Nom du préréglage", with: "Été"
     fill_in "Seuil d’humidité (%)", with: "40"
     find("#humidity-threshold").send_keys(:tab)
@@ -249,6 +277,7 @@ class AccountGardensTest < ApplicationSystemTestCase
     page.execute_script("localStorage.clear()")
     page.refresh
     click_button "Zone 1"
+    garden_step "Seuils"
     assert_field "Seuil d’humidité (%)", with: "40"
     assert_select "Préréglage enregistré", options: [ "Choisir un préréglage" ]
   end

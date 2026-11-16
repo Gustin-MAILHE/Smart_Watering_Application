@@ -1,10 +1,15 @@
 import { Controller } from "@hotwired/stimulus"
 
 const STORAGE_KEY = "smartWatering.garden.v1"
+const DEFAULT_WATERING_SLOTS = {
+  "Every 2 days - 6:00 AM": [{ start: "06:00", end: "06:30" }],
+  "Every day - 7:00 AM": [{ start: "07:00", end: "07:30" }],
+  "Every 3 days - 8:00 PM": [{ start: "20:00", end: "20:30" }]
+}
 const DEMO_SENSORS = [
-  { id: "temperature-1", type: "temp", name: "Température · T-01", health: "healthy", reading: "24°C", initialZoneId: 1 },
-  { id: "humidity-1", type: "humidity", name: "Humidité · H-01", health: "healthy", reading: "65%", initialZoneId: 1 },
-  { id: "brightness-1", type: "brightness", name: "Luminosité · B-01", health: "healthy", reading: "850 lx", initialZoneId: 1 },
+  { id: "temperature-1", type: "temp", name: "Température · T-01", health: "healthy", reading: "28°C", initialZoneId: 1 },
+  { id: "humidity-1", type: "humidity", name: "Humidité · H-01", health: "low-battery", reading: "42%", initialZoneId: 1 },
+  { id: "brightness-1", type: "brightness", name: "Luminosité · B-01", health: "offline", reading: null, initialZoneId: 1 },
   { id: "temperature-2", type: "temp", name: "Température · T-02", health: "healthy", reading: "19°C", initialZoneId: 2 },
   { id: "humidity-2", type: "humidity", name: "Humidité · H-02", health: "healthy", reading: "80%", initialZoneId: 2 },
   { id: "brightness-2", type: "brightness", name: "Luminosité · B-02", health: "healthy", reading: "620 lx", initialZoneId: 2 },
@@ -26,7 +31,7 @@ export default class extends Controller {
     "readingsNote", "storageNotice", "zoneName", "nameError", "zoneContent", "emptyGarden",
     "sensorSelect", "sensorAssign", "presetSelect", "presetName", "presetError",
     "presetApply", "presetUpdate", "presetDelete", "humidityThreshold", "temperatureThreshold", "brightnessThreshold",
-    "localConfiguration"
+    "localConfiguration", "wateringSlots", "wateringAdd", "wateringStartsOn", "wateringEndsOn", "wateringError", "wateringStatus"
   ]
 
   /** Restores state and rebuilds buttons after initial loading or a Turbo visit. */
@@ -35,6 +40,7 @@ export default class extends Controller {
     this.requestController = new AbortController()
     this.state = this.loadState()
     if (this.accountIdValue) this.restoreAccountZones()
+    this.state.zones.forEach((zone) => this.initializeWateringSchedule(zone))
     this.initializePresets()
     this.renderZoneButtons()
     this.renderSelectedZone()
@@ -58,6 +64,8 @@ export default class extends Controller {
       if (!zone.configurationSaved && local) {
         Object.assign(restored, {
           crop: local.crop, schedule: local.schedule, thresholds: local.thresholds ?? this.emptyThresholds(),
+          watering_time_slots: local.watering_time_slots ?? structuredClone(DEFAULT_WATERING_SLOTS[local.schedule]),
+          watering_starts_on: local.watering_starts_on ?? null, watering_ends_on: local.watering_ends_on ?? null,
           localConfiguration: true
         })
       }
@@ -113,9 +121,11 @@ export default class extends Controller {
     if (this.zoneRequestPending) return false
     if (this.accountIdValue) {
       try {
-        const settings = { crop: zone.crop, schedule: zone.schedule, thresholds: zone.thresholds, ...changes }
+        const settings = { ...zone, ...changes }
         const saved = await this.requestZone("PATCH", zone.id, {
-          crop: settings.crop, schedule: settings.schedule, thresholds: settings.thresholds
+          crop: settings.crop, schedule: settings.schedule, thresholds: settings.thresholds,
+          watering_time_slots: settings.watering_time_slots,
+          watering_starts_on: settings.watering_starts_on, watering_ends_on: settings.watering_ends_on
         })
         Object.assign(zone, changes, saved, { localConfiguration: false })
         this.localConfigurationTarget.hidden = true
@@ -137,6 +147,7 @@ export default class extends Controller {
   renderConfigurationFields(zone) {
     this.cropTarget.value = zone.crop
     this.scheduleTarget.value = zone.schedule
+    this.renderWateringSchedule(zone)
     for (const key of ["humidity", "temperature", "brightness"]) {
       this[`${key}ThresholdTarget`].value = zone.thresholds[key] ?? ""
     }
@@ -228,7 +239,11 @@ export default class extends Controller {
       if (uniqueNames.has(normalizedName)) return false
       uniqueIds.add(zone.id)
       uniqueNames.add(normalizedName)
-      return crops.includes(zone.crop) && schedules.includes(zone.schedule) && this.isValidSensorAssignment(zone, assignedSensors)
+      return crops.includes(zone.crop) && schedules.includes(zone.schedule) &&
+        this.validWateringSchedule({
+          watering_time_slots: zone.watering_time_slots ?? DEFAULT_WATERING_SLOTS[zone.schedule],
+          watering_starts_on: zone.watering_starts_on ?? null, watering_ends_on: zone.watering_ends_on ?? null
+        }) && this.isValidSensorAssignment(zone, assignedSensors)
     })
   }
 
@@ -293,10 +308,11 @@ export default class extends Controller {
   }
 
   /** @param {MouseEvent} event The selected zone button's click event. */
-  selectZone(event) {
+  async selectZone(event) {
     if (this.zoneRequestPending) return
     const zoneId = Number(event.currentTarget.dataset.zoneId)
     if (!this.state.zones.some((zone) => zone.id === zoneId)) return
+    if (!await this.savePendingWateringSchedule()) return
 
     this.state.selectedZoneId = zoneId
     this.renderSelectedZone()
@@ -307,12 +323,14 @@ export default class extends Controller {
   /** Creates and selects the next numbered zone without assigning simulated sensors. */
   async addZone() {
     if (this.zoneRequestPending) return
+    if (!await this.savePendingWateringSchedule()) return
     const nextId = this.state.nextZoneId
     if (!Number.isSafeInteger(nextId)) return
 
     const usedNames = new Set(this.state.zones.map((zone) => zone.name.toLowerCase()))
     const name = this.nextZoneName(usedNames, this.state.zones.length)
     const zone = { id: nextId, name, crop: "Carrots", schedule: "Every 3 days - 8:00 PM", sensorIds: [] }
+    this.initializeWateringSchedule(zone)
     if (this.accountIdValue) {
       try {
         Object.assign(zone, await this.requestZone("POST", null, { name }))
@@ -436,8 +454,149 @@ export default class extends Controller {
     this.zoneNameTarget.value = zone.name
     this.cropTarget.value = zone.crop
     this.scheduleTarget.value = zone.schedule
+    this.renderWateringSchedule(zone)
     this.renderSensorReadings(zone)
     this.renderPresets(zone)
+  }
+
+  /** Adds editable time ranges to legacy browser saves without discarding their other settings. */
+  initializeWateringSchedule(zone) {
+    zone.watering_time_slots ??= structuredClone(DEFAULT_WATERING_SLOTS[zone.schedule])
+    zone.watering_starts_on ??= null
+    zone.watering_ends_on ??= null
+  }
+
+  /** Shared validation for browser storage and the editor, using local dates without timezone conversion. */
+  validWateringSchedule(settings) {
+    const slots = settings.watering_time_slots
+    const time = /^(?:[01]\d|2[0-3]):[0-5]\d$/
+    if (!Array.isArray(slots) || slots.length < 1 || slots.length > 24) return false
+    if (!slots.every((slot) => slot && Object.keys(slot).sort().join() === "end,start" &&
+      typeof slot.start === "string" && typeof slot.end === "string" &&
+      time.test(slot.start) && time.test(slot.end) && slot.start < slot.end)) return false
+    const ordered = [...slots].sort((a, b) => a.start.localeCompare(b.start))
+    if (ordered.some((slot, index) => index > 0 && ordered[index - 1].end > slot.start)) return false
+    const start = settings.watering_starts_on
+    const end = settings.watering_ends_on
+    const validDate = (value) => value === null || (typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value) &&
+      value.slice(0, 4) !== "0000" && Number.isFinite(Date.parse(value)) && new Date(value).toISOString().slice(0, 10) === value)
+    return validDate(start) && validDate(end) && (!start || !end || start <= end)
+  }
+
+  renderWateringSchedule(zone) {
+    this.wateringSlotsTarget.replaceChildren()
+    zone.watering_time_slots.forEach((slot) => this.appendWateringSlot(slot))
+    this.wateringStartsOnTarget.value = zone.watering_starts_on ?? ""
+    this.wateringEndsOnTarget.value = zone.watering_ends_on ?? ""
+    this.wateringErrorTarget.hidden = true
+    this.wateringStatusTarget.hidden = true
+  }
+
+  /** Builds labelled time fields as DOM nodes so saved values never become markup. */
+  appendWateringSlot(slot = { start: "", end: "" }) {
+    const row = document.createElement("div")
+    row.className = "watering-slot"
+    const index = this.wateringSlotsTarget.children.length + 1
+    for (const [key, label] of [["start", "Début"], ["end", "Fin"]]) {
+      const group = document.createElement("div")
+      const input = document.createElement("input")
+      input.type = "time"
+      input.required = true
+      input.className = "field-input"
+      input.dataset.wateringField = key
+      input.id = `watering-${key}-${index}`
+      input.value = slot[key]
+      const caption = document.createElement("label")
+      caption.className = "field-label"
+      caption.htmlFor = input.id
+      caption.textContent = `${label} du créneau ${index}`
+      group.append(caption, input)
+      row.append(group)
+    }
+    const remove = document.createElement("button")
+    remove.type = "button"
+    remove.className = "zone-delete"
+    remove.textContent = "Supprimer"
+    remove.setAttribute("aria-label", `Supprimer le créneau ${index}`)
+    remove.dataset.action = "click->garden#removeWateringSlot"
+    row.append(remove)
+    this.wateringSlotsTarget.append(row)
+    this.wateringAddTarget.disabled = index >= 24
+  }
+
+  addWateringSlot() {
+    if (this.wateringSlotsTarget.children.length >= 24) return
+    this.appendWateringSlot()
+    this.wateringSlotsTarget.lastElementChild.querySelector("input").focus()
+    this.clearWateringFeedback()
+  }
+
+  removeWateringSlot(event) {
+    event.currentTarget.closest(".watering-slot").remove()
+    const slots = this.readWateringSlots()
+    this.wateringSlotsTarget.replaceChildren()
+    slots.forEach((slot) => this.appendWateringSlot(slot))
+    this.wateringAddTarget.disabled = false
+    this.wateringAddTarget.focus()
+    this.clearWateringFeedback()
+  }
+
+  clearWateringFeedback() {
+    this.wateringErrorTarget.hidden = true
+    this.wateringStatusTarget.hidden = true
+  }
+
+  readWateringSlots() {
+    return Array.from(this.wateringSlotsTarget.children, (row) => ({
+      start: row.querySelector('[data-watering-field="start"]').value,
+      end: row.querySelector('[data-watering-field="end"]').value
+    }))
+  }
+
+  wateringDraft() {
+    return {
+      watering_time_slots: this.readWateringSlots(),
+      watering_starts_on: this.wateringStartsOnTarget.value || null,
+      watering_ends_on: this.wateringEndsOnTarget.value || null
+    }
+  }
+
+  beforeStepChange(event) {
+    if (event.detail.from === 3) event.detail.waitUntil(this.savePendingWateringSchedule())
+  }
+
+  async savePendingWateringSchedule() {
+    const zone = this.state.zones.find((zone) => zone.id === this.state.selectedZoneId)
+    if (!zone) return true
+    const draft = this.wateringDraft()
+    const unchanged = Object.entries(draft).every(([key, value]) => JSON.stringify(value) === JSON.stringify(zone[key]))
+    if (unchanged && this.wateringSlotsTarget.closest("form").checkValidity()) return true
+    return this.saveWateringSchedule()
+  }
+
+  async saveWateringSchedule(event) {
+    event?.preventDefault()
+    const zone = this.state.zones.find((zone) => zone.id === this.state.selectedZoneId)
+    if (!zone || this.zoneRequestPending) return false
+    const settings = this.wateringDraft()
+    this.wateringStatusTarget.hidden = true
+    if (!this.validWateringSchedule(settings) || !this.wateringSlotsTarget.closest("form").checkValidity()) {
+      this.wateringErrorTarget.textContent = "Vérifiez les créneaux : 1 à 24 horaires, une fin après le début le même jour, sans chevauchement. La date de fin doit être le même jour ou après la date de début."
+      this.wateringErrorTarget.hidden = false
+      return false
+    }
+    if (!await this.saveConfiguration(zone, settings)) {
+      this.wateringErrorTarget.textContent = this.storageNoticeTarget.textContent
+      this.wateringErrorTarget.hidden = false
+      return false
+    }
+    this.renderWateringSchedule(zone)
+    this.saveState()
+    this.wateringStatusTarget.textContent = this.accountIdValue
+      ? "Créneaux et dates enregistrés sur votre compte."
+      : "Créneaux et dates appliqués en mode démonstration."
+    this.wateringStatusTarget.hidden = false
+    return true
   }
 
   /** @param {object} zone Lists unassigned devices for reading types still missing in the zone. @returns {object[]} */

@@ -32,12 +32,12 @@ body:has(.garden-wrapper),
     --garden-healthy-surface: #344b32;
     --garden-warning: #f0d18c;
     --garden-warning-surface: #493e28;
-    --garden-offline: #f3b7aa;
-    --garden-offline-surface: #4b322c;
-    --garden-stop: #334633;
-    --garden-stop-hover: #435b3d;
+    --garden-offline: #ffb3bc;
+    --garden-offline-surface: #4c2c31;
+    --garden-error: #ff9fae;
+    --garden-notice: #e7c08d;
     --garden-focus: #b8dc9c;
-    --garden-button-text: #17251b;
+    --garden-button-text: #1c2d20;
     color-scheme: dark;
 }
 
@@ -179,11 +179,11 @@ body:has(.garden-wrapper) {
     width: 100%;
     min-width: 0;
     min-height: 100svh;
-    padding: 76px 24px 64px;
+    padding: 32px 28px 56px;
     box-sizing: border-box;
     font-family: 'Inter', system-ui, sans-serif;
-    font-size: 18px;
-    line-height: 1.5;
+    font-size: 17px;
+    line-height: 1.6;
     color: var(--garden-ink);
 }
 
@@ -274,120 +274,89 @@ body:has(.garden-wrapper) {
 .garden-wrapper button { cursor: pointer; font-size: 17px; font-weight: 750; }
 .garden-wrapper button:hover { transform: translateY(-2px); box-shadow: 0 5px 12px #243c2b12; }
 .garden-wrapper button:active { transform: translateY(0); box-shadow: none; }
-.garden-wrapper :is(button, input, select):focus-visible {
-    outline: 3px solid var(--garden-focus);
-    outline-offset: 4px;
-}
+.garden-wrapper :is(button, input, select):focus-visible { outline: 3px solid var(--garden-focus); outline-offset: 4px; }
 .garden-wrapper [hidden] { display: none !important; }
-
-.garden-wrapper .zone-list { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
-.garden-wrapper .zone-btn {
-    max-width: 100%;
-    padding: 12px 22px;
-    color: var(--garden-green);
-    background: var(--garden-sage);
-    border: 1px solid transparent;
-    border-radius: 13px;
-    overflow-wrap: anywhere;
-}
-.garden-wrapper .zone-btn:hover { background: var(--garden-hover); border-color: var(--garden-hover-border); }
-.garden-wrapper .zone-btn.active { color: var(--garden-button-text); background: var(--garden-green); border-color: var(--garden-green); }
+.garden-wrapper button:disabled { opacity: .45; cursor: not-allowed; transform: none; box-shadow: none; }
+.garden-wrapper .zone-list { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+.garden-wrapper .zone-btn { max-width: 100%; padding: 11px 22px; color: var(--garden-green); background: var(--garden-sage); border: 0; border-radius: 25px 25px 25px 8px; overflow-wrap: anywhere; }
+.garden-wrapper .zone-btn:hover { background: var(--garden-hover); }
+.garden-wrapper .zone-btn.active { color: var(--garden-button-text); background: var(--garden-green); }
 .garden-wrapper .zone-btn.active:hover { background: var(--garden-green-hover); }
-.garden-wrapper .zone-add {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    flex: 0 0 48px;
-    width: 48px;
-    height: 48px;
-    color: var(--garden-green);
-    background: transparent;
-    border: 1px dashed var(--garden-add-border);
-    border-radius: 13px;
-    font-size: 26px;
-}
+.garden-wrapper .zone-add { display: inline-grid; place-items: center; flex: 0 0 44px; width: 44px; height: 44px; color: var(--garden-green); background: transparent; border: 1px dashed var(--garden-border); border-radius: 50%; font-size: 25px; }
 .garden-wrapper .zone-add:hover { background: var(--garden-sage); border-style: solid; }
-
-.garden-wrapper .field-label {
-    display: block;
-    margin-bottom: 8px;
-    color: var(--garden-muted);
-    font-size: 15px;
-    font-weight: 700;
-}
-.garden-wrapper :is(.field-input, .field-select) {
-    width: 100%;
-    min-width: 0;
-    min-height: 50px;
-    padding: 12px 14px;
-    background: var(--garden-field);
-    color: var(--garden-ink);
-    border: 1px solid var(--garden-border);
-    border-radius: 11px;
-    font-size: 18px;
-    font-weight: 500;
-}
-.garden-wrapper :is(.field-input, .field-select):hover { background: var(--garden-field-hover); border-color: var(--garden-field-border); }
+.garden-wrapper .field-label { display: block; margin-bottom: 8px; color: var(--garden-muted); font-size: 14px; font-weight: 600; }
+.garden-wrapper :is(.field-input, .field-select) { display: block; width: 100%; min-width: 0; min-height: 50px; padding: 12px 18px; background: var(--garden-field); color: var(--garden-ink); border: 1px solid var(--garden-border); border-radius: 20px 8px 20px 8px; font-size: 16px; font-weight: 500; }
+.garden-wrapper :is(.field-input, .field-select):hover { background: var(--garden-field-hover); border-color: var(--garden-green); }
 .garden-wrapper :is(.field-input, .field-select):focus { background: var(--garden-focus-surface); border-color: var(--garden-green); }
-.garden-wrapper .field-select { display: block; margin-bottom: 22px; cursor: pointer; }
-.garden-wrapper .zone-name-form { margin-bottom: 22px; }
-.garden-wrapper .zone-name-row { display: flex; flex-wrap: wrap; gap: 10px; }
-.garden-wrapper .field-input { flex: 1 1 160px; }
-.garden-wrapper :is(.zone-save, .zone-delete) { padding: 12px 16px; border-radius: 11px; }
-.garden-wrapper .zone-save { color: var(--garden-button-text); background: var(--garden-green); border: 1px solid var(--garden-green); }
+.garden-wrapper .field-select { margin-bottom: 24px; cursor: pointer; }
+.garden-wrapper .zone-name-form { margin-bottom: 26px; }
+.garden-wrapper .zone-name-row { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
+.garden-wrapper .zone-name-row .field-input { flex: 1 1 220px; }
+.garden-wrapper :is(.zone-save, .zone-delete) { padding: 12px 20px; border: 0; border-radius: 28px; line-height: 1.6; }
+.garden-wrapper .zone-save { color: var(--garden-button-text); background: var(--garden-green); }
 .garden-wrapper .zone-save:hover { background: var(--garden-green-hover); }
-.garden-wrapper .zone-delete { color: var(--garden-danger); background: var(--garden-danger-surface); border: 1px solid var(--garden-danger-border); }
-.garden-wrapper .zone-delete:hover { color: var(--garden-danger-hover); background: var(--garden-danger-hover-surface); border-color: var(--garden-danger-hover-border); }
-.garden-wrapper .garden-field-error { margin-top: 8px; color: var(--garden-error); font-size: 15px; }
+.garden-wrapper :is(.zone-delete, .btn-stop) { color: #fff; background: var(--garden-danger); border: 0; }
+.garden-wrapper :is(.zone-delete, .btn-stop):hover { color: #fff; background: var(--garden-danger-hover); box-shadow: 0 5px 18px rgb(223 32 56 / 22%); }
+.garden-wrapper .zone-delete--compact { padding: 8px 16px; font-size: 12px; }
+.garden-wrapper .garden-field-error { margin-top: 10px; color: var(--garden-error); font-size: 14px; }
 .garden-wrapper .field-input[aria-invalid="true"] { border-color: var(--garden-error); }
-
-.garden-wrapper :is(.garden-note, .garden-storage-notice, .garden-empty) {
-    font-size: 15px;
-    color: var(--garden-muted);
-    overflow-wrap: anywhere;
-}
-.garden-wrapper .garden-note { margin-bottom: 16px; }
-.garden-wrapper .garden-empty { margin-top: 18px; }
+.garden-wrapper :is(.garden-note, .garden-storage-notice, .garden-empty) { font-size: 14px; color: var(--garden-muted); overflow-wrap: anywhere; }
+.garden-wrapper .garden-note { margin-bottom: 18px; }
+.garden-wrapper .garden-empty { margin-top: 20px; }
 .garden-wrapper .garden-storage-notice { margin-top: 16px; color: var(--garden-notice); }
-.garden-wrapper .sensor-tags { display: grid; gap: 10px; margin: 0 0 22px; list-style: none; }
-.garden-wrapper .sensor-item { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; padding: 10px 12px; background: var(--garden-reading); border-radius: 11px; }
-.garden-wrapper .sensor-name { flex: 1 1 150px; font-size: 15px; font-weight: 650; }
-.garden-wrapper .sensor-health { display: inline-flex; align-items: center; gap: 5px; padding: 3px 7px; border-radius: 6px; font-size: 12px; font-weight: 700; }
+.garden-sensor-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 36px; }
+.garden-wrapper .sensor-tags { display: grid; gap: 12px; margin: 0 0 24px; padding: 0; list-style: none; }
+.garden-wrapper .sensor-item { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; padding: 12px 0; border-bottom: 1px solid var(--garden-border); background: transparent; }
+.garden-wrapper .sensor-name { flex: 1 1 150px; font-size: 14px; font-weight: 600; }
+.garden-wrapper .sensor-health { display: inline-flex; align-items: center; gap: 5px; padding: 4px 9px; border-radius: 18px; font-size: 11px; font-weight: 650; }
 .garden-wrapper .sensor-health::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
 .garden-wrapper .sensor-health.healthy { color: var(--garden-green); background: var(--garden-healthy-surface); }
 .garden-wrapper .sensor-health.low-battery { color: var(--garden-warning); background: var(--garden-warning-surface); }
 .garden-wrapper .sensor-health.offline { color: var(--garden-offline); background: var(--garden-offline-surface); }
-.garden-wrapper .sensor-remove { width: 34px; height: 34px; margin-left: auto; border: 1px solid var(--garden-border); border-radius: 8px; background: var(--garden-surface); color: var(--garden-muted); font-size: 22px; }
-.garden-wrapper .sensor-remove:hover { color: var(--garden-danger); background: var(--garden-danger-surface); border-color: var(--garden-danger-border); }
-.garden-wrapper .sensor-form .field-select { margin-bottom: 12px; }
-.garden-wrapper button:disabled { opacity: .5; cursor: not-allowed; transform: none; box-shadow: none; }
-.garden-wrapper .sensor-boxes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
-.garden-wrapper .sensor-reading { min-width: 0; padding: 14px 8px; text-align: center; background: var(--garden-reading); border-radius: 13px; }
-.garden-wrapper .sensor-label { display: block; margin-bottom: 8px; color: var(--garden-muted); font-size: 12px; font-weight: 600; overflow-wrap: anywhere; }
-.garden-wrapper .value-box { font-size: clamp(18px, 2.5vw, 27px); font-weight: 800; letter-spacing: -.05em; overflow-wrap: anywhere; }
-
-.garden-wrapper .garden-actions { display: flex; flex-wrap: wrap; gap: 14px; width: 100%; max-width: 480px; margin: 4px auto 0; }
-.garden-wrapper :is(.btn-start, .btn-stop) { flex: 1 1 140px; padding: 16px 24px; border: 1px solid var(--garden-green); border-radius: 13px; font-size: 19px; }
+.garden-wrapper .sensor-remove { width: 36px; height: 36px; margin-left: auto; border: 0; border-radius: 50%; background: var(--garden-danger); color: #fff; font-size: 22px; }
+.garden-wrapper .sensor-remove:hover { background: var(--garden-danger-hover); }
+.garden-wrapper .sensor-form .field-select { margin-bottom: 14px; }
+.garden-wrapper .sensor-boxes { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
+.garden-wrapper .sensor-reading { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-width: 0; padding: 18px 22px; background: var(--garden-reading); border-radius: 36px 12px 36px 12px; }
+.garden-wrapper .sensor-label { color: var(--garden-muted); font-size: 13px; overflow-wrap: anywhere; }
+.garden-wrapper .value-box { font-size: 27px; font-weight: 700; letter-spacing: -.05em; overflow-wrap: anywhere; }
+.garden-wrapper .garden-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 34px; }
+.garden-wrapper :is(.btn-start, .btn-stop) { padding: 13px 30px; border: 0; border-radius: 28px; font-size: 17px; }
 .garden-wrapper .btn-start { color: var(--garden-button-text); background: var(--garden-green); }
 .garden-wrapper .btn-start:hover { background: var(--garden-green-hover); }
-.garden-wrapper .btn-stop { color: var(--garden-green); background: var(--garden-stop); }
-.garden-wrapper .btn-stop:hover { background: var(--garden-stop-hover); }
-
+.garden-wrapper .preset-grid, .garden-wrapper .threshold-grid, .garden-wrapper .watering-dates { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; margin-bottom: 24px; }
+.garden-wrapper .preset-grid > div, .garden-wrapper .threshold-grid > div, .garden-wrapper .watering-dates > div { min-width: 0; }
+.garden-wrapper .preset-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 18px; }
+.garden-wrapper .watering-slots { display: grid; gap: 22px; margin-bottom: 20px; }
+.garden-wrapper .watering-slot { display: flex; align-items: end; flex-wrap: wrap; gap: 14px; }
+.garden-wrapper .watering-slot > div { flex: 1 1 180px; min-width: 0; }
+.garden-wrapper .watering-dates { margin-top: 28px; margin-bottom: 14px; }
+@keyframes garden-unfold { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
 @media (min-width: 900px) {
-    .garden-page { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 24px; align-items: start; }
-    .garden-wrapper .full-width { grid-column: 1 / -1; }
+    .garden-sensor-layout { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 44px; }
+    .garden-wrapper .preset-grid, .garden-wrapper .watering-dates { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .garden-wrapper .threshold-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
-
 @media (max-width: 480px) {
-    .garden-wrapper { padding-inline: 16px; }
-    .garden-wrapper .sensor-boxes { grid-template-columns: minmax(0, 1fr); gap: 8px; }
-    .garden-wrapper .sensor-reading { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 16px; }
-    .garden-wrapper .sensor-label { margin: 0; font-size: 14px; }
-    .garden-wrapper .value-box { font-size: 24px; }
+    .garden-wrapper { padding: 32px 20px 44px; }
+    .garden-wrapper::before { opacity: .14; mask-image: linear-gradient(90deg, #000, transparent 20%, transparent 80%, #000); }
+    .garden-heading { margin-bottom: 30px; }
+    .garden-zones-heading { gap: 12px; }
+    .garden-stepper ol { gap: 5px; }
+    .garden-wrapper .garden-step-button { font-size: 11px; }
+    .garden-step-number { width: 40px; height: 40px; }
+    .garden-stepper li:not(:last-child)::after { top: 20px; }
+    .garden-step { padding-top: 22px; }
+    .garden-flow-navigation { align-items: stretch; flex-direction: column-reverse; gap: 10px; margin-top: 28px; }
+    .garden-wrapper .garden-previous { text-align: center; }
+    .garden-wrapper .zone-name-row .zone-save { width: 100%; }
+    .garden-wrapper .sensor-reading { padding: 15px 18px; }
+    .garden-wrapper .watering-slot > div { flex-basis: 100%; }
+    .garden-wrapper .preset-actions button { width: 100%; }
 }
-
 @media (prefers-reduced-motion: reduce) {
-    .garden-wrapper :is(button, input, select) { transition: none; }
+    body:has(.garden-wrapper), .garden-wrapper :is(button, input, select), .garden-step-number { transition: none; }
+    .garden-step { animation: none; }
     .garden-wrapper button:hover { transform: none; }
 }
 
