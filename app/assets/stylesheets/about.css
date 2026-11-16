@@ -1,7 +1,7 @@
 .about-page {
-    --about-text: #ffffff;
-    --about-accent: #1fb862;
-    --about-link: #4a90e2;
+    --about-text: var(--TextColor);
+    --about-accent: var(--AccentColor);
+    --about-link: var(--AccentColor);
 
     display: flex;
     flex-direction: column;
@@ -19,14 +19,16 @@
 
 .about-card {
     padding: 1.25rem 1.5rem;
-    border: 2px solid var(--about-accent);
+    border: 2px solid var(--BorderColor);
     border-radius: 10px;
-    background: transparent;
+    background-color: var(--SurfaceColor);
+    color: var(--about-text);
 }
 
 .about-card__title {
     margin: 0 0 0.75rem;
     font-size: 1.1rem;
+    color: var(--about-accent);
 }
 
 .about-card__text,
@@ -42,7 +44,5 @@
 
 .about-card a {
     color: var(--about-link);
-}
-body {
-    background: #2b333b;
+    text-decoration: underline;
 }

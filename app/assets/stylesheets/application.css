@@ -18,33 +18,73 @@
 }
 
 :root,
-[data-theme="dark"] {
-    --TextColor: #e4edde;
-    --TextDarkColor: #19271d;
-    --BackgroundColor: #202924;
-    --AccentColor: #a6cf94;
-    --P1Color: #293d30;
-    --P2Color: #38533e;
-    --P3Color: #48694e;
-    --SurfaceColor: #26342b;
-    --BorderColor: #465b49;
-    --MutedColor: #afc1ac;
-    --ChromeBackground: rgb(29 41 32 / 94%);
+[data-theme="default"] {
+    --BackgroundColor: #1c241e;
+    --SurfaceColor: #242e26;
+    --BorderColor: #334036;
+    --TextColor: #e8ede9;
+    --MutedColor: #9aa89d;
+    --AccentColor: #a3c995;
+    --TextDarkColor: #141a15;
+    --P1Color: #2b382e;
+    --P2Color: #38473b;
+    --P3Color: #4a5e4e;
+    --ChromeBackground: rgb(28 36 30 / 92%);
     color-scheme: dark;
 }
+
+[data-theme="dark"] {
+    --BackgroundColor: #0d0e11;
+    --SurfaceColor: #16181d;
+    --BorderColor: #272a33;
+    --TextColor: #f1f3f5;
+    --MutedColor: #8b92a0;
+    --AccentColor: #58a6ff;
+    --TextDarkColor: #0d0e11;
+    --P1Color: #1f2229;
+    --P2Color: #2c303a;
+    --P3Color: #3d4250;
+    --ChromeBackground: rgb(13 14 17 / 92%);
+    color-scheme: dark;
+}
+
 [data-theme="light"] {
-    --TextColor: #263e2c;
-    --TextDarkColor: #fffef9;
-    --BackgroundColor: #e8e9dd;
-    --AccentColor: #386749;
-    --P1Color: #e2ead8;
-    --P2Color: #d2e0c5;
-    --P3Color: #b8ceaa;
-    --SurfaceColor: #e7e9dc;
-    --BorderColor: #d6dfce;
-    --MutedColor: #5c7160;
-    --ChromeBackground: rgb(229 232 216 / 94%);
+    --BackgroundColor: #e9e6df;
+    --SurfaceColor: #f4f2ed;
+    --BorderColor: #d5d0c5;
+    --TextColor: #2c302b;
+    --MutedColor: #686d66;
+    --AccentColor: #3d6b47;
+    --TextDarkColor: #f4f2ed;
+    --P1Color: #e2dfd7;
+    --P2Color: #d4d0c5;
+    --P3Color: #c2bdb0;
+    --ChromeBackground: rgb(233 230 223 / 92%);
     color-scheme: light;
+}
+
+[data-theme="sakura"] {
+    --BackgroundColor: #f7eef0;
+    --SurfaceColor: rgba(255, 250, 251, 0.88);
+    --BorderColor: #e8ccd3;
+    --TextColor: #3b282e;
+    --MutedColor: #85656f;
+    --AccentColor: #d45d79;
+    --TextDarkColor: #fffafb;
+    --P1Color: #f2dce1;
+    --P2Color: #e8c3cc;
+    --P3Color: #dca3b1;
+    --ChromeBackground: rgb(247 238 240 / 92%);
+    color-scheme: light;
+}
+
+[data-theme="sakura"] body {
+    background-color: #f7eef0;
+    background-image:
+            radial-gradient(circle at 100% 150%, #f7eef0 24%, #f0dce1 25%, #f0dce1 28%, #f7eef0 29%, #f7eef0 36%, #f0dce1 36%, #f0dce1 40%, transparent 40%, transparent),
+            radial-gradient(circle at 0    150%, #f7eef0 24%, #f0dce1 25%, #f0dce1 28%, #f7eef0 29%, #f7eef0 36%, #f0dce1 36%, #f0dce1 40%, transparent 40%, transparent),
+            radial-gradient(circle at 50%  100%, #f0dce1 10%, #f7eef0 11%, #f7eef0 23%, #f0dce1 24%, #f0dce1 30%, #f7eef0 31%, #f7eef0 43%, #f0dce1 44%, #f0dce1 50%, #f7eef0 51%, #f7eef0 63%, #f0dce1 64%, #f0dce1 71%, transparent 71%, transparent);
+    background-size: 80px 40px;
 }
 
 

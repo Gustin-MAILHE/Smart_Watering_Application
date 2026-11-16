@@ -1,1 +1,106 @@
-<h1 class="title-page">Paramètres</h1>
+<h1 class="title-page"><%= t('pages.settings.index.settings_title') %></h1>
+
+<!-- language section -->
+<div class="settings-box">
+  <div class="language-section">
+    <label for="language"><%= t('pages.settings.index.language_label') %></label>
+    <%= form_with url: set_language_path, method: :post, data: { turbo: false } do |form| %>
+      <%= form.select :locale,
+                      options_for_select([%w[Français fr], %w[English en]], session[:locale] || I18n.locale.to_s),
+                      {},
+                      { onchange: "this.form.submit();", id: "language"}
+      %>
+    <% end %>
+  </div>
+
+  <!-- theme section -->
+  <div class="theme-section">
+    <label for="theme"><%= t('pages.settings.index.theme_label') %></label>
+    <select name="theme" id="theme"
+            data-appearance-target="themeSelect"
+            data-action="change->appearance#changeThemeFromSelect">
+      <option value="default"><%= t('pages.settings.index.themes.default') %></option>
+      <option value="light"><%= t('pages.settings.index.themes.light') %></option>
+      <option value="dark"><%= t('pages.settings.index.themes.dark') %></option>
+      <option value="sakura"><%= t('pages.settings.index.themes.sakura') %></option>
+    </select>
+  </div>
+
+  <!-- user gestion section -->
+  <div class="profile-section">
+    <label><%= t('pages.settings.index.profile_label') %></label>
+    <div class="profile-actions">
+      <% if user_signed_in? %>
+        <!-- logged view -->
+        <input type="text" value="<%= current_user.username %>" disabled>
+        <input type="text" value="<%= current_user.email %>" disabled>
+        <%= link_to t('pages.settings.index.edit_profile'), edit_user_registration_path, class: "btn-edit" %>
+      <% else %>
+        <!-- offline view -->
+        <%= link_to t('pages.settings.index.login'), new_user_session_path, class: "btn-login" %>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- notification section (only logged) -->
+  <% if user_signed_in? %>
+    <div class="notification-section">
+      <label><%= t('pages.settings.index.notifications_title') %></label>
+      <div class="checkbox-group">
+        <label><input type="checkbox" name="notify_all"><%= t('pages.settings.index.notifications.all') %></label>
+        <label><input type="checkbox" name="notif_battery_level"> <%= t('pages.settings.index.notifications.battery_level') %></label>
+        <label><input type="checkbox" name="notif_battery_status"> <%= t('pages.settings.index.notifications.battery_status') %></label>
+        <label><input type="checkbox" name="notif_sensor_status"> <%= t('pages.settings.index.notifications.sensor_status') %></label>
+        <label><input type="checkbox" name="notif_watering_start"> <%= t('pages.settings.index.notifications.watering_start') %></label>
+        <label><input type="checkbox" name="notif_watering_end"> <%= t('pages.settings.index.notifications.watering_end') %></label>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- temperature section -->
+  <div class="temperature-section">
+    <label for="temperature-unit"><%= t('pages.settings.index.temperature_label') %></label>
+    <%= form_with url: update_preferences_path, method: :post, data: { turbo: false } do |form| %>
+      <%= form.select :temperature_unit,
+                      options_for_select([
+                                           [t('pages.settings.index.units.celsius'),  "celsius"],
+                                           [t('pages.settings.index.units.fahrenheit'), "fahrenheit"],
+                                           [t('pages.settings.index.units.kelvin'), "kelvin"]
+                                         ], current_user&.temperature_unit || "celsius"),
+                      {},
+                      { onchange: "this.form.submit();", id: "temperature-unit"}
+      %>
+    <% end %>
+  </div>
+
+  <!-- brightness section -->
+  <div class="brightness-section">
+    <label for="brightness-unit"><%= t('pages.settings.index.brightness_label') %></label>
+    <%= form_with url: update_preferences_path, method: :post, data: { turbo: false } do |form| %>
+      <%= form.select :brightness_unit,
+                      options_for_select([
+                                           [t('pages.settings.index.units.percentage'),  "percentage"],
+                                           [t('pages.settings.index.units.lumen'), "lumen"],
+                                           [t('pages.settings.index.units.lux'), "lux"]
+                                         ], current_user&.brightness_unit || "percentage"),
+                      {},
+                      { onchange: "this.form.submit();", id: "brightness-unit"}
+      %>
+    <% end %>
+  </div>
+
+  <!-- humidity section -->
+  <div class="humidity-section">
+    <label for="humidity-unit"><%= t('pages.settings.index.humidity_label') %></label>
+    <%= form_with url: update_preferences_path, method: :post, data: { turbo: false } do |form| %>
+      <%= form.select :humidity_unit,
+                      options_for_select([
+                                           [t('pages.settings.index.units.percentage'),  "percentage"],
+                                           [t('pages.settings.index.units.weight_by_distance'), "weight_by_distance"]
+                                         ], current_user&.humidity_unit || "percentage"),
+                      {},
+                      { onchange: "this.form.submit();", id: "humidity-unit"}
+      %>
+    <% end %>
+  </div>
+</div>
