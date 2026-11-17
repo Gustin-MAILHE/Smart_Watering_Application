@@ -32,14 +32,14 @@
       </div>
       <div class="zone-list" data-garden-target="zoneList" role="group" aria-label="Zones du jardin">
         <% (user_signed_in? ? @zones : [ { id: 1, name: "Zone 1" }, { id: 2, name: "Zone 2" } ]).each do |zone| %>
-        <button type="button"
-                class="zone-btn"
-                data-garden-target="zoneBtn"
-                data-zone-id="<%= zone[:id] %>"
-                aria-pressed="false"
-                data-action="click->garden#selectZone">
-          <%= zone[:name] %>
-        </button>
+          <button type="button"
+                  class="zone-btn"
+                  data-garden-target="zoneBtn"
+                  data-zone-id="<%= zone[:id] %>"
+                  aria-pressed="false"
+                  data-action="click->garden#selectZone">
+            <%= zone[:name] %>
+          </button>
         <% end %>
 
         <button type="button"
@@ -99,50 +99,64 @@
             <option value="Carrots">Carottes</option>
             <option value="Strawberries">Fraises</option>
           </select>
-          <button type="submit" class="zone-save" data-garden-target="sensorAssign" disabled>Attribuer le capteur</button>
-        </form>
-      </div>
-
-      <!-- Demo readings are never presented as live hardware measurements. -->
-      <div class="garden-card">
-        <p class="card-title">Mesures des capteurs</p>
-        <p class="garden-note" data-garden-target="readingsNote">Mesures simulées pour cette zone de démonstration.</p>
-        <% @zones.each do |zone| %>
-          <div class="sensor-boxes">
-            <div class="sensor-reading">
-              <span class="sensor-label">Température</span>
-              <div class="value-box" data-garden-target="temp">
-                <%= display_temperature(zone.temperature_threshold, current_user) %>
-                <%= temperature_symbol(current_user) %>
-              </div>
-            </div>
-            <div class="sensor-reading">
-              <span class="sensor-label">Humidité</span>
-              <div class="value-box" data-garden-target="humidity">
-                <%= display_humidity(zone.humidity_threshold, zone.temperature_threshold, current_user) %>
-                <%= humidity_symbol(current_user) %>
-              </div>
-            </div>
-            <div class="sensor-reading">
-              <span class="sensor-label">Luminosité</span>
-              <div class="value-box" data-garden-target="brightness">
-                <%= display_brightness(zone.brightness_threshold, current_user) %>
-                <%= brightness_symbol(current_user) %>
-              </div>
-            </div>
+          <div data-garden-target="localConfiguration" hidden>
+            <p class="garden-note">Cette zone possède d’anciens réglages locaux. Transférez-les sur votre compte pour les retrouver sur vos autres appareils. Ils seront aussi enregistrés lors de votre prochaine modification des réglages.</p>
+            <button type="button" class="zone-save" data-action="click->garden#importConfiguration">Enregistrer ces réglages sur mon compte</button>
           </div>
-        <% end %>
-      </div>
-    </div>
+        </div>
+      </section>
+      <section id="garden-step-2" class="garden-step" data-garden-steps-target="panel"
+               aria-labelledby="garden-step-heading-2" hidden>
+        <div class="garden-step-intro">
+          <p class="garden-eyebrow">02 · À l’écoute du jardin</p>
+          <h2 id="garden-step-heading-2" class="garden-step-title" tabindex="-1">Chaque plante a quelque chose à dire.</h2>
+          <p class="garden-description">Associez vos capteurs pour mieux comprendre votre petit coin de nature.</p>
+        </div>
+        <div class="garden-step-content">
+          <div class="garden-sensor-layout">
+            <!-- Sensors associated with the selected zone -->
+            <div class="garden-card">
+              <p class="card-title">Capteurs associés</p>
+              <p class="garden-note">Capteurs de démonstration · état et mesures simulés</p>
+              <ul class="sensor-tags" data-garden-target="sensorTags"></ul>
+              <p class="garden-note" data-garden-target="emptySensors" hidden>Aucun capteur attribué</p>
+              <form class="sensor-form" data-action="submit->garden#assignSensor">
+                <label class="field-label" for="sensor-select">Capteur disponible</label>
+                <select id="sensor-select" class="field-select" data-garden-target="sensorSelect"
+                        data-action="change->garden#updateSensorButton" required>
+                  <option value="">Choisir un capteur</option>
+                </select>
+                <button type="submit" class="zone-save" data-garden-target="sensorAssign" disabled>Attribuer le capteur</button>
+              </form>
+            </div>
 
             <!-- Demo readings are never presented as live hardware measurements. -->
             <div class="garden-card">
               <p class="card-title">Mesures des capteurs</p>
               <p class="garden-note" data-garden-target="readingsNote">Mesures simulées pour cette zone de démonstration.</p>
+              <% active_zone = @zones.first %>
               <div class="sensor-boxes">
-                <div class="sensor-reading"><span class="sensor-label">Température</span><div class="value-box" data-garden-target="temp">28°C</div></div>
-                <div class="sensor-reading"><span class="sensor-label">Humidité</span><div class="value-box" data-garden-target="humidity">42%</div></div>
-                <div class="sensor-reading"><span class="sensor-label">Luminosité</span><div class="value-box" data-garden-target="brightness">—</div></div>
+                <% active_zone = @zones&.first %>
+                <div class="sensor-boxes">
+                  <div class="sensor-reading">
+                    <span class="sensor-label">Température</span>
+                    <div class="value-box" data-garden-target="temp">
+                      <%= active_zone ? "#{display_temperature(active_zone.temperature_threshold, current_user)} #{temperature_symbol(current_user)}" : "28°C" %>
+                    </div>
+                  </div>
+                  <div class="sensor-reading">
+                    <span class="sensor-label">Humidité</span>
+                    <div class="value-box" data-garden-target="humidity">
+                      <%= active_zone ? "#{display_humidity(active_zone.humidity_threshold, active_zone.temperature_threshold, current_user)} #{humidity_symbol(current_user)}" : "42%" %>
+                    </div>
+                  </div>
+                  <div class="sensor-reading">
+                    <span class="sensor-label">Luminosité</span>
+                    <div class="value-box" data-garden-target="brightness">
+                      <%= active_zone ? "#{display_brightness(active_zone.brightness_threshold, current_user)} #{brightness_symbol(current_user)}" : "—" %>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
