@@ -18,7 +18,7 @@ fr:
       confirmation_instructions:
         subject: Confirmation de votre compte
       reset_password_instructions:
-        subject: Réinitialisation de votre mot de passe
+        subject: Réinitialisation de votre mot de passe — Arrosage intelligent
       unlock_instructions:
         subject: Déverrouillage de votre compte
       email_changed:

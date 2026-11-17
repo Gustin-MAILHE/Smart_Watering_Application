@@ -24,3 +24,6 @@ application.register("zones", ZonesController)
 
 import PasswordDialogController from "controllers/password_dialog_controller"
 application.register("password-dialog", PasswordDialogController)
+
+import PasswordFormController from "controllers/password_form_controller"
+application.register("password-form", PasswordFormController)
