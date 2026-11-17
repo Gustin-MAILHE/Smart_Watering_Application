@@ -154,3 +154,30 @@ body:has(.auth-page) {
     .auth-panel :is(input, button, a) { transition: none !important; }
     .auth-panel .btn-submit:hover { transform: none; }
 }
+
+/* A focused recovery form, with a clear hierarchy and compact guidance. */
+.auth-page--recovery { --auth-card: #f5f4eb; --auth-note: #dfe7d5; }
+[data-theme="dark"] .auth-page--recovery { --auth-card: #24352a; --auth-note: #2e4431; }
+.auth-page--recovery .auth-layout { gap: clamp(28px, 4vw, 60px); }
+.auth-page--recovery .auth-panel { padding: clamp(24px, 3vw, 38px); border-radius: 32px 12px 32px 12px; background: var(--auth-card); box-shadow: 0 16px 56px -32px rgb(15 35 20 / 25%); }
+.auth-page--recovery .auth-heading { margin-bottom: 28px; }
+.auth-page--recovery .auth-heading h1 { font-size: clamp(1.8rem, 3vw, 2.2rem); }
+.auth-page--recovery .auth-description { max-width: 390px; line-height: 1.75; }
+.auth-recovery-icon { display: grid; place-items: center; width: 52px; height: 52px; margin-bottom: 24px; border-radius: 18px 8px 18px 8px; background: var(--auth-note); color: var(--auth-green); }
+.auth-recovery-icon svg, .auth-email-field svg, .auth-page--recovery .btn-submit svg { width: 23px; height: 23px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; color: inherit; }
+.auth-recovery-icon svg *, .auth-email-field svg *, .auth-page--recovery .btn-submit svg * { color: inherit; }
+.auth-email-field { position: relative; }
+.auth-email-field > svg { position: absolute; left: 16px; top: 15px; color: var(--auth-muted); pointer-events: none; }
+.auth-page--recovery .auth-panel .auth-email-field input[type="email"] { padding-left: 50px; }
+.auth-page--recovery .auth-field-help { margin-top: 9px; color: var(--auth-muted); font-size: 12px; line-height: 1.6; }
+.auth-page--recovery .btn-submit { display: flex; align-items: center; justify-content: center; gap: 14px; min-height: 52px; border-radius: 16px; }
+.auth-page--recovery .btn-submit:disabled { opacity: .65; cursor: wait; transform: none; box-shadow: none; }
+.auth-recovery-note { margin-top: 22px; padding: 16px 18px; border-radius: 16px; background: var(--auth-note); font-size: 12px; line-height: 1.7; }
+.auth-recovery-note strong { display: block; margin-bottom: 5px; font-weight: 600; }
+.auth-recovery-note p { color: var(--auth-muted); }
+.auth-page--recovery .auth-links { display: flex; flex-wrap: wrap; gap: 12px 22px; margin-top: 24px; padding-top: 20px; }
+.auth-password-visibility { padding: 0 0 20px; border: 0; background: transparent; color: var(--auth-green); font: inherit; font-size: 12px; cursor: pointer; text-decoration: underline; text-underline-offset: 4px; }
+@media (max-width: 760px) {
+    .auth-page--recovery .auth-panel { padding: 24px 20px; }
+    .auth-page--recovery .auth-garden { display: none; }
+}

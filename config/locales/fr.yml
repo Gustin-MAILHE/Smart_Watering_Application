@@ -9,6 +9,7 @@ fr:
         password_confirmation: Confirmation du mot de passe
         remember_me: Se souvenir de moi
         username: Nom d’utilisateur
+        reset_password_token: Lien de réinitialisation
       zone:
         brightness_threshold: Seuil de luminosité
         crop: Culture
@@ -17,12 +18,28 @@ fr:
         schedule: Programme d’arrosage
         temperature_threshold: Seuil de température
         user: Propriétaire
+        watering_time_slots: Les créneaux d’arrosage
+        watering_starts_on: La date de début
+        watering_ends_on: La date de fin
     errors:
       messages:
         record_invalid: 'Validation échouée : %{errors}'
         restrict_dependent_destroy:
           has_many: 'Suppression impossible : des éléments associés existent.'
           has_one: 'Suppression impossible : un élément associé existe.'
+      models:
+        user:
+          attributes:
+            reset_password_token:
+              invalid: est invalide ou a déjà été utilisé. Demandez un nouveau lien.
+              expired: a expiré. Demandez un nouveau lien.
+              blank: est manquant. Utilisez le lien reçu par e-mail.
+            password:
+              too_short:
+                one: doit contenir au moins un caractère.
+                other: doit contenir au moins %{count} caractères.
+            password_confirmation:
+              confirmation: ne correspond pas au nouveau mot de passe.
     models:
       user: compte
       zone: zone
@@ -86,8 +103,8 @@ fr:
       already_confirmed: est déjà confirmé
       blank: doit être renseigné
       confirmation: ne correspond pas à %{attribute}
-      confirmation_period_expired: doit être confirmé dans un délai de %{period} ;
-        demandez un nouveau lien
+      confirmation_period_expired: doit être confirmé dans un délai de %{period} ; demandez un nouveau
+        lien
       empty: doit être renseigné
       equal_to: doit être égal à %{count}
       even: doit être pair
@@ -138,7 +155,7 @@ fr:
           logout_button: Se déconnecter
     header:
       header_title_link: Irrigation Intelligente
-      aria_toggle: "Passer en mode jour/nuit"
+      aria_toggle: Passer en mode jour/nuit
     footer:
       footer_title: Irrigation Intelligente
       footer_description: Prendre soin du jardin, une zone à la fois.
@@ -154,13 +171,13 @@ fr:
           history: Visionner l'historique des arrosages
           monitor: Surveiller votre potager et les données météorologiques
         features_title: Fonctionnalités
-        project_description: Le projet d'irrigation Intelligente est un projet de
-          SAE. Il a pour but de créer une application web permettant de surveiller
-          et gérer l'arrosage des plantes de manière intelligente.
+        project_description: >-
+          Le projet d'irrigation Intelligente est un projet de SAE. Il a pour but de créer une application
+          web permettant de surveiller et gérer l'arrosage des plantes de manière intelligente.
         project_title: Quel est ce projet ?
-        team_description: 'Ce projet a été créé par : AHAMED Nasser, BOUDIA--THOMAS
-          Akcyl, CANTOR Romain, CHETIOUI Willem, DECAMPS Lou, MAILHE Gustin. Et supervisé
-          par : GERARD Olivier.'
+        team_description: >-
+          Ce projet a été créé par : AHAMED Nasser, BOUDIA--THOMAS Akcyl, CANTOR Romain, CHETIOUI Willem,
+          DECAMPS Lou, MAILHE Gustin. Et supervisé par : GERARD Olivier.
         team_title: L'équipe
         tech_description: Ruby on Rails, ...
         tech_title: Technologies
@@ -197,7 +214,6 @@ fr:
           sensor_status: Etat des capteurs
           watering_start: Début de l'arrosage
           watering_end: Fin de l'arrosage
-
   support:
     array:
       last_word_connector: " et "
