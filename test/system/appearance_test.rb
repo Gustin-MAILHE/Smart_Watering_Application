@@ -1,41 +1,44 @@
 require "application_system_test_case"
 
-# Covers shared layout behavior across Jardin, Accueil and exact mobile viewports.
+# Covers shared layout behavior across Settings, Jardin, Accueil and exact mobile viewports.
 class AppearanceTest < ApplicationSystemTestCase
   setup do
-    visit gardens_path
+    visit settings_path
     wait_for_appearance
     page.execute_script("localStorage.removeItem('smartWatering.theme')")
     page.refresh
     wait_for_appearance
   end
 
-  test "theme survives reloads and Turbo visits and supports keyboard activation" do
-    assert_selector "html[data-theme='dark']"
-    assert_selector "[data-appearance-target='moon']", visible: true
-    assert_no_selector "[data-appearance-target='sun']", visible: true
-    find(".theme-toggle").click
+  test "theme survives reloads and Turbo visits and supports select changes" do
+    assert_selector "html[data-theme='default']"
+    assert_equal "default", find("#theme").value
+
+    select "Clair", from: "theme"
     assert_selector "html[data-theme='light']"
-    assert_selector "[data-appearance-target='sun']", visible: true
-    assert_no_selector "[data-appearance-target='moon']", visible: true
-    assert_selector ".theme-toggle[aria-label='Passer en mode nuit']"
+
     page.refresh
     wait_for_appearance
     assert_selector "html[data-theme='light']"
-    assert_selector "[data-appearance-target='sun']", visible: true
-    assert_no_selector "[data-appearance-target='moon']", visible: true
+    assert_equal "light", find("#theme").value
+
     page.execute_script("window.Turbo.visit(arguments[0])", root_path)
     assert_selector ".home-page"
     wait_for_appearance
     assert_selector "html[data-theme='light']"
-    find(".theme-toggle").send_keys(:enter)
+
+    page.execute_script("window.Turbo.visit(arguments[0])", settings_path)
+    wait_for_appearance
+    select "Sakura", from: "theme"
+    assert_selector "html[data-theme='sakura']"
+
+    select "Sombre", from: "theme"
     assert_selector "html[data-theme='dark']"
-    assert_selector "[data-appearance-target='moon']", visible: true
-    assert_no_selector "[data-appearance-target='sun']", visible: true
-    assert_selector ".theme-toggle[aria-label='Passer en mode jour']"
   end
 
   test "sticky header keeps a full height drawer and back to top follows scrolling" do
+    visit gardens_path
+    wait_for_appearance
     assert_no_selector ".back-to-top"
     page.execute_script("window.scrollTo({top: 600, behavior: 'instant'})")
     assert_selector ".back-to-top"
@@ -56,9 +59,9 @@ class AppearanceTest < ApplicationSystemTestCase
 
   test "theme remains usable when storage writes are blocked" do
     page.execute_script("Storage.prototype.setItem = function () { throw new DOMException('Full', 'QuotaExceededError') }")
-    find(".theme-toggle").click
+    select "Clair", from: "theme"
     assert_selector "html[data-theme='light']"
-    find(".theme-toggle").click
+    select "Sombre", from: "theme"
     assert_selector "html[data-theme='dark']"
   end
 
@@ -76,12 +79,8 @@ class AppearanceTest < ApplicationSystemTestCase
         wait_for_appearance
         page.execute_script("document.documentElement.dataset.theme = 'dark'")
         assert page.evaluate_script("document.documentElement.scrollWidth <= innerWidth"), "Layout should fit at #{width}px"
-        assert_selector ".theme-toggle", count: 1
+        assert_no_selector ".theme-toggle"
         assert_selector ".site-footer .footer-links a", count: 3
-        find(".theme-toggle").click
-        assert_selector "html[data-theme='light']", visible: :all
-        find(".theme-toggle").click
-        assert_selector "html[data-theme='dark']", visible: :all
       end
     end
   end

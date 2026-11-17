@@ -1,29 +1,29 @@
 /* Shared by Devise screens; mail templates keep their own presentation. */
 body:has(.auth-page) {
-    --auth-background: #e8e9dd;
-    --auth-ink: #293e30;
-    --auth-muted: #5b6d59;
-    --auth-green: #386548;
-    --auth-green-hover: #294e37;
-    --auth-field: #f1f1e7;
-    --auth-border: #bdcbb3;
-    --auth-button-text: #f8f7ef;
+    --auth-background: var(--BackgroundColor);
+    --auth-ink: var(--TextColor);
+    --auth-muted: var(--MutedColor);
+    --auth-green: var(--AccentColor);
+    --auth-green-hover: color-mix(in srgb, var(--AccentColor) 85%, var(--TextColor));
+    --auth-field: var(--SurfaceColor);
+    --auth-border: var(--BorderColor);
+    --auth-button-text: var(--TextDarkColor);
+    --auth-panel-bg: color-mix(in srgb, var(--SurfaceColor) 82%, transparent);
+    --auth-card-bg: color-mix(in srgb, var(--AccentColor) 28%, var(--P2Color));
+    --auth-card-ink: var(--TextColor);
+    --auth-card-muted: var(--MutedColor);
+    --auth-card-accent: var(--AccentColor);
     --auth-error: #ae1830;
-    --auth-error-surface: #f0dcd5;
-    background: var(--auth-background);
+    --auth-error-surface: color-mix(in srgb, #ae1830 14%, var(--SurfaceColor));
+    background-color: var(--auth-background);
 }
+
+[data-theme="default"] body:has(.auth-page),
 [data-theme="dark"] body:has(.auth-page) {
-    --auth-background: #1e2b23;
-    --auth-ink: #e3e9da;
-    --auth-muted: #aabb9f;
-    --auth-green: #b1cd98;
-    --auth-green-hover: #c6dfb0;
-    --auth-field: #293b2e;
-    --auth-border: #4a614b;
-    --auth-button-text: #1c2d20;
     --auth-error: #ffacb7;
-    --auth-error-surface: #422c30;
+    --auth-error-surface: color-mix(in srgb, #ffacb7 18%, var(--SurfaceColor));
 }
+
 .auth-page {
     --TextColor: var(--auth-ink);
     padding: clamp(28px, 5vw, 64px) clamp(20px, 4vw, 48px);
@@ -32,9 +32,11 @@ body:has(.auth-page) {
     line-height: 1.6;
 }
 .auth-page, .auth-page *, .auth-page *::before, .auth-page *::after { box-sizing: border-box; }
-.auth-layout { display: grid; grid-template-columns: minmax(0, .95fr) minmax(0, 1fr); align-items: start; gap: clamp(40px, 7vw, 100px); max-width: 1080px; margin-inline: auto; }
+.auth-layout { display: grid; grid-template-columns: minmax(0, .95fr) minmax(0, 1fr); align-items: start; gap: clamp(32px, 5vw, 64px); max-width: 1080px; margin-inline: auto; }
+
+/* Carte illustrative de gauche adaptée au thème */
 .auth-garden {
-    --TextColor: #ecf0df;
+    --TextColor: var(--auth-card-ink);
     position: sticky;
     top: 106px;
     isolation: isolate;
@@ -43,18 +45,42 @@ body:has(.auth-page) {
     padding: clamp(28px, 4vw, 48px);
     display: flex;
     align-items: center;
-    background: #2c4533;
+    background: var(--auth-card-bg);
+    border: 1px solid var(--auth-border);
     border-radius: 110px 24px 110px 24px;
+    color: var(--auth-card-ink);
+    transition: background-color .25s ease, border-color .25s ease, color .25s ease;
 }
-.auth-garden::before { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(160deg, rgb(28 51 34 / 10%), rgb(28 51 34 / 60%)), url('garden-foliage.png') center / cover no-repeat; opacity: .65; }
+.auth-garden::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+            linear-gradient(160deg, color-mix(in srgb, var(--auth-card-bg) 55%, transparent), color-mix(in srgb, var(--auth-card-bg) 90%, transparent)),
+            url('garden-foliage.png') center / cover no-repeat;
+    opacity: .45;
+}
 .auth-garden-content { width: 100%; }
 .auth-eyebrow { margin: 0 0 14px; color: var(--auth-green); font-size: 11px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; }
-.auth-garden .auth-eyebrow { color: #c4d9b3; }
-.auth-leaf { display: block; width: 72px; height: 72px; margin: 28px 0; fill: none; stroke: #c4d9b3; stroke-width: 1.2; stroke-linecap: round; stroke-linejoin: round; }
-.auth-garden-title { margin: 0 0 22px; font-family: 'Roboto Slab Variable', Georgia, serif; font-size: clamp(1.9rem, 3vw, 2.6rem); line-height: 1.2; letter-spacing: -.04em; text-wrap: balance; }
-.auth-garden-description { max-width: 300px; margin: 0 0 34px; color: #d4dfc8; font-size: 14px; }
-.auth-garden-signature { color: #bbcfab; font-size: 11px; letter-spacing: .04em; }
-.auth-panel { min-width: 0; padding-block: 20px; animation: auth-arrive .5s ease both; }
+.auth-garden .auth-eyebrow { color: var(--auth-card-accent); }
+.auth-leaf { display: block; width: 72px; height: 72px; margin: 28px 0; fill: none; stroke: var(--auth-card-accent); stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+.auth-garden-title { margin: 0 0 22px; color: var(--auth-card-ink); font-family: 'Roboto Slab Variable', Georgia, serif; font-size: clamp(1.9rem, 3vw, 2.6rem); line-height: 1.2; letter-spacing: -.04em; text-wrap: balance; }
+.auth-garden-description { max-width: 300px; margin: 0 0 34px; color: var(--auth-card-muted); font-size: 14px; }
+.auth-garden-signature { color: var(--auth-card-muted); font-size: 11px; letter-spacing: .04em; opacity: .85; }
+
+/* Panneau de formulaire de droite avec fond translucide */
+.auth-panel {
+    min-width: 0;
+    padding: clamp(28px, 4vw, 44px);
+    background: var(--auth-panel-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--auth-border);
+    border-radius: 28px;
+    box-shadow: 0 10px 30px rgb(0 0 0 / 6%);
+    animation: auth-arrive .5s ease both;
+}
 .auth-heading { margin-bottom: 30px; }
 .auth-heading h1 { margin: 0 0 12px; font-family: 'Roboto Slab Variable', Georgia, serif; font-size: clamp(1.8rem, 3vw, 2.6rem); line-height: 1.2; font-weight: 500; letter-spacing: -.04em; overflow-wrap: anywhere; text-wrap: balance; }
 .auth-description { margin: 0; color: var(--auth-muted); font-size: 14px; }
@@ -97,7 +123,7 @@ body:has(.auth-page) {
     cursor: pointer;
     transition: background-color .2s ease, color .2s ease, transform .2s ease, box-shadow .2s ease;
 }
-.auth-panel .btn-submit:hover { background: var(--auth-green-hover); transform: translateY(-2px); box-shadow: 0 6px 18px rgb(30 60 35 / 12%); }
+.auth-panel .btn-submit:hover { background: var(--auth-green-hover); transform: translateY(-2px); box-shadow: 0 6px 18px rgb(0 0 0 / 16%); }
 .auth-panel .btn-submit:active { transform: translateY(0); box-shadow: none; }
 .auth-panel .auth-links { display: grid; gap: 12px; margin-top: 26px; padding-top: 22px; border-top: 1px solid var(--auth-border); font-size: 13px; }
 .auth-links p { margin: 0; }
@@ -121,10 +147,37 @@ body:has(.auth-page) {
     .auth-garden-title { max-width: 270px; padding-right: 38px; margin: 0; font-size: 25px; }
     .auth-garden-title br { display: none; }
     .auth-leaf { position: absolute; right: 24px; top: 26px; width: 44px; height: 44px; margin: 0; }
-    .auth-panel { padding-block: 0; }
+    .auth-panel { padding: 24px 20px; border-radius: 22px; }
 }
 @media (prefers-reduced-motion: reduce) {
     .auth-panel { animation: none; }
     .auth-panel :is(input, button, a) { transition: none !important; }
     .auth-panel .btn-submit:hover { transform: none; }
+}
+
+/* A focused recovery form, with a clear hierarchy and compact guidance. */
+.auth-page--recovery { --auth-card: #f5f4eb; --auth-note: #dfe7d5; }
+[data-theme="dark"] .auth-page--recovery { --auth-card: #24352a; --auth-note: #2e4431; }
+.auth-page--recovery .auth-layout { gap: clamp(28px, 4vw, 60px); }
+.auth-page--recovery .auth-panel { padding: clamp(24px, 3vw, 38px); border-radius: 32px 12px 32px 12px; background: var(--auth-card); box-shadow: 0 16px 56px -32px rgb(15 35 20 / 25%); }
+.auth-page--recovery .auth-heading { margin-bottom: 28px; }
+.auth-page--recovery .auth-heading h1 { font-size: clamp(1.8rem, 3vw, 2.2rem); }
+.auth-page--recovery .auth-description { max-width: 390px; line-height: 1.75; }
+.auth-recovery-icon { display: grid; place-items: center; width: 52px; height: 52px; margin-bottom: 24px; border-radius: 18px 8px 18px 8px; background: var(--auth-note); color: var(--auth-green); }
+.auth-recovery-icon svg, .auth-email-field svg, .auth-page--recovery .btn-submit svg { width: 23px; height: 23px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; color: inherit; }
+.auth-recovery-icon svg *, .auth-email-field svg *, .auth-page--recovery .btn-submit svg * { color: inherit; }
+.auth-email-field { position: relative; }
+.auth-email-field > svg { position: absolute; left: 16px; top: 15px; color: var(--auth-muted); pointer-events: none; }
+.auth-page--recovery .auth-panel .auth-email-field input[type="email"] { padding-left: 50px; }
+.auth-page--recovery .auth-field-help { margin-top: 9px; color: var(--auth-muted); font-size: 12px; line-height: 1.6; }
+.auth-page--recovery .btn-submit { display: flex; align-items: center; justify-content: center; gap: 14px; min-height: 52px; border-radius: 16px; }
+.auth-page--recovery .btn-submit:disabled { opacity: .65; cursor: wait; transform: none; box-shadow: none; }
+.auth-recovery-note { margin-top: 22px; padding: 16px 18px; border-radius: 16px; background: var(--auth-note); font-size: 12px; line-height: 1.7; }
+.auth-recovery-note strong { display: block; margin-bottom: 5px; font-weight: 600; }
+.auth-recovery-note p { color: var(--auth-muted); }
+.auth-page--recovery .auth-links { display: flex; flex-wrap: wrap; gap: 12px 22px; margin-top: 24px; padding-top: 20px; }
+.auth-password-visibility { padding: 0 0 20px; border: 0; background: transparent; color: var(--auth-green); font: inherit; font-size: 12px; cursor: pointer; text-decoration: underline; text-underline-offset: 4px; }
+@media (max-width: 760px) {
+    .auth-page--recovery .auth-panel { padding: 24px 20px; }
+    .auth-page--recovery .auth-garden { display: none; }
 }

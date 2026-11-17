@@ -31,8 +31,26 @@ Rails.application.configure do
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :local
 
-  # Don't care if the mailer can't send.
-  config.action_mailer.raise_delivery_errors = false
+  # Use real delivery when configured; otherwise keep development messages locally.
+  smtp_file = Rails.root.join("config/smtp.local.yml")
+  local_smtp = smtp_file.file? ? (YAML.safe_load_file(smtp_file, aliases: false) || {}) : {}
+  smtp_username = ENV["SMTP_USERNAME"].presence || local_smtp["username"]
+  smtp_password = ENV["SMTP_PASSWORD"].presence || local_smtp["password"]
+  if ENV["SMTP_ADDRESS"].present? || (smtp_username.present? && smtp_password.present?)
+    config.x.smtp_sender = ENV["MAILER_FROM"].presence || local_smtp["from"].presence || smtp_username
+    config.action_mailer.delivery_method = :smtp
+    config.action_mailer.smtp_settings = {
+      address: ENV["SMTP_ADDRESS"].presence || local_smtp.fetch("address"),
+      port: Integer(ENV["SMTP_PORT"].presence || local_smtp.fetch("port", 587)),
+      user_name: smtp_username.presence || ENV.fetch("SMTP_USERNAME"),
+      password: smtp_password.presence || ENV.fetch("SMTP_PASSWORD"),
+      authentication: :plain, enable_starttls_auto: true, open_timeout: 15, read_timeout: 60
+    }
+  else
+    config.action_mailer.delivery_method = :file
+    config.action_mailer.file_settings = { location: Rails.root.join("tmp/mail") }
+  end
+  config.action_mailer.raise_delivery_errors = true
 
   # Make template changes take effect immediately.
   config.action_mailer.perform_caching = false
