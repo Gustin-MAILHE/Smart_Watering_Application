@@ -1,53 +1,24 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 
-body:has(.garden-wrapper) {
-    --garden-background: #e8e9dd;
-    --garden-ink: #293e30;
-    --garden-muted: #5b6d59;
-    --garden-green: #386548;
-    --garden-green-hover: #284e37;
-    --garden-border: #becbb3;
-    --garden-sage: #d8e0cd;
-    --garden-surface: #e0e5d5;
-    --garden-hover: #cbd8bf;
-    --garden-field: #f0f0e5;
-    --garden-field-hover: #e8eddc;
-    --garden-focus-surface: #f2f2e7;
-    --garden-reading: #dce4d2;
-    --garden-healthy-surface: #d1dfc3;
-    --garden-warning: #77520c;
-    --garden-warning-surface: #eee0b5;
-    --garden-offline: #9f2738;
-    --garden-offline-surface: #ecd4ce;
-    --garden-error: #b31931;
-    --garden-notice: #78511f;
-    --garden-focus: #63854e;
-    --garden-button-text: #f6f5ed;
-    --garden-danger: #df2038;
-    --garden-danger-hover: #bd102a;
-    display: block;
-    height: auto;
-    min-height: 100svh;
-    background: var(--garden-background);
-    color: var(--garden-ink);
-    transition: background-color .35s ease, color .35s ease;
-}
-
-[data-theme="dark"] body:has(.garden-wrapper) {
-    --garden-background: #1e2b23;
-    --garden-ink: #e3e9da;
-    --garden-muted: #aabb9f;
-    --garden-green: #b1cd98;
-    --garden-green-hover: #c6dfb0;
-    --garden-border: #4a614b;
-    --garden-sage: #324632;
-    --garden-surface: #2d402f;
-    --garden-hover: #3e583c;
-    --garden-field: #293b2e;
-    --garden-field-hover: #324935;
-    --garden-focus-surface: #344c36;
-    --garden-reading: #2c402f;
-    --garden-healthy-surface: #3b5334;
+/* ==========================================================================
+   1. DEFAULT THEME (Forest Green)
+   ========================================================================== */
+body:has(.garden-wrapper),
+[data-theme="default"] body:has(.garden-wrapper) {
+    --garden-background: #1c241e;
+    --garden-ink: #e5eee4;
+    --garden-muted: #afc1ac;
+    --garden-green: #a6cf94;
+    --garden-green-hover: #bedeb0;
+    --garden-border: #485b48;
+    --garden-sage: #334633;
+    --garden-surface: #253329;
+    --garden-hover: #435b3d;
+    --garden-field: #1e2b22;
+    --garden-field-hover: #2c3f2e;
+    --garden-focus-surface: #263c2a;
+    --garden-reading: #2e402f;
+    --garden-healthy-surface: #344b32;
     --garden-warning: #f0d18c;
     --garden-warning-surface: #493e28;
     --garden-offline: #ffb3bc;
@@ -56,7 +27,114 @@ body:has(.garden-wrapper) {
     --garden-notice: #e7c08d;
     --garden-focus: #b8dc9c;
     --garden-button-text: #1c2d20;
+    --garden-danger: #df2038;
+    --garden-danger-hover: #bd102a;
     color-scheme: dark;
+}
+
+/* ==========================================================================
+   2. DARK THEME (True Dark Mode)
+   ========================================================================== */
+[data-theme="dark"] body:has(.garden-wrapper) {
+    --garden-background: #0d0e11;
+    --garden-ink: #f1f3f5;
+    --garden-muted: #8b92a0;
+    --garden-green: #58a6ff;
+    --garden-green-hover: #79b8ff;
+    --garden-border: #272a33;
+    --garden-sage: #1f2229;
+    --garden-surface: #16181d;
+    --garden-hover: #2c303a;
+    --garden-field: #121418;
+    --garden-field-hover: #1b1e24;
+    --garden-focus-surface: #1f2229;
+    --garden-reading: #1f2229;
+    --garden-healthy-surface: #1b2e26;
+    --garden-warning: #fdd663;
+    --garden-warning-surface: #332b18;
+    --garden-offline: #f28b82;
+    --garden-offline-surface: #331c1e;
+    --garden-error: #f28b82;
+    --garden-notice: #fdd663;
+    --garden-focus: #58a6ff;
+    --garden-button-text: #0d0e11;
+    --garden-danger: #f28b82;
+    --garden-danger-hover: #f6aea9;
+    color-scheme: dark;
+}
+
+/* ==========================================================================
+   3. LIGHT THEME
+   ========================================================================== */
+[data-theme="light"] body:has(.garden-wrapper) {
+    --garden-background: #eceae2;
+    --garden-ink: #273329;
+    --garden-muted: #5b695d;
+    --garden-green: #386749;
+    --garden-green-hover: #2c543a;
+    --garden-border: #d2d8ca;
+    --garden-sage: #e2e8d9;
+    --garden-surface: #f7f6f1;
+    --garden-hover: #d5dfc8;
+    --garden-field: #f2f1eb;
+    --garden-field-hover: #eae8e0;
+    --garden-focus-surface: #ffffff;
+    --garden-reading: #eaece3;
+    --garden-healthy-surface: #dce8d3;
+    --garden-warning: #815614;
+    --garden-warning-surface: #f2e5be;
+    --garden-offline: #8b493c;
+    --garden-offline-surface: #eed9d1;
+    --garden-error: #b31931;
+    --garden-notice: #805326;
+    --garden-focus: #648849;
+    --garden-button-text: #f7f6f1;
+    --garden-danger: #df2038;
+    --garden-danger-hover: #bd102a;
+    color-scheme: light;
+}
+
+/* ==========================================================================
+   4. SAKURA THEME (Japanese Garden)
+   ========================================================================== */
+[data-theme="sakura"] body:has(.garden-wrapper) {
+    --garden-background: #f7eef0;
+    --garden-ink: #3b282e;
+    --garden-muted: #7d5e67;
+    --garden-green: #c85271;
+    --garden-green-hover: #ad3e5b;
+    --garden-border: #e6c6cf;
+    --garden-sage: #f3dce2;
+    --garden-surface: #fffafb;
+    --garden-hover: #ebd0d8;
+    --garden-field: #fdf5f7;
+    --garden-field-hover: #f8ebef;
+    --garden-focus-surface: #ffffff;
+    --garden-reading: #f6e7eb;
+    --garden-healthy-surface: #f2d5dd;
+    --garden-warning: #8f5624;
+    --garden-warning-surface: #f7e6d4;
+    --garden-offline: #9e2a3b;
+    --garden-offline-surface: #f7d9de;
+    --garden-error: #a62639;
+    --garden-notice: #8a4b5c;
+    --garden-focus: #d45d79;
+    --garden-button-text: #fffafb;
+    --garden-danger: #df2038;
+    --garden-danger-hover: #bd102a;
+    color-scheme: light;
+}
+
+/* ==========================================================================
+   LAYOUT & COMPONENTS (Exact structure from main)
+   ========================================================================== */
+body:has(.garden-wrapper) {
+    display: block;
+    height: auto;
+    min-height: 100svh;
+    background: var(--garden-background);
+    color: var(--garden-ink);
+    transition: background-color .35s ease, color .35s ease;
 }
 
 .garden-wrapper {
@@ -83,9 +161,24 @@ body:has(.garden-wrapper) {
     pointer-events: none;
     background: url('garden-foliage.png') center 60px / cover no-repeat;
     mask-image: linear-gradient(90deg, #000, transparent 25%, transparent 75%, #000);
+    opacity: .36;
+    transition: filter 0.3s ease, opacity 0.3s ease;
+}
+
+[data-theme="dark"] .garden-wrapper::before {
+    filter: grayscale(100%) brightness(0.6);
+    opacity: .22;
+}
+
+[data-theme="light"] .garden-wrapper::before {
     opacity: .28;
 }
-[data-theme="dark"] .garden-wrapper::before { opacity: .36; }
+
+[data-theme="sakura"] .garden-wrapper::before {
+    filter: hue-rotate(285deg) saturate(1.6) brightness(0.95);
+    opacity: .26;
+}
+
 .garden-wrapper *, .garden-wrapper *::before, .garden-wrapper *::after { box-sizing: border-box; }
 .garden-heading, .garden-page { width: 100%; max-width: 1040px; margin-inline: auto; }
 .garden-heading { text-align: center; margin-bottom: 28px; }

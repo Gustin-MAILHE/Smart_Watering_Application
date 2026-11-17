@@ -14,7 +14,7 @@ const DEMO_SENSORS = [
   { id: "humidity-2", type: "humidity", name: "Humidité · H-02", health: "healthy", reading: "80%", initialZoneId: 2 },
   { id: "brightness-2", type: "brightness", name: "Luminosité · B-02", health: "healthy", reading: "620 lx", initialZoneId: 2 },
   { id: "temperature-3", type: "temp", name: "Température · T-03", health: "healthy", reading: "22°C" },
-  { id: "humidity-3", type: "humidity", name: "Humidité · H-03", health: "low-battery", reading: "58%" },
+  { id: "humidity-3", type: "humidity", name: "Humidité · H-03", health: "low-battery", reading: "58%", initialZoneId: null },
   { id: "brightness-3", type: "brightness", name: "Luminosité · B-03", health: "offline", reading: null }
 ]
 const SENSOR_HEALTH = {
@@ -112,8 +112,8 @@ export default class extends Controller {
   showRequestError(error) {
     if (error.name === "AbortError") return
     this.showStorageNotice(error.name === "TypeError"
-      ? "Impossible de joindre le serveur. La modification n’a pas été confirmée ; rechargez la page avant de réessayer."
-      : error.message)
+        ? "Impossible de joindre le serveur. La modification n’a pas été confirmée ; rechargez la page avant de réessayer."
+        : error.message)
   }
 
   /** Saves all zone settings together; a failed request restores confirmed field values. */
@@ -193,7 +193,7 @@ export default class extends Controller {
       return savedState
     } catch (error) {
       this.showStorageNotice(
-        "Impossible de charger les zones enregistrées. Vous pouvez continuer, mais vos modifications risquent d’être perdues en quittant ou en rechargeant la page."
+          "Impossible de charger les zones enregistrées. Vous pouvez continuer, mais vos modifications risquent d’être perdues en quittant ou en rechargeant la page."
       )
       console.warn("Garden storage could not be loaded:", error)
       return this.state || this.defaultState()
@@ -240,10 +240,10 @@ export default class extends Controller {
       uniqueIds.add(zone.id)
       uniqueNames.add(normalizedName)
       return crops.includes(zone.crop) && schedules.includes(zone.schedule) &&
-        this.validWateringSchedule({
-          watering_time_slots: zone.watering_time_slots ?? DEFAULT_WATERING_SLOTS[zone.schedule],
-          watering_starts_on: zone.watering_starts_on ?? null, watering_ends_on: zone.watering_ends_on ?? null
-        }) && this.isValidSensorAssignment(zone, assignedSensors)
+          this.validWateringSchedule({
+            watering_time_slots: zone.watering_time_slots ?? DEFAULT_WATERING_SLOTS[zone.schedule],
+            watering_starts_on: zone.watering_starts_on ?? null, watering_ends_on: zone.watering_ends_on ?? null
+          }) && this.isValidSensorAssignment(zone, assignedSensors)
     })
   }
 
@@ -274,8 +274,8 @@ export default class extends Controller {
       console.log("SUCCESS: Garden zones saved in this browser.")
     } catch (error) {
       this.showStorageNotice(this.accountIdValue
-        ? "Les zones sont enregistrées sur votre compte, mais les réglages locaux n’ont pas pu être sauvegardés dans ce navigateur."
-        : "Impossible d’enregistrer les modifications dans ce navigateur. Elles risquent d’être perdues en quittant ou en rechargeant la page.")
+          ? "Les zones sont enregistrées sur votre compte, mais les réglages locaux n’ont pas pu être sauvegardés dans ce navigateur."
+          : "Impossible d’enregistrer les modifications dans ce navigateur. Elles risquent d’être perdues en quittant ou en rechargeant la page.")
       console.warn("Garden changes could not be saved:", error)
     }
   }
@@ -451,6 +451,7 @@ export default class extends Controller {
       button.setAttribute("aria-pressed", String(isSelected))
     })
     this.titleTarget.textContent = `${zone.name} - configuration`
+
     this.zoneNameTarget.value = zone.name
     this.cropTarget.value = zone.crop
     this.scheduleTarget.value = zone.schedule
@@ -472,14 +473,14 @@ export default class extends Controller {
     const time = /^(?:[01]\d|2[0-3]):[0-5]\d$/
     if (!Array.isArray(slots) || slots.length < 1 || slots.length > 24) return false
     if (!slots.every((slot) => slot && Object.keys(slot).sort().join() === "end,start" &&
-      typeof slot.start === "string" && typeof slot.end === "string" &&
-      time.test(slot.start) && time.test(slot.end) && slot.start < slot.end)) return false
+        typeof slot.start === "string" && typeof slot.end === "string" &&
+        time.test(slot.start) && time.test(slot.end) && slot.start < slot.end)) return false
     const ordered = [...slots].sort((a, b) => a.start.localeCompare(b.start))
     if (ordered.some((slot, index) => index > 0 && ordered[index - 1].end > slot.start)) return false
     const start = settings.watering_starts_on
     const end = settings.watering_ends_on
     const validDate = (value) => value === null || (typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value) &&
-      value.slice(0, 4) !== "0000" && Number.isFinite(Date.parse(value)) && new Date(value).toISOString().slice(0, 10) === value)
+        value.slice(0, 4) !== "0000" && Number.isFinite(Date.parse(value)) && new Date(value).toISOString().slice(0, 10) === value)
     return validDate(start) && validDate(end) && (!start || !end || start <= end)
   }
 
@@ -593,8 +594,8 @@ export default class extends Controller {
     this.renderWateringSchedule(zone)
     this.saveState()
     this.wateringStatusTarget.textContent = this.accountIdValue
-      ? "Créneaux et dates enregistrés sur votre compte."
-      : "Créneaux et dates appliqués en mode démonstration."
+        ? "Créneaux et dates enregistrés sur votre compte."
+        : "Créneaux et dates appliqués en mode démonstration."
     this.wateringStatusTarget.hidden = false
     return true
   }
@@ -667,16 +668,18 @@ export default class extends Controller {
     this.sensorTagsTarget.hidden = sensors.length === 0
     this.emptySensorsTarget.hidden = sensors.length > 0
     this.readingsNoteTarget.textContent = sensors.length > 0
-      ? "Mesures simulées pour cette zone de démonstration."
-      : "Aucune mesure disponible."
+        ? "Mesures simulées pour cette zone de démonstration."
+        : "Aucune mesure disponible."
     const available = this.availableSensors(zone)
     this.sensorSelectTarget.replaceChildren(new Option(available.length ? "Choisir un capteur" : "Aucun capteur disponible", ""))
     available.forEach((sensor) => this.sensorSelectTarget.add(new Option(sensor.name, sensor.id)))
     this.sensorSelectTarget.disabled = available.length === 0
     this.updateSensorButton()
-    for (const type of ["temp", "humidity", "brightness"]) {
-      const sensor = sensors.find((sensor) => sensor.type === type)
-      this[`${type}Target`].textContent = sensor?.health === "offline" ? "—" : sensor?.reading ?? "—"
+    if (!this.accountIdValue) {
+      for (const type of ["temp", "humidity", "brightness"]) {
+        const sensor = sensors.find((sensor) => sensor.type === type)
+        this[`${type}Target`].textContent = sensor?.health === "offline" ? "—" : sensor?.reading ?? "—"
+      }
     }
   }
 
@@ -700,7 +703,7 @@ export default class extends Controller {
   validThresholds(values) {
     const bounds = { humidity: [0, 100], temperature: [-50, 100], brightness: [0, 200000] }
     return Boolean(values && Object.entries(bounds).every(([key, [min, max]]) =>
-      values[key] === null || (typeof values[key] === "number" && Number.isFinite(values[key]) && values[key] >= min && values[key] <= max)))
+        values[key] === null || (typeof values[key] === "number" && Number.isFinite(values[key]) && values[key] >= min && values[key] <= max)))
   }
 
   /** @param {object} state Accepts legacy saves and checks the optional preset library. @returns {boolean} */

@@ -536,9 +536,10 @@ class GardensTest < ApplicationSystemTestCase
     wait_for_theme_transition
     light_card = page.evaluate_script("getComputedStyle(document.body).backgroundColor")
     assert_not_equal dark_card, light_card
+
     page.execute_script("document.documentElement.dataset.theme = 'dark'")
     wait_for_theme_transition
-    assert_equal dark_card, page.evaluate_script("getComputedStyle(document.body).backgroundColor")
+    assert_equal "rgb(13, 14, 17)", page.evaluate_script("getComputedStyle(document.body).backgroundColor")
 
     page.execute_script("window.Turbo.visit(arguments[0])", root_path)
     assert_selector ".home-page"

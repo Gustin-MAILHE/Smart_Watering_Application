@@ -15,25 +15,25 @@
           <li class="<%= 'active' if current_page?(root_path) %>">
             <%= link_to root_path do %>
               <%= inline_svg_tag "home_icon.svg", aria: { hidden: true } %>
-              <span>Accueil</span>
+              <span><%= t('layout.navbar.index.top_navigation.home_label') %></span>
             <% end %>
           </li>
           <li class="<%= 'active' if current_page?(gardens_path) %>">
             <%= link_to gardens_path do %>
               <%= inline_svg_tag "garden_icon.svg", aria: { hidden: true } %>
-              <span>Jardin</span>
+              <span><%= t('layout.navbar.index.top_navigation.garden_label') %></span>
             <% end %>
           </li>
           <li class="<%= 'active' if current_page?(accounts_path) %>">
             <%= link_to accounts_path do %>
               <%= inline_svg_tag "account_icon.svg", aria: { hidden: true } %>
-              <span>Compte</span>
+              <span><%= t('layout.navbar.index.top_navigation.account_label') %></span>
             <% end %>
           </li>
           <li class="<%= 'active' if current_page?(stats_path) %>">
             <%= link_to stats_path do %>
               <%= inline_svg_tag "stats_icon.svg", aria: { hidden: true } %>
-              <span>Statistiques</span>
+              <span><%= t('layout.navbar.index.top_navigation.stats_label') %></span>
             <% end %>
           </li>
         </ul>
@@ -42,25 +42,25 @@
           <li class="<%= 'active' if current_page?(settings_path) %>">
             <%= link_to settings_path do %>
               <%= inline_svg_tag "setting_icon.svg", aria: { hidden: true } %>
-              <span>Paramètres</span>
+              <span><%= t('layout.navbar.index.bottom_navigation.settings_label') %></span>
             <% end %>
           </li>
           <li class="<%= 'active' if current_page?(abouts_path) %>">
             <%= link_to abouts_path do %>
               <%= inline_svg_tag "about_icon.svg", aria: { hidden: true } %>
-              <span>About</span>
+              <span><%= t('layout.navbar.index.bottom_navigation.about_label') %></span>
             <% end %>
           </li>
         </ul>
         <ul class="down_navigation">
           <% if user_signed_in? %>
-            <li>Connecté en tant que :
+            <li><%= t('layout.navbar.index.bottom_navigation.login_as_label') %>
               <strong><%= current_user.username %></strong>
-              <%= button_to "Se déconnecter", destroy_user_session_path, method: :delete, class: "btn-submit" %>
+              <%= button_to t('layout.navbar.index.bottom_navigation.logout_button') , destroy_user_session_path, method: :delete, class: "btn-submit" %>
             </li>
           <% else %>
             <li>
-              <%= link_to "Se connecter", new_user_session_path, class: "btn-submit"%>
+              <%= link_to t('layout.navbar.index.bottom_navigation.login_button'), new_user_session_path, class: "btn-submit"%>
             </li>
 
           <% end %>
