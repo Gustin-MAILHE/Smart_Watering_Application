@@ -1,14 +1,31 @@
-<%= render layout: "devise/shared/shell", locals: { title: "Mot de passe oublié ?", description: "Recevez un lien par e-mail pour retrouver votre jardin." } do %>
-  <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
+<%= render layout: "devise/shared/shell", locals: {
+  title: "Retrouvez votre accès", recovery: true,
+  description: "Indiquez l’adresse utilisée lors de votre inscription pour recevoir un lien de réinitialisation."
+} do %>
+  <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: {
+    method: :post, data: { controller: "password-form", action: "invalid->password-form#validate:capture input->password-form#clear" }
+  }) do |f| %>
     <%= render "devise/shared/error_messages", resource: resource %>
 
     <div class="form-group">
       <%= f.label :email, "Adresse e-mail" %>
-      <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-input" %>
+      <div class="auth-email-field">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m4 7 8 6 8-6"/></svg>
+        <%= f.email_field :email, autofocus: true, autocomplete: "email", required: true, class: "form-input",
+                         placeholder: "vous@exemple.fr", spellcheck: false, autocapitalize: "none", aria: { describedby: "recovery-email-help" } %>
+      </div>
+      <p class="auth-field-help" id="recovery-email-help">L’adresse e-mail associée à votre compte.</p>
     </div>
 
     <div class="action">
-      <%= f.button "Envoyer les instructions de réinitialisation", type: "submit", class: "btn-submit" %>
+      <%= f.button type: "submit", class: "btn-submit", data: { turbo_submits_with: "Envoi en cours…" } do %>
+        Recevoir le lien
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+      <% end %>
+    </div>
+    <div class="auth-recovery-note">
+      <strong>Un lien personnel, valable <%= (resource_class.reset_password_within / 1.minute).to_i %> minutes</strong>
+      <p>Consultez aussi vos courriers indésirables. Votre mot de passe reste inchangé tant que vous n’en choisissez pas un nouveau.</p>
     </div>
   <% end %>
 

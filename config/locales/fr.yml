@@ -21,8 +21,22 @@ fr:
         password: Mot de passe
         password_confirmation: Confirmation du mot de passe
         current_password: Mot de passe actuel
+        reset_password_token: Lien de réinitialisation
         remember_me: Se souvenir de moi
     errors:
+      models:
+        user:
+          attributes:
+            reset_password_token:
+              invalid: est invalide ou a déjà été utilisé. Demandez un nouveau lien.
+              expired: a expiré. Demandez un nouveau lien.
+              blank: est manquant. Utilisez le lien reçu par e-mail.
+            password:
+              too_short:
+                one: doit contenir au moins un caractère.
+                other: doit contenir au moins %{count} caractères.
+            password_confirmation:
+              confirmation: ne correspond pas au nouveau mot de passe.
       messages:
         record_invalid: "Validation échouée : %{errors}"
         restrict_dependent_destroy:

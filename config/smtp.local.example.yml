@@ -1,0 +1,7 @@
+# Copier vers config/smtp.local.yml (ignoré par Git).
+# Renseigner uniquement username et password pour un compte Gmail.
+address: "smtp.gmail.com"
+port: 587
+username: "" # Adresse Gmail du compte qui envoie les e-mails.
+password: "" # Mot de passe d’application Google, sans espaces.
+from: "" # Facultatif : utilise username si vide.
