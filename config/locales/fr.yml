@@ -157,6 +157,13 @@ fr:
       header_title_link: Irrigation Intelligente
       aria_toggle: Passer en mode jour/nuit
     footer:
+      eyebrow: Du code au jardin
+      navigation_label: Navigation du pied de page
+      explore: Explorer
+      project_title: Un projet qui prend racine
+      project_description: Une application imaginée en équipe pour accompagner la gestion du jardin d’un professeur.
+      project_signature: Projet SAE · BUT Informatique · 3ᵉ année
+      source_code: Code source sur GitHub
       footer_title: Irrigation Intelligente
       footer_description: Prendre soin du jardin, une zone à la fois.
       footer_link_home: Accueil

@@ -139,6 +139,13 @@ en:
       header_title_link: Smart Irrigation
       aria_toggle: "Toggle day/night mode"
     footer:
+      eyebrow: From code to garden
+      navigation_label: Footer navigation
+      explore: Explore
+      project_title: A project taking root
+      project_description: An application designed as a team to help manage a teacher’s garden.
+      project_signature: SAE project · BUT Computer Science · Year 3
+      source_code: Source code on GitHub
       footer_title: Smart Irrigation
       footer_description: Taking care of the garden, one area at a time.
       footer_link_home: Home

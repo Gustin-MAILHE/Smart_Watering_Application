@@ -22,7 +22,7 @@ Le parcours de configuration fonctionne, mais l’application ne commande pas en
 
 | Partie | État actuel et suite du développement |
 | --- | --- |
-| Capteurs | Données de démonstration. Connecter les capteurs réels et distinguer les mesures reçues des seuils configurés. |
+| Capteurs | Mesures simulées, distinctes des seuils configurés. Connecter les capteurs réels pour afficher leurs mesures. |
 | Arrosage | Réglages enregistrés. Relier les boutons « Démarrer » / « Arrêter » au matériel et exécuter la programmation. |
 | Accueil et statistiques | L’accueil utilise des données fixes et la page Statistiques reste à développer. Ajouter des données réelles et leur historique. |
 | Notifications | Options affichées dans les paramètres. Ajouter leur sauvegarde et l’envoi des alertes. |
