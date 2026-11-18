@@ -20,7 +20,7 @@ Rails.application.routes.draw do
   resources :accounts, only: [ :index, :update, :destroy ]
 
   # Stats
-  resources :stats, only: [ :index ]
+  resources :stats, only: [ :index, :show ]
 
   # Zones
   resources :zones, only: [ :index ]

@@ -1,1 +1,26 @@
-<h1 class="title-page">Statistiques</h1>
+<section class="stats-page" aria-labelledby="stats-title">
+  <h1 class="stats-title" id="stats-title">Statistiques</h1>
+
+  <ul class="stats-list">
+    <% @days.each do |day| %>
+      <li class="stats-card">
+        <h2 class="stats-card__date"><%= day[:date] %></h2>
+
+        <p class="stats-card__values">
+          <span title="Humidité"><%= day[:humidity] %>% 💧</span>
+          <span title="Luminosité"><%= day[:brightness] %>% ☀️</span>
+          <span title="Température"><%= day[:temperature] %>°C 🌡️</span>
+        </p>
+
+        <%= link_to "Voir +", stat_path(day[:date].tr("/", "-")), class: "stats-card__button",
+                    aria: { label: "Voir le détail du #{day[:date]}" } %>
+      </li>
+    <% end %>
+  </ul>
+
+  <%# Fake button: the database export will be done with the back end %>
+  <button type="button" class="stats-card__button stats-export"
+          onclick="alert('Export simulé : toutes les données seront exportées quand le back-end sera prêt.')">
+    Exporter toutes les données
+  </button>
+</section>
