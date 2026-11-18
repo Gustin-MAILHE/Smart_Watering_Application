@@ -30,6 +30,38 @@ Le parcours de configuration fonctionne, mais l’application ne commande pas en
 
 Les prochaines étapes comprennent aussi l’harmonisation des unités et des traductions, les essais avec le jardin et la préparation du déploiement.
 
+## Architecture du projet
+
+L’application repose sur une architecture **MVC (Modèle, Vue, Contrôleur)** avec Ruby on Rails. Les pages sont rendues en HTML avec ERB ; Turbo gère la navigation et Stimulus les interactions dans le navigateur.
+
+```mermaid
+flowchart LR
+    UI["Navigateur · Turbo et Stimulus"] <-->|HTML et JSON| Rails["Serveur Rails"]
+    Rails <-->|Active Record| DB[(SQLite)]
+    UI <-->|Données locales de démonstration| Local["localStorage"]
+    Rails -->|Devise et Action Mailer| Mail["E-mails de réinitialisation"]
+```
+
+Pour un utilisateur connecté, une modification de zone est envoyée au contrôleur `GardenZonesController`. Celui-ci vérifie que la zone appartient à l’utilisateur, puis le modèle `Zone` valide les données avant leur enregistrement dans SQLite. La réponse JSON permet ensuite de mettre l’interface à jour.
+
+Les deux modèles principaux sont `User` et `Zone` : un utilisateur possède plusieurs zones et chaque zone appartient à un seul utilisateur. Les capteurs simulés et les préréglages sont actuellement gérés côté navigateur.
+
+```text
+app/
+├── controllers/              # Requêtes, accès aux données et réponses
+├── models/                   # Modèles Active Record et validations
+├── views/                    # Pages ERB et éléments partagés (header, footer…)
+├── javascript/controllers/   # Contrôleurs Stimulus : jardin, étapes, thèmes…
+├── assets/                   # Feuilles de style et images
+└── mailers/                  # Base des mailers de l’application
+config/                       # Routes, environnements, traductions et Devise
+db/                           # Migrations et schéma de la base
+public/                       # Fichiers statiques, icônes et pages d’erreur
+test/                         # Tests des modèles, contrôleurs et parcours navigateur
+docs/                         # Documentation complémentaire, dont le guide SMTP
+.github/workflows/            # Vérifications automatiques avec GitHub Actions
+```
+
 ## Installation et lancement
 
 Le projet utilise **Ruby on Rails 8.1**, **SQLite3**, **Hotwire (Turbo et Stimulus)** et **Devise** pour l’authentification.
@@ -65,5 +97,7 @@ bin/rails db:test:prepare test:system
 ```
 
 Les tests navigateur utilisent Firefox avec Selenium et nécessitent Firefox ainsi qu’un pilote GeckoDriver compatible. Ils couvrent notamment la configuration du jardin, la séparation des données entre utilisateurs, les erreurs de sauvegarde, l’affichage mobile et la récupération du mot de passe.
+
+Sur Ubuntu, l’installation Firefox via Snap est détectée automatiquement pour utiliser le véritable exécutable et son pilote, plutôt que le lanceur `/usr/bin/firefox`. Pour une installation personnalisée, les variables `FIREFOX_BIN` et `SE_GECKODRIVER` permettent de préciser leurs chemins.
 
 Les tests, les contrôles de style Ruby et les analyses de sécurité sont également exécutés par GitHub Actions sur les pull requests.
