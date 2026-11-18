@@ -88,3 +88,48 @@ body:has(.stats-page) {
 .stats-card__button:hover {
     background: var(--stats-green-hover);
 }
+
+/* Day details */
+.stats-back {
+    color: var(--stats-green);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.stats-section {
+    margin-bottom: 1.5rem;
+}
+
+.stats-section__title {
+    margin: 0;
+    color: var(--stats-green);
+    font-size: 1.15rem;
+}
+
+.stats-table,
+.stats-rows {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-collapse: collapse;
+    text-align: center;
+}
+
+/* Thin line between the rows */
+.stats-table td,
+.stats-table th,
+.stats-rows li {
+    padding: .45rem 0;
+    border-bottom: 1px solid var(--stats-border);
+}
+
+.stats-table tr:last-child td,
+.stats-rows li:last-child {
+    border-bottom: none;
+}
+
+.stats-rows li {
+    display: flex;
+    justify-content: space-between;
+}
