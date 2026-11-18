@@ -1,0 +1,88 @@
+<%
+  averages = { temperature_min: 17, temperature_max: 31, water: "33,5" } # Other figures of the day
+  readings = [
+    { hour: "00:00", temperature: 18, humidity: 82, brightness: 0 },
+    { hour: "03:00", temperature: 17, humidity: 85, brightness: 0 },
+    { hour: "06:00", temperature: 19, humidity: 80, brightness: 15 },
+    { hour: "09:00", temperature: 24, humidity: 71, brightness: 55 },
+    { hour: "12:00", temperature: 30, humidity: 58, brightness: 95 },
+    { hour: "15:00", temperature: 31, humidity: 55, brightness: 85 },
+    { hour: "18:00", temperature: 27, humidity: 63, brightness: 45 },
+    { hour: "21:00", temperature: 22, humidity: 74, brightness: 5 }
+  ] # Garden readings every 3 hours
+  zones = [
+    { name: "Zone 1", crop: "Tomates", water: "15,5", waterings: 2 },
+    { name: "Zone 2", crop: "Laitues", water: "5,5", waterings: 1 },
+    { name: "Zone 3", crop: "Carottes", water: "12,5", waterings: 2 }
+  ] # Water used by each zone
+  waterings = [
+    { time: "08:30 – 08:45", zone: "Zone 1", liters: "9,5" },
+    { time: "09:00 – 09:10", zone: "Zone 2", liters: "5,5" },
+    { time: "10:15 – 10:30", zone: "Zone 3", liters: "8,0" },
+    { time: "15:45 – 15:55", zone: "Zone 3", liters: "4,5" },
+    { time: "16:30 – 16:40", zone: "Zone 1", liters: "6,0" }
+  ] # Waterings of the day, in chronological order
+%>
+
+<section class="stats-page stats-page--detail" aria-labelledby="stats-title">
+  <%= link_to "← Retour", stats_path, class: "stats-back" %> <%# Back to the history %>
+  <h1 class="stats-title" id="stats-title"><%= @day[:date] %></h1> <%# Day displayed %>
+
+  <%# Averages of the day, the same figures as on the list %>
+  <section class="stats-card stats-section">
+    <h2 class="stats-section__title">Moyennes de la journée</h2>
+    <p class="stats-card__values">
+      <span title="Humidité"><%= @day[:humidity] %>% 💧</span>
+      <span title="Luminosité"><%= @day[:brightness] %>% ☀️</span>
+      <span title="Température"><%= @day[:temperature] %>°C 🌡️</span>
+    </p>
+    <p>Température min <%= averages[:temperature_min] %>°C · max <%= averages[:temperature_max] %>°C</p>
+    <p>Eau utilisée : <strong><%= averages[:water] %> L</strong> en <%= waterings.size %> arrosages</p>
+  </section>
+
+  <%# Readings during the day %>
+  <section class="stats-card stats-section">
+    <h2 class="stats-section__title">Relevés de la journée</h2>
+    <table class="stats-table">
+      <thead>
+        <tr><th>Heure</th><th>🌡️</th><th>💧</th><th>☀️</th></tr>
+      </thead>
+      <tbody>
+        <% readings.each do |reading| %> <%# Fixed list of 8 readings %>
+          <tr>
+            <td><%= reading[:hour] %></td>
+            <td><%= reading[:temperature] %>°C</td>
+            <td><%= reading[:humidity] %>%</td>
+            <td><%= reading[:brightness] %>%</td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </section>
+
+  <%# Water used by each zone %>
+  <section class="stats-card stats-section">
+    <h2 class="stats-section__title">Eau par zone</h2>
+    <ul class="stats-rows">
+      <% zones.each do |zone| %> <%# Fixed list of 3 zones %>
+        <li>
+          <span><strong><%= zone[:name] %></strong> · <%= zone[:crop] %></span>
+          <span><%= zone[:water] %> L · <%= zone[:waterings] %> arrosage<%= "s" if zone[:waterings] > 1 %></span>
+        </li>
+      <% end %>
+    </ul>
+  </section>
+
+  <%# Waterings of the day %>
+  <section class="stats-card stats-section">
+    <h2 class="stats-section__title">Arrosages</h2>
+    <ul class="stats-rows">
+      <% waterings.each do |watering| %> <%# Fixed list of 5 waterings %>
+        <li>
+          <span><strong><%= watering[:time] %></strong> · <%= watering[:zone] %></span>
+          <span><%= watering[:liters] %> L</span>
+        </li>
+      <% end %>
+    </ul>
+  </section>
+</section>
