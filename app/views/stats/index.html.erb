@@ -1,1 +1,30 @@
-<h1 class="title-page">Statistiques</h1>
+<%
+  # Front-end only: these simulated days will come from the back end once the sensor history is stored.
+  days = [
+    { date: "01/01/2026", humidity: 70, brightness: 50, temperature: 25 },
+    { date: "02/01/2026", humidity: 64, brightness: 72, temperature: 27 },
+    { date: "03/01/2026", humidity: 81, brightness: 35, temperature: 21 },
+    { date: "04/01/2026", humidity: 75, brightness: 48, temperature: 23 },
+    { date: "05/01/2026", humidity: 68, brightness: 60, temperature: 26 }
+  ] # One summary per recorded day
+%>
+
+<section class="stats-page" aria-labelledby="stats-title">
+  <h1 class="stats-title" id="stats-title">Statistiques</h1>
+
+  <ul class="stats-list">
+    <% days.each do |day| %>
+      <li class="stats-card">
+        <h2 class="stats-card__date"><%= day[:date] %></h2>
+
+        <p class="stats-card__values">
+          <span title="Humidité"><%= day[:humidity] %>% 💧</span>
+          <span title="Luminosité"><%= day[:brightness] %>% ☀️</span>
+          <span title="Température"><%= day[:temperature] %>°C 🌡️</span>
+        </p>
+
+        <a href="#" class="stats-card__button" aria-label="Voir le détail du <%= day[:date] %>">Voir +</a>
+      </li>
+    <% end %>
+  </ul>
+</section>
