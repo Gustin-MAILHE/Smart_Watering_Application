@@ -10,6 +10,9 @@ fr:
         remember_me: Se souvenir de moi
         username: Nom d’utilisateur
         reset_password_token: Lien de réinitialisation
+        temperature_unit: Unité de température
+        brightness_unit: Unité de luminosité
+        humidity_unit: Unité d’humidité
       zone:
         brightness_threshold: Seuil de luminosité
         crop: Culture
@@ -138,7 +141,6 @@ fr:
       wrong_length:
         one: doit contenir 1 caractère
         other: doit contenir %{count} caractères
-  hello: Hello world
   layout:
     navbar:
       index:

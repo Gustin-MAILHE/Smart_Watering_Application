@@ -2,11 +2,11 @@
 
 class SettingsController < ApplicationController
   before_action :authenticate_user!, only: [ :update_preferences ]
+
   def index
   end
 
   def set_language
-    session[:locale] = params[:locale]
     redirect_back fallback_location: root_path
   end
 
@@ -18,7 +18,9 @@ class SettingsController < ApplicationController
     end
   end
 
+  private
+
   def preference_params
-    params.permit(:temperature_unit, :brightness_unit, :humidity_unit) # allow changes only to these three parameters
+    params.permit(:temperature_unit, :brightness_unit, :humidity_unit)
   end
 end

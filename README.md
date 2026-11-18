@@ -24,7 +24,7 @@ Le parcours de configuration fonctionne, mais l’application ne commande pas en
 | --- | --- |
 | Capteurs | Mesures simulées, distinctes des seuils configurés. Connecter les capteurs réels pour afficher leurs mesures. |
 | Arrosage | Réglages enregistrés. Relier les boutons « Démarrer » / « Arrêter » au matériel et exécuter la programmation. |
-| Accueil et statistiques | L’accueil utilise des données fixes et la page Statistiques reste à développer. Ajouter des données réelles et leur historique. |
+| Accueil et statistiques | L’accueil et l’historique par journée utilisent des données de démonstration. Les exports sont simulés. Relier ces pages aux mesures réelles. |
 | Notifications | Options affichées dans les paramètres. Ajouter leur sauvegarde et l’envoi des alertes. |
 | Administration des comptes | La page « Compte » utilise des utilisateurs fictifs, distincts des vrais inscrits. Prévoir une gestion des comptes réels avec les droits adaptés. |
 
@@ -44,7 +44,7 @@ flowchart LR
 
 Pour un utilisateur connecté, une modification de zone est envoyée au contrôleur `GardenZonesController`. Celui-ci vérifie que la zone appartient à l’utilisateur, puis le modèle `Zone` valide les données avant leur enregistrement dans SQLite. La réponse JSON permet ensuite de mettre l’interface à jour.
 
-Les deux modèles principaux sont `User` et `Zone` : un utilisateur possède plusieurs zones et chaque zone appartient à un seul utilisateur. Les capteurs simulés et les préréglages sont actuellement gérés côté navigateur.
+Les deux modèles persistants sont `User` et `Zone` : un utilisateur possède plusieurs zones et chaque zone appartient à un seul utilisateur. `DemoStatistics` regroupe les données provisoires de l’historique, sans table en base. Les capteurs simulés et les préréglages sont actuellement gérés côté navigateur.
 
 ```text
 app/
@@ -52,6 +52,7 @@ app/
 ├── models/                   # Modèles Active Record et validations
 ├── views/                    # Pages ERB et éléments partagés (header, footer…)
 ├── javascript/controllers/   # Contrôleurs Stimulus : jardin, étapes, thèmes…
+├── javascript/garden/        # Données des capteurs et horaires de démonstration
 ├── assets/                   # Feuilles de style et images
 └── mailers/                  # Base des mailers de l’application
 config/                       # Routes, environnements, traductions et Devise

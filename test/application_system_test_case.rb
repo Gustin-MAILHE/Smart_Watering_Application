@@ -19,6 +19,20 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
 
   # Exercise existing zone features through the same step buttons used by visitors.
   def garden_step(name)
+    # Les boutons HTML peuvent apparaître avant le chargement des contrôleurs Stimulus.
+    page.document.synchronize do
+      ready = page.evaluate_script(<<~JS)
+        (() => {
+          const garden = document.querySelector('.garden-wrapper');
+          const steps = document.querySelector('[data-controller="garden-steps"]');
+          return Boolean(window.Stimulus && garden && steps &&
+            window.Stimulus.getControllerForElementAndIdentifier(garden, 'garden')?.state &&
+            window.Stimulus.getControllerForElementAndIdentifier(steps, 'garden-steps')?.step);
+        })()
+      JS
+      raise Capybara::ElementNotFound, "Les contrôleurs du jardin ne sont pas encore prêts" unless ready
+    end
+
     button = find(".garden-step-button", text: name)
     button.click unless button["aria-current"] == "step"
     assert_selector ".garden-step-button[aria-current=step]", text: name

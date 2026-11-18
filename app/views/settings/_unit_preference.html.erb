@@ -1,0 +1,9 @@
+<div class="<%= measurement %>-section">
+  <%= label_tag "#{measurement}-unit", t("pages.settings.index.#{measurement}_label") %>
+  <%= form_with url: update_preferences_path, method: :post, data: { turbo: false } do |form| %>
+    <%= form.select "#{measurement}_unit",
+                    units.map { |unit| [t("pages.settings.index.units.#{unit}"), unit] },
+                    { selected: current_user&.public_send("#{measurement}_unit") || units.first },
+                    { onchange: "this.form.submit();", id: "#{measurement}-unit" } %>
+  <% end %>
+</div>

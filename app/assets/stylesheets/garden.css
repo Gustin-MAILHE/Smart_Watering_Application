@@ -1,8 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 
-/* ==========================================================================
-   1. DEFAULT THEME (Forest Green)
-   ========================================================================== */
+/* 1. DEFAULT THEME (Forest Green) */
 body:has(.garden-wrapper),
 [data-theme="default"] body:has(.garden-wrapper) {
     --garden-background: #1c241e;
@@ -32,9 +30,7 @@ body:has(.garden-wrapper),
     color-scheme: dark;
 }
 
-/* ==========================================================================
-   2. DARK THEME (True Dark Mode)
-   ========================================================================== */
+/* 2. DARK THEME (True Dark Mode) */
 [data-theme="dark"] body:has(.garden-wrapper) {
     --garden-background: #0d0e11;
     --garden-ink: #f1f3f5;
@@ -63,9 +59,7 @@ body:has(.garden-wrapper),
     color-scheme: dark;
 }
 
-/* ==========================================================================
-   3. LIGHT THEME
-   ========================================================================== */
+/* 3. LIGHT THEME */
 [data-theme="light"] body:has(.garden-wrapper) {
     --garden-background: #eceae2;
     --garden-ink: #273329;
@@ -94,9 +88,7 @@ body:has(.garden-wrapper),
     color-scheme: light;
 }
 
-/* ==========================================================================
-   4. SAKURA THEME (Japanese Garden)
-   ========================================================================== */
+/* 4. SAKURA THEME (Japanese Garden) */
 [data-theme="sakura"] body:has(.garden-wrapper) {
     --garden-background: #f7eef0;
     --garden-ink: #3b282e;
@@ -125,9 +117,7 @@ body:has(.garden-wrapper),
     color-scheme: light;
 }
 
-/* ==========================================================================
-   LAYOUT & COMPONENTS (Exact structure from main)
-   ========================================================================== */
+/* Mise en page et composants */
 body:has(.garden-wrapper) {
     display: block;
     height: auto;

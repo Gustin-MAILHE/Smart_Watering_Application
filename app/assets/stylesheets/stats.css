@@ -1,28 +1,13 @@
-/* Statistics page: same botanical palette as the Garden page. */
-body:has(.stats-page) {
-    --stats-background: #e8e9dd;
-    --stats-ink: #293e30;
-    --stats-green: #386548;
-    --stats-green-hover: #284e37;
-    --stats-border: #becbb3;
-    --stats-surface: #e0e5d5;
-    --stats-button-text: #f6f5ed;
-    background: var(--stats-background);
-    color: var(--stats-ink);
-}
-
-/* Dark theme colors */
-[data-theme="dark"] body:has(.stats-page) {
-    --stats-background: #1e2b23;
-    --stats-ink: #e3e9da;
-    --stats-green: #b1cd98;
-    --stats-green-hover: #c6dfb0;
-    --stats-border: #4a614b;
-    --stats-surface: #2d402f;
-    --stats-button-text: #1c2d20;
-}
-
+/* Use the shared palette so statistics follow all four site themes. */
 .stats-page {
+    --stats-ink: var(--TextColor);
+    --stats-green: var(--AccentColor);
+    --stats-border: var(--BorderColor);
+    --stats-surface: var(--SurfaceColor);
+    --stats-button-background: color-mix(in srgb, var(--AccentColor) 75%, var(--TextColor));
+    --stats-green-hover: color-mix(in srgb, var(--AccentColor) 65%, var(--TextColor));
+    --stats-button-text: var(--TextDarkColor);
+
     max-width: 420px;
     margin: 0 auto;
     padding: 2rem 1rem;
@@ -37,6 +22,8 @@ body:has(.stats-page) {
     letter-spacing: -.05em;
     text-align: center;
 }
+
+.stats-note { margin: 0 0 1.5rem; color: var(--MutedColor); font-size: .85rem; line-height: 1.6; text-align: center; }
 
 /* List of the days */
 .stats-list {
@@ -67,6 +54,7 @@ body:has(.stats-page) {
 
 .stats-card__values {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     gap: 1.25rem;
     margin: 0;
@@ -78,7 +66,7 @@ body:has(.stats-page) {
 .stats-card__button {
     padding: .35rem 2rem;
     border-radius: 25px 25px 25px 8px;
-    background: var(--stats-green);
+    background: var(--stats-button-background);
     color: var(--stats-button-text);
     font-weight: 700;
     text-decoration: none;
@@ -87,6 +75,12 @@ body:has(.stats-page) {
 
 .stats-card__button:hover {
     background: var(--stats-green-hover);
+}
+
+.stats-card__button:focus-visible,
+.stats-back:focus-visible {
+    outline: 3px solid var(--stats-green);
+    outline-offset: 4px;
 }
 
 /* Day details */
@@ -132,6 +126,8 @@ body:has(.stats-page) {
 .stats-rows li {
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap;
+    gap: .35rem 1rem;
 }
 
 /* Export button at the end of the details */
@@ -141,4 +137,8 @@ body:has(.stats-page) {
     border: none;
     font-size: 1rem;
     cursor: pointer;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .stats-card__button { transition: none; }
 }

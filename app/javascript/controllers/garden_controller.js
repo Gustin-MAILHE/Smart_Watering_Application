@@ -1,27 +1,8 @@
 import { Controller } from "@hotwired/stimulus"
+import { DEFAULT_WATERING_SLOTS, DEMO_SENSORS, SENSOR_HEALTH } from "garden/demo_data"
 
 const STORAGE_KEY = "smartWatering.garden.v1"
-const DEFAULT_WATERING_SLOTS = {
-  "Every 2 days - 6:00 AM": [{ start: "06:00", end: "06:30" }],
-  "Every day - 7:00 AM": [{ start: "07:00", end: "07:30" }],
-  "Every 3 days - 8:00 PM": [{ start: "20:00", end: "20:30" }]
-}
-const DEMO_SENSORS = [
-  { id: "temperature-1", type: "temp", name: "Température · T-01", health: "healthy", reading: "28°C", initialZoneId: 1 },
-  { id: "humidity-1", type: "humidity", name: "Humidité · H-01", health: "low-battery", reading: "42%", initialZoneId: 1 },
-  { id: "brightness-1", type: "brightness", name: "Luminosité · B-01", health: "offline", reading: null, initialZoneId: 1 },
-  { id: "temperature-2", type: "temp", name: "Température · T-02", health: "healthy", reading: "19°C", initialZoneId: 2 },
-  { id: "humidity-2", type: "humidity", name: "Humidité · H-02", health: "healthy", reading: "80%", initialZoneId: 2 },
-  { id: "brightness-2", type: "brightness", name: "Luminosité · B-02", health: "healthy", reading: "620 lx", initialZoneId: 2 },
-  { id: "temperature-3", type: "temp", name: "Température · T-03", health: "healthy", reading: "22°C" },
-  { id: "humidity-3", type: "humidity", name: "Humidité · H-03", health: "low-battery", reading: "58%", initialZoneId: null },
-  { id: "brightness-3", type: "brightness", name: "Luminosité · B-03", health: "offline", reading: null }
-]
-const SENSOR_HEALTH = {
-  healthy: "En bon état", "low-battery": "Batterie faible", offline: "Hors ligne"
-}
 
-/** Persists account zones in Rails and keeps demo configuration in browser storage. */
 export default class extends Controller {
   static values = { accountId: Number, zones: Array, zonesUrl: String }
 
@@ -34,7 +15,6 @@ export default class extends Controller {
     "localConfiguration", "wateringSlots", "wateringAdd", "wateringStartsOn", "wateringEndsOn", "wateringError", "wateringStatus"
   ]
 
-  /** Restores state and rebuilds buttons after initial loading or a Turbo visit. */
   connect() {
     this.zoneRequestPending = false
     this.requestController = new AbortController()
@@ -44,7 +24,6 @@ export default class extends Controller {
     this.initializePresets()
     this.renderZoneButtons()
     this.renderSelectedZone()
-    console.log("SUCCESS: Garden controller connected.")
   }
 
   disconnect() {
@@ -55,7 +34,7 @@ export default class extends Controller {
     return this.accountIdValue ? `${STORAGE_KEY}.account.${this.accountIdValue}` : STORAGE_KEY
   }
 
-  /** Server settings take precedence; legacy account settings remain available for explicit transfer. */
+  // Les réglages du serveur priment sur l’ancienne sauvegarde locale.
   restoreAccountZones() {
     const cached = new Map(this.state.zones.map((zone) => [zone.id, zone]))
     this.state.zones = this.zonesValue.map((zone) => {
@@ -76,7 +55,6 @@ export default class extends Controller {
     }
   }
 
-  /** Mutations keep the displayed list unchanged until Rails confirms the save. */
   async requestZone(method, id = null, attributes = null) {
     this.zoneRequestPending = true
     this.zoneListTarget.inert = true
@@ -116,7 +94,7 @@ export default class extends Controller {
         : error.message)
   }
 
-  /** Saves all zone settings together; a failed request restores confirmed field values. */
+  // Une erreur de sauvegarde rétablit les dernières valeurs confirmées.
   async saveConfiguration(zone, changes) {
     if (this.zoneRequestPending) return false
     if (this.accountIdValue) {
@@ -153,7 +131,6 @@ export default class extends Controller {
     }
   }
 
-  /** @returns {object} A fresh demo state when no saved zones are available. */
   defaultState() {
     if (this.accountIdValue) {
       return { version: 1, numberingVersion: 1, selectedZoneId: null, nextZoneId: 1, zones: [] }
@@ -170,7 +147,6 @@ export default class extends Controller {
     }
   }
 
-  /** @returns {object} Valid saved state, or usable defaults if storage fails. */
   loadState() {
     this.showStorageNotice("")
     try {
@@ -200,7 +176,7 @@ export default class extends Controller {
     }
   }
 
-  /** @param {object} state Repairs old generated names once, retaining custom names and device identities. */
+  // Migration des anciens noms automatiques, sans toucher aux noms personnalisés.
   restoreZoneNumbering(state) {
     if (state.numberingVersion === 1) return
     const automaticZones = state.zones.filter((zone) => zone.name === `Zone ${zone.id}`)
@@ -212,14 +188,12 @@ export default class extends Controller {
     state.numberingVersion = 1
   }
 
-  /** @param {Set<string>} usedNames @param {number} zoneCount Finds the first free display number. @returns {string} */
   nextZoneName(usedNames, zoneCount) {
     for (let number = 1; number <= zoneCount + 1; number += 1) {
       if (!usedNames.has(`zone ${number}`)) return `Zone ${number}`
     }
   }
 
-  /** @param {unknown} state Saved JSON to check before displaying it. @returns {boolean} */
   isValidState(state) {
     if (!state || state.version !== 1 || !Array.isArray(state.zones) || !this.isValidPresetState(state)) {
       return false
@@ -247,12 +221,10 @@ export default class extends Controller {
     })
   }
 
-  /** @param {object} zone Restores original demo assignments for older saves. @returns {string[]} */
   sensorIdsForZone(zone) {
     return zone.sensorIds ?? DEMO_SENSORS.filter((sensor) => sensor.initialZoneId === zone.id).map((sensor) => sensor.id)
   }
 
-  /** @param {object} zone @param {Set<string>} assigned Checks unique devices and one sensor per reading type. @returns {boolean} */
   isValidSensorAssignment(zone, assigned) {
     const ids = this.sensorIdsForZone(zone)
     if (!Array.isArray(ids)) return false
@@ -266,12 +238,10 @@ export default class extends Controller {
     })
   }
 
-  /** Saves current state without interrupting editing if browser storage is unavailable. */
   saveState() {
     try {
       window.localStorage.setItem(this.storageKey, JSON.stringify(this.state))
       this.showStorageNotice("")
-      console.log("SUCCESS: Garden zones saved in this browser.")
     } catch (error) {
       this.showStorageNotice(this.accountIdValue
           ? "Les zones sont enregistrées sur votre compte, mais les réglages locaux n’ont pas pu être sauvegardés dans ce navigateur."
@@ -280,20 +250,17 @@ export default class extends Controller {
     }
   }
 
-  /** @param {string} message Storage feedback; an empty message hides the notice. */
   showStorageNotice(message) {
     this.storageNoticeTarget.textContent = message
     this.storageNoticeTarget.hidden = message.length === 0
   }
 
-  /** Replaces cached zone buttons so a Turbo restoration never duplicates them. */
   renderZoneButtons() {
     this.state.zones.sort((left, right) => left.name.localeCompare(right.name, "fr", { numeric: true, sensitivity: "base" }))
     this.zoneBtnTargets.forEach((button) => button.remove())
     this.state.zones.forEach((zone) => this.appendZoneButton(zone))
   }
 
-  /** @param {object} zone A zone with a stable numeric identifier. @returns {HTMLButtonElement} */
   appendZoneButton(zone) {
     const button = document.createElement("button")
     button.type = "button"
@@ -307,7 +274,6 @@ export default class extends Controller {
     return button
   }
 
-  /** @param {MouseEvent} event The selected zone button's click event. */
   async selectZone(event) {
     if (this.zoneRequestPending) return
     const zoneId = Number(event.currentTarget.dataset.zoneId)
@@ -317,10 +283,8 @@ export default class extends Controller {
     this.state.selectedZoneId = zoneId
     this.renderSelectedZone()
     this.saveState()
-    console.log(`SUCCESS: Selected Zone ${zoneId}.`)
   }
 
-  /** Creates and selects the next numbered zone without assigning simulated sensors. */
   async addZone() {
     if (this.zoneRequestPending) return
     if (!await this.savePendingWateringSchedule()) return
@@ -347,10 +311,8 @@ export default class extends Controller {
     const button = this.zoneBtnTargets.find((button) => Number(button.dataset.zoneId) === zone.id)
     button.focus()
     this.saveState()
-    console.log(`SUCCESS: Created and selected ${zone.name} (ID ${zone.id}).`)
   }
 
-  /** @param {SubmitEvent} event Saves a trimmed, unique name for the selected zone. */
   async renameZone(event) {
     event.preventDefault()
     if (this.zoneRequestPending) return
@@ -379,10 +341,8 @@ export default class extends Controller {
     this.renderZoneButtons()
     this.renderSelectedZone()
     this.saveState()
-    console.log(`SUCCESS: Renamed Zone ${zone.id} to ${name}.`)
   }
 
-  /** @param {string} message Explains a rejected name and focuses the field to correct it. */
   showNameError(message) {
     this.nameErrorTarget.textContent = message
     this.nameErrorTarget.hidden = false
@@ -390,14 +350,12 @@ export default class extends Controller {
     this.zoneNameTarget.focus()
   }
 
-  /** Clears name feedback when editing the field or switching to another zone. */
   clearNameError() {
     this.nameErrorTarget.hidden = true
     this.nameErrorTarget.textContent = ""
     this.zoneNameTarget.removeAttribute("aria-invalid")
   }
 
-  /** Immediately deletes the selected zone and selects its nearest remaining neighbour. */
   async deleteZone() {
     if (this.zoneRequestPending) return
     const index = this.state.zones.findIndex((zone) => zone.id === this.state.selectedZoneId)
@@ -421,19 +379,15 @@ export default class extends Controller {
     const focusTarget = selectedButton || this.zoneAddTarget
     focusTarget.focus()
     this.saveState()
-    console.log(`SUCCESS: Deleted Zone ${zone.id}.`)
   }
 
-  /** Saves the selected zone's crop and schedule when either configuration field changes. */
   async updateConfiguration() {
     const zone = this.state.zones.find((zone) => zone.id === this.state.selectedZoneId)
     if (!zone) return
     if (!await this.saveConfiguration(zone, { crop: this.cropTarget.value, schedule: this.scheduleTarget.value })) return
     this.saveState()
-    console.log(`SUCCESS: Updated Zone ${zone.id} configuration.`)
   }
 
-  /** Updates the selection, configuration and sensor display from the same zone state. */
   renderSelectedZone() {
     const zone = this.state.zones.find((zone) => zone.id === this.state.selectedZoneId)
     this.clearNameError()
@@ -460,14 +414,12 @@ export default class extends Controller {
     this.renderPresets(zone)
   }
 
-  /** Adds editable time ranges to legacy browser saves without discarding their other settings. */
   initializeWateringSchedule(zone) {
     zone.watering_time_slots ??= structuredClone(DEFAULT_WATERING_SLOTS[zone.schedule])
     zone.watering_starts_on ??= null
     zone.watering_ends_on ??= null
   }
 
-  /** Shared validation for browser storage and the editor, using local dates without timezone conversion. */
   validWateringSchedule(settings) {
     const slots = settings.watering_time_slots
     const time = /^(?:[01]\d|2[0-3]):[0-5]\d$/
@@ -493,7 +445,6 @@ export default class extends Controller {
     this.wateringStatusTarget.hidden = true
   }
 
-  /** Builds labelled time fields as DOM nodes so saved values never become markup. */
   appendWateringSlot(slot = { start: "", end: "" }) {
     const row = document.createElement("div")
     row.className = "watering-slot"
@@ -600,19 +551,16 @@ export default class extends Controller {
     return true
   }
 
-  /** @param {object} zone Lists unassigned devices for reading types still missing in the zone. @returns {object[]} */
   availableSensors(zone) {
     const assignedIds = new Set(this.state.zones.flatMap((other) => other.sensorIds))
     const assignedTypes = new Set(DEMO_SENSORS.filter((sensor) => zone.sensorIds.includes(sensor.id)).map((sensor) => sensor.type))
     return DEMO_SENSORS.filter((sensor) => !assignedIds.has(sensor.id) && !assignedTypes.has(sensor.type))
   }
 
-  /** Enables assignment only after an available sensor has been selected. */
   updateSensorButton() {
     this.sensorAssignTarget.disabled = !this.sensorSelectTarget.value
   }
 
-  /** @param {SubmitEvent} event Assigns an available demo device to the active zone. */
   assignSensor(event) {
     event.preventDefault()
     const zone = this.state.zones.find((zone) => zone.id === this.state.selectedZoneId)
@@ -624,10 +572,8 @@ export default class extends Controller {
     this.renderSensorReadings(zone)
     this.sensorSelectTarget.focus()
     this.saveState()
-    console.log(`SUCCESS: Assigned sensor ${id} to Zone ${zone.id}.`)
   }
 
-  /** @param {MouseEvent} event Removes a device from this zone, making it available elsewhere. */
   removeSensor(event) {
     const zone = this.state.zones.find((zone) => zone.id === this.state.selectedZoneId)
     const id = event.currentTarget.dataset.sensorId
@@ -637,10 +583,8 @@ export default class extends Controller {
     this.renderSensorReadings(zone)
     this.sensorSelectTarget.focus()
     this.saveState()
-    console.log(`SUCCESS: Removed sensor ${id} from Zone ${zone.id}.`)
   }
 
-  /** @param {object} sensor Creates an accessible row with a labelled health state. @returns {HTMLLIElement} */
   sensorElement(sensor) {
     const item = document.createElement("li")
     item.className = "sensor-item"
@@ -661,7 +605,6 @@ export default class extends Controller {
     return item
   }
 
-  /** @param {object} zone Displays device assignments, simulated health and available demo readings. */
   renderSensorReadings(zone) {
     const sensors = DEMO_SENSORS.filter((sensor) => zone.sensorIds.includes(sensor.id))
     this.sensorTagsTarget.replaceChildren(...sensors.map((sensor) => this.sensorElement(sensor)))
@@ -681,7 +624,6 @@ export default class extends Controller {
     }
   }
 
-  /** Upgrades older saves without changing their zones or sensor assignments. */
   initializePresets() {
     this.state.presets ??= []
     const highestId = this.state.presets.reduce((highest, preset) => Math.max(highest, preset.id), 0)
@@ -692,19 +634,16 @@ export default class extends Controller {
     })
   }
 
-  /** @returns {object} Blank thresholds disable all three settings. */
   emptyThresholds() {
     return { humidity: null, temperature: null, brightness: null }
   }
 
-  /** @param {unknown} values Checks stored units and numeric bounds. @returns {boolean} */
   validThresholds(values) {
     const bounds = { humidity: [0, 100], temperature: [-50, 100], brightness: [0, 200000] }
     return Boolean(values && Object.entries(bounds).every(([key, [min, max]]) =>
         values[key] === null || (typeof values[key] === "number" && Number.isFinite(values[key]) && values[key] >= min && values[key] <= max)))
   }
 
-  /** @param {object} state Accepts legacy saves and checks the optional preset library. @returns {boolean} */
   isValidPresetState(state) {
     const presets = state.presets ?? []
     if (!Array.isArray(presets)) return false
@@ -723,7 +662,6 @@ export default class extends Controller {
     return validPresets && state.zones.every((zone) => zone && (zone.thresholds === undefined || this.validThresholds(zone.thresholds)))
   }
 
-  /** @returns {object|null} Current field values, or inline feedback for invalid input. */
   readThresholds() {
     const values = {}
     for (const key of ["humidity", "temperature", "brightness"]) {
@@ -738,7 +676,6 @@ export default class extends Controller {
     return values
   }
 
-  /** Saves manual threshold changes only to the active zone. */
   async updateThresholds() {
     const zone = this.state.zones.find((zone) => zone.id === this.state.selectedZoneId)
     const thresholds = this.readThresholds()
@@ -746,10 +683,8 @@ export default class extends Controller {
     if (!await this.saveConfiguration(zone, { thresholds, presetId: null })) return
     this.showPresetError("")
     this.saveState()
-    console.log(`SUCCESS: Updated Zone ${zone.id} thresholds.`)
   }
 
-  /** @param {object} zone Restores its values and lists reusable presets safely as text. */
   renderPresets(zone) {
     zone.thresholds ??= this.emptyThresholds()
     this.presetSelectTarget.replaceChildren(new Option("Choisir un préréglage", ""))
@@ -762,7 +697,6 @@ export default class extends Controller {
     this.showPresetError("")
   }
 
-  /** Selects a library entry for applying, editing or deleting without changing zone values. */
   selectPreset() {
     const preset = this.state.presets.find((preset) => preset.id === Number(this.presetSelectTarget.value))
     this.presetNameTarget.value = preset?.name ?? ""
@@ -771,7 +705,6 @@ export default class extends Controller {
     this.presetDeleteTarget.disabled = !preset
   }
 
-  /** Copies the chosen preset into the active zone; other zones keep their own snapshots. */
   async applyPreset() {
     const zone = this.state.zones.find((zone) => zone.id === this.state.selectedZoneId)
     const preset = this.state.presets.find((preset) => preset.id === Number(this.presetSelectTarget.value))
@@ -779,20 +712,16 @@ export default class extends Controller {
     if (!await this.saveConfiguration(zone, { thresholds: { ...preset.thresholds }, presetId: preset.id })) return
     this.renderPresets(zone)
     this.saveState()
-    console.log(`SUCCESS: Applied preset ${preset.id} to Zone ${zone.id}.`)
   }
 
-  /** Creates a named preset from the currently displayed thresholds. */
   createPreset() {
     this.savePreset(false)
   }
 
-  /** Updates the selected library entry from the currently displayed thresholds. */
   updatePreset() {
     this.savePreset(true)
   }
 
-  /** @param {boolean} updating Validates the editor before creating or updating a library entry. */
   async savePreset(updating) {
     const zone = this.state.zones.find((zone) => zone.id === this.state.selectedZoneId)
     if (!zone) return
@@ -816,10 +745,8 @@ export default class extends Controller {
     }
     this.renderPresets(zone)
     this.saveState()
-    console.log(`SUCCESS: Saved preset ${id}.`)
   }
 
-  /** Removes the selected preset while retaining every zone's applied thresholds. */
   deletePreset() {
     const id = Number(this.presetSelectTarget.value)
     if (!this.state.presets.some((preset) => preset.id === id)) return
@@ -827,10 +754,8 @@ export default class extends Controller {
     this.state.zones.forEach((zone) => { if (zone.presetId === id) zone.presetId = null })
     this.renderPresets(this.state.zones.find((zone) => zone.id === this.state.selectedZoneId))
     this.saveState()
-    console.log(`SUCCESS: Deleted preset ${id}.`)
   }
 
-  /** @param {string} message Shows inline validation feedback without opening a dialog. */
   showPresetError(message) {
     this.presetErrorTarget.textContent = message
     this.presetErrorTarget.hidden = !message

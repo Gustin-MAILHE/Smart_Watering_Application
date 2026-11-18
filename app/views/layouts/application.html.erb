@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="fr" data-theme="dark">
+<html lang="<%= I18n.locale %>" data-theme="default">
   <head>
     <script>
       try {
         const theme = localStorage.getItem("smartWatering.theme");
-        if (["light", "dark"].includes(theme)) document.documentElement.dataset.theme = theme;
+        if (["light", "dark", "sakura", "default"].includes(theme)) document.documentElement.dataset.theme = theme;
       } catch (_) { /* Keep the default theme when browser storage is unavailable. */ }
-      document.documentElement.style.colorScheme = document.documentElement.dataset.theme;
+      document.documentElement.style.colorScheme = ["dark", "default"].includes(document.documentElement.dataset.theme) ? "dark" : "light";
     </script>
     <title><%= content_for(:title) || "Arrosage intelligent" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -14,19 +14,12 @@
     <meta name="application-name" content="Arrosage intelligent">
     <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
-    <%#= csp_meta_tag %>
-
-    <!-- WEB AWESOME-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.19.1/cdn/themes/light.css" />
-
-    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
 
     <%= favicon_link_tag 'garden-favicon.png', type: 'image/png', sizes: '32x32' %>
     <%= favicon_link_tag 'garden-favicon.svg', type: 'image/svg+xml', sizes: 'any' %>
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">
 
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
 

@@ -156,8 +156,7 @@ body:has(.auth-page) {
 }
 
 /* A focused recovery form, with a clear hierarchy and compact guidance. */
-.auth-page--recovery { --auth-card: #f5f4eb; --auth-note: #dfe7d5; }
-[data-theme="dark"] .auth-page--recovery { --auth-card: #24352a; --auth-note: #2e4431; }
+.auth-page--recovery { --auth-card: var(--SurfaceColor); --auth-note: var(--P1Color); }
 .auth-page--recovery .auth-layout { gap: clamp(28px, 4vw, 60px); }
 .auth-page--recovery .auth-panel { padding: clamp(24px, 3vw, 38px); border-radius: 32px 12px 32px 12px; background: var(--auth-card); box-shadow: 0 16px 56px -32px rgb(15 35 20 / 25%); }
 .auth-page--recovery .auth-heading { margin-bottom: 28px; }

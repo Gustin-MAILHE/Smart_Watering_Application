@@ -1,8 +1,8 @@
 class AccountsController < ApplicationController
   DEFAULT_USERS = [
-    { "id" => 1, "name" => "Utilisateur 1", "password" => "motdepasse1", "role" => "admin" },
-    { "id" => 2, "name" => "Utilisateur 2", "password" => "motdepasse2", "role" => "user" },
-    { "id" => 3, "name" => "Utilisateur 3", "password" => "motdepasse3", "role" => "user" }
+    { "id" => 1, "name" => "Utilisateur 1", "role" => "admin" },
+    { "id" => 2, "name" => "Utilisateur 2", "role" => "user" },
+    { "id" => 3, "name" => "Utilisateur 3", "role" => "user" }
   ].freeze
 
   before_action :load_users
@@ -18,7 +18,7 @@ class AccountsController < ApplicationController
       if params[:password].length < 6
         return redirect_to accounts_path, alert: "Le mot de passe doit contenir au moins 6 caractères."
       end
-      user["password"] = params[:password]
+      user["password_changed"] = true
       message = "Mot de passe de #{user['name']} modifié."
     elsif %w[user admin].include?(params[:role])
       user["role"] = params[:role]
@@ -44,6 +44,9 @@ class AccountsController < ApplicationController
 
   def load_users
     @users = session[:users] || DEFAULT_USERS.map(&:dup)
+    # Nettoie aussi les anciennes sessions de démonstration.
+    @users.each { |user| user.delete("password") }
+    save_users
   end
 
   def save_users

@@ -1,5 +1,6 @@
 <section class="stats-page" aria-labelledby="stats-title">
   <h1 class="stats-title" id="stats-title">Statistiques</h1>
+  <p class="stats-note">Données de démonstration : les capteurs réels ne sont pas encore connectés.</p>
 
   <ul class="stats-list">
     <% @days.each do |day| %>
@@ -18,7 +19,6 @@
     <% end %>
   </ul>
 
-  <%# Fake button: the database export will be done with the back end %>
   <button type="button" class="stats-card__button stats-export"
           onclick="alert('Export simulé : toutes les données seront exportées quand le back-end sera prêt.')">
     Exporter toutes les données

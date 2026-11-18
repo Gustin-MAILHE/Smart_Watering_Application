@@ -42,10 +42,7 @@ class Zone < ApplicationRecord
 
   def validate_watering_time_slots
     slots = watering_time_slots
-    unless slots.is_a?(Array) && slots.length.between?(1, 24) && slots.all? { |slot|
-      slot.is_a?(Hash) && slot.keys.sort == %w[end start] &&
-        slot.values.all? { |value| value.is_a?(String) && WATERING_TIME.match?(value) } && slot["start"] < slot["end"]
-    }
+    unless slots.is_a?(Array) && slots.length.between?(1, 24) && slots.all? { |slot| valid_watering_slot?(slot) }
       errors.add(:watering_time_slots, "doivent contenir de 1 à 24 créneaux valides, avec une fin après le début le même jour")
       return
     end
@@ -53,6 +50,12 @@ class Zone < ApplicationRecord
     if slots.sort_by { |slot| slot["start"] }.each_cons(2).any? { |first, second| first["end"] > second["start"] }
       errors.add(:watering_time_slots, "ne doivent pas se chevaucher")
     end
+  end
+
+  def valid_watering_slot?(slot)
+    slot.is_a?(Hash) && slot.keys.sort == %w[end start] &&
+      slot.values.all? { |value| value.is_a?(String) && WATERING_TIME.match?(value) } &&
+      slot["start"] < slot["end"]
   end
 
   def validate_watering_dates

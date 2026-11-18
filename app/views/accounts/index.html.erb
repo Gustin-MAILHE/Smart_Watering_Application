@@ -1,12 +1,7 @@
 <div class="account-page">
   <h1 class="title-page">Compte</h1>
 
-  <% if notice %>
-    <p class="account-notice"><%= notice %></p>
-  <% end %>
-  <% if alert %>
-    <p class="account-notice account-notice--error"><%= alert %></p>
-  <% end %>
+  <p class="account-notice">Démonstration : ces comptes fictifs ne modifient pas les utilisateurs inscrits.</p>
 
   <% if @users.empty? %>
     <p class="account-empty">Aucun compte.</p>
@@ -25,13 +20,13 @@
             <span class="account-card__value"><%= user["name"] %></span>
           </p>
           <p class="account-card__row">
-            <span class="account-card__label">PWD</span>
-            <span class="account-card__value"><%= user["password"] %></span>
+            <span class="account-card__label">Mot de passe</span>
+            <span class="account-card__value"><%= user["password_changed"] ? "Modifié en démonstration" : "Non modifié" %></span>
           </p>
         </div>
 
         <%= form_with url: account_path(user["id"]), method: :patch, class: "account-card__form" do |form| %>
-          <%= form.select :role, [["Utilisateur", "user"], ["Admin", "admin"]], { selected: user["role"] }, class: "account-card__select" %>
+          <%= form.select :role, [["Utilisateur", "user"], ["Admin", "admin"]], { selected: user["role"] }, class: "account-card__select", aria: { label: "Rôle de #{user['name']}" } %>
           <%= form.submit "Enregistrer le rôle", class: "account-card__button" %>
         <% end %>
 
@@ -49,7 +44,8 @@
           <%= form_with url: account_path(user["id"]), method: :patch, class: "account-dialog__form" do |form| %>
             <h2 class="account-dialog__title">Modifier le mot de passe</h2>
             <p class="account-dialog__text"><%= user["name"] %></p>
-            <%= form.text_field :password, placeholder: "Nouveau mot de passe", required: true, minlength: 6, autocomplete: "off", class: "account-dialog__input" %>
+            <%= form.label :password, "Nouveau mot de passe", for: "demo-password-#{user['id']}" %>
+            <%= form.password_field :password, id: "demo-password-#{user['id']}", required: true, minlength: 6, autocomplete: "new-password", class: "account-dialog__input" %>
             <div class="account-dialog__actions">
               <button type="button" class="account-card__button" data-action="click->password-dialog#close">Annuler</button>
               <%= form.submit "Valider", class: "account-card__button" %>

@@ -9,6 +9,9 @@ en:
         password_confirmation: Password Confirmation
         remember_me: Remember Me
         username: Username
+        temperature_unit: Temperature unit
+        brightness_unit: Brightness unit
+        humidity_unit: Humidity unit
       zone:
         brightness_threshold: Brightness Threshold
         crop: Culture
@@ -120,7 +123,6 @@ en:
       wrong_length:
         one: must contain 1 character
         other: must contain %{count} characters
-  hello: Hello world
   layout:
     navbar:
       index:
