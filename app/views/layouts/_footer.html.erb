@@ -1,17 +1,32 @@
 <footer class="site-footer">
   <div class="site-footer__content">
     <div class="site-footer__brand">
+      <p class="footer-eyebrow"><%= t('layout.footer.eyebrow') %></p>
       <%= link_to gardens_path, class: "footer-brand" do %>
         <%= inline_svg_tag "garden_icon.svg", aria: { hidden: true } %>
         <span><%= t('layout.footer.footer_title') %></span>
       <% end %>
       <p class="footer-description"><%= t('layout.footer.footer_description') %></p>
     </div>
-    <nav class="footer-links" aria-label="Navigation du pied de page">
-      <%= link_to t('layout.footer.footer_link_home'), root_path %>
-      <%= link_to t('layout.footer.footer_link_garden'), gardens_path %>
-      <%= link_to t('layout.footer.footer_link_about'), abouts_path %>
+    <nav class="footer-navigation" aria-label="<%= t('layout.footer.navigation_label') %>">
+      <h2 class="footer-heading"><%= t('layout.footer.explore') %></h2>
+      <ul class="footer-links">
+        <li><%= link_to t('layout.footer.footer_link_home'), root_path %></li>
+        <li><%= link_to t('layout.footer.footer_link_garden'), gardens_path %></li>
+        <li><%= link_to t('layout.footer.footer_link_about'), abouts_path %></li>
+      </ul>
     </nav>
+    <div class="footer-project">
+      <h2 class="footer-heading"><%= t('layout.footer.project_title') %></h2>
+      <p class="footer-project__description"><%= t('layout.footer.project_description') %></p>
+      <p class="footer-project__signature"><%= t('layout.footer.project_signature') %></p>
+    </div>
   </div>
-  <p class="site-footer__bottom">© <%= Time.current.year %> · <%= t('layout.footer.footer_site_bottom') %></p>
+  <div class="site-footer__bottom">
+    <p>© <%= Time.current.year %> · <%= t('layout.footer.footer_site_bottom') %></p>
+    <%= link_to 'https://github.com/Gustin-MAILHE/Smart_Watering_Application', class: 'footer-source' do %>
+      <%= t('layout.footer.source_code') %>
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m8 8-4 4 4 4m8-8 4 4-4 4m-3-11-2 14" /></svg>
+    <% end %>
+  </div>
 </footer>

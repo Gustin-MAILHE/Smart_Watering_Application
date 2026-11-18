@@ -84,6 +84,56 @@ class AccountGardensTest < ApplicationSystemTestCase
     assert_field "Seuil d’humidité (%)", with: "45"
   end
 
+  test "account readings follow assigned sensors independently of zone thresholds" do
+    first = users(:one).zones.create!(name: "Serre", thresholds: { temperature: 35, humidity: 65, brightness: 1500 })
+    users(:one).zones.create!(name: "Potager", thresholds: { temperature: 18, humidity: 30, brightness: 800 })
+    login(users(:one))
+    visit gardens_path
+    garden_step "Capteurs"
+
+    assert_text "Aucune mesure disponible."
+    %w[temp humidity brightness].each do |type|
+      assert_selector "[data-garden-target='#{type}']", exact_text: "—"
+    end
+
+    select "Température · T-03", from: "Capteur disponible"
+    click_button "Attribuer le capteur"
+    select "Humidité · H-03", from: "Capteur disponible"
+    click_button "Attribuer le capteur"
+    select "Luminosité · B-03", from: "Capteur disponible"
+    click_button "Attribuer le capteur"
+    assert_selector "[data-garden-target='temp']", exact_text: "22°C"
+    assert_selector "[data-garden-target='humidity']", exact_text: "58%"
+    assert_selector "[data-garden-target='brightness']", exact_text: "—"
+    assert_text "Mesures simulées"
+
+    click_button "Potager"
+    assert_selector "[data-garden-target='temp']", exact_text: "—"
+    assert_selector "[data-garden-target='humidity']", exact_text: "—"
+    select "Température · T-02", from: "Capteur disponible"
+    click_button "Attribuer le capteur"
+    assert_selector "[data-garden-target='temp']", exact_text: "19°C"
+
+    click_button "Serre"
+    garden_step "Seuils"
+    assert_field "Seuil de température (°C)", with: "35"
+    fill_in "Seuil de température (°C)", with: "40"
+    find("#temperature-threshold").send_keys(:tab)
+    wait_for_save
+    assert_equal 40, first.reload.temperature_threshold
+    garden_step "Capteurs"
+    assert_selector "[data-garden-target='temp']", exact_text: "22°C"
+    assert_selector "[data-garden-target='humidity']", exact_text: "58%"
+
+    page.refresh
+    garden_step "Capteurs"
+    assert_selector "[data-garden-target='temp']", exact_text: "22°C"
+    find("button[aria-label='Retirer Température · T-03']").click
+    assert_selector "[data-garden-target='temp']", exact_text: "—"
+    click_button "Potager"
+    assert_selector "[data-garden-target='temp']", exact_text: "19°C"
+  end
+
   test "an empty account does not import the anonymous demo" do
     visit gardens_path
     assert_button "Zone 1"
