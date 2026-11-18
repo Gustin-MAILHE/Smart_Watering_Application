@@ -16,7 +16,7 @@ gem "devise", ">= 4.9.3"
 gem "inline_svg"
 gem "jbuilder"
 gem "image_processing", "~> 1.2"
-gem "json", "< 3.0"
+gem "json", "< 4.0"
 
 # Cache, tâches et déploiement
 gem "solid_cache"
