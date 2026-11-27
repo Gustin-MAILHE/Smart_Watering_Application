@@ -28,7 +28,7 @@ gem "thruster", require: false
 group :development, :test do
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
   gem "bundler-audit", require: false
-  gem "brakeman", "~> 8.1.0"
+  gem "brakeman", "~> 8.1.1"
   gem "rubocop-rails-omakase", require: false
 end
 
