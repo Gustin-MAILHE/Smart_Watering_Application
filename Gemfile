@@ -15,7 +15,7 @@ gem "stimulus-rails"
 gem "devise", ">= 4.9.3"
 gem "inline_svg"
 gem "jbuilder"
-gem "image_processing", "~> 1.2"
+gem "image_processing", "~> 2.2"
 gem "json", "< 3.0"
 
 # Cache, tâches et déploiement
